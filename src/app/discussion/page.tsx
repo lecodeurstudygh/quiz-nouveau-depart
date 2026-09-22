@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useMemo, useCallback } from "react";
-import { week01, week10, getAllDiscussionCards } from "@/data/courses";
+import { allCourses, getAllDiscussionCards } from "@/data/courses";
 import { useLanguage } from "@/context/LanguageContext";
 import { DiscussionCard } from "@/components/DiscussionCard";
 import { DiscussionCard as DiscussionCardType } from "@/types/course";
@@ -22,12 +22,8 @@ import {
 export default function DiscussionPage() {
   const { language, t, selectedWeekId, setSelectedWeekId } = useLanguage();
 
-  const [weekFilter, setWeekFilter] = useState<"all" | "week-01" | "week-10">(
-    selectedWeekId === "week-10"
-      ? "week-10"
-      : selectedWeekId === "week-01"
-      ? "week-01"
-      : "all"
+  const [weekFilter, setWeekFilter] = useState<string>(
+    selectedWeekId || "week-01"
   );
   const [selectedTheme, setSelectedTheme] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -40,8 +36,9 @@ export default function DiscussionPage() {
 
   // Sync weekFilter if selectedWeekId changed externally
   useEffect(() => {
-    if (selectedWeekId === "week-10") setWeekFilter("week-10");
-    else if (selectedWeekId === "week-01") setWeekFilter("week-01");
+    if (selectedWeekId) {
+      setWeekFilter(selectedWeekId);
+    }
   }, [selectedWeekId]);
 
   // Load bookmarks & view mode preferences
@@ -89,9 +86,9 @@ export default function DiscussionPage() {
 
   // Base list of cards based on week selection
   const baseCards: DiscussionCardType[] = useMemo(() => {
-    if (weekFilter === "week-01") return week01.discussionCards || [];
-    if (weekFilter === "week-10") return week10.discussionCards || [];
-    return getAllDiscussionCards();
+    if (weekFilter === "all") return getAllDiscussionCards();
+    const course = allCourses.find((c) => c.id === weekFilter);
+    return course?.discussionCards || [];
   }, [weekFilter]);
 
   // Unique themes for filter dropdown
@@ -232,7 +229,7 @@ export default function DiscussionPage() {
             <select
               value={weekFilter}
               onChange={(e) => {
-                const val = e.target.value as "all" | "week-01" | "week-10";
+                const val = e.target.value;
                 setWeekFilter(val);
                 if (val !== "all") setSelectedWeekId(val);
                 setShuffledOrder(null);
@@ -240,14 +237,17 @@ export default function DiscussionPage() {
               }}
               className="appearance-none pl-3 pr-8 py-1.5 text-xs font-semibold rounded-xl bg-slate-100 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 text-slate-800 dark:text-zinc-200 hover:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500 cursor-pointer"
             >
-              <option value="week-01">
-                {language === "fr" ? "Semaine 1 : Sauveur (10 Q&A)" : "Week 1: Saviour (10 Q&A)"}
-              </option>
-              <option value="week-10">
-                {language === "fr" ? "Semaine 10 : L'Église (8 Q&A)" : "Week 10: Church (8 Q&A)"}
-              </option>
+              {allCourses.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {language === "fr"
+                    ? `Semaine ${c.weekNumber} : ${c.title.fr} (${c.discussionCards?.length || 0} Q&A)`
+                    : `Week ${c.weekNumber}: ${c.title.en} (${c.discussionCards?.length || 0} Q&A)`}
+                </option>
+              ))}
               <option value="all">
-                {language === "fr" ? "Toutes les semaines (18 Q&A)" : "All Weeks (18 Q&A)"}
+                {language === "fr"
+                  ? `Toutes les semaines (${getAllDiscussionCards().length} Q&A)`
+                  : `All Weeks (${getAllDiscussionCards().length} Q&A)`}
               </option>
             </select>
             <ChevronDown className="w-3.5 h-3.5 absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />

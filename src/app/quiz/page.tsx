@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useMemo, useEffect } from "react";
-import { week01, week10 } from "@/data/courses";
+import { allCourses, getAllQuestions } from "@/data/courses";
 import { useLanguage } from "@/context/LanguageContext";
 import { Question } from "@/types/course";
 import {
@@ -29,14 +29,14 @@ interface QuestionUserAnswer {
 
 export default function QuizPage() {
   const { language, t, selectedWeekId } = useLanguage();
-  const [selectedQuizWeek, setSelectedQuizWeek] = useState<"week-01" | "week-10" | "all">(
-    selectedWeekId === "week-10" ? "week-10" : "week-01"
+  const [selectedQuizWeek, setSelectedQuizWeek] = useState<string>(
+    selectedWeekId || "week-01"
   );
 
   const rawQuestions: Question[] = useMemo(() => {
-    if (selectedQuizWeek === "week-01") return week01.questions;
-    if (selectedQuizWeek === "week-10") return week10.questions;
-    return [...week01.questions, ...week10.questions];
+    if (selectedQuizWeek === "all") return getAllQuestions();
+    const course = allCourses.find((c) => c.id === selectedQuizWeek);
+    return course ? course.questions : getAllQuestions();
   }, [selectedQuizWeek]);
 
   // Session seed to trigger re-shuffling of options on mount or on replay
@@ -354,28 +354,22 @@ export default function QuizPage() {
         </div>
 
         <div className="flex flex-wrap items-center gap-1.5">
-          <button
-            type="button"
-            onClick={() => handleSelectQuizWeek("week-01")}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
-              selectedQuizWeek === "week-01"
-                ? "bg-amber-500 text-slate-950 shadow-sm"
-                : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
-            }`}
-          >
-            {t("week1Short")} ({week01.questions.length})
-          </button>
-          <button
-            type="button"
-            onClick={() => handleSelectQuizWeek("week-10")}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
-              selectedQuizWeek === "week-10"
-                ? "bg-amber-500 text-slate-950 shadow-sm"
-                : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
-            }`}
-          >
-            {t("week10Short")} ({week10.questions.length})
-          </button>
+          {allCourses.map((c) => (
+            <button
+              key={c.id}
+              type="button"
+              onClick={() => handleSelectQuizWeek(c.id as any)}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                selectedQuizWeek === c.id
+                  ? "bg-amber-500 text-slate-950 shadow-sm"
+                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+              }`}
+            >
+              {language === "fr"
+                ? `Sem. ${c.weekNumber} (${c.questions.length})`
+                : `Wk. ${c.weekNumber} (${c.questions.length})`}
+            </button>
+          ))}
           <button
             type="button"
             onClick={() => handleSelectQuizWeek("all")}
@@ -385,7 +379,7 @@ export default function QuizPage() {
                 : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
             }`}
           >
-            {language === "fr" ? "Toutes (50 Q)" : "All (50 Q)"}
+            {language === "fr" ? `Toutes (${getAllQuestions().length} Q)` : `All (${getAllQuestions().length} Q)`}
           </button>
         </div>
       </div>
@@ -743,15 +737,16 @@ export default function QuizPage() {
               {t("congratulations")}
             </h2>
             <p className="text-sm text-slate-600 dark:text-slate-300 max-w-md mx-auto">
-              {selectedQuizWeek === "week-10"
+              {selectedQuizWeek === "all"
                 ? language === "fr"
-                  ? "Tu as validé les acquis fondamentaux de la Semaine 10 (L'Église, une communauté vivante) !"
-                  : "You have completed the foundational milestones of Week 10 (The Church, a Living Community)!"
-                : selectedQuizWeek === "all"
-                ? language === "fr"
-                  ? "Impressionnant ! Tu as complété le Grand Quiz combiné des Semaines 1 et 10 !"
-                  : "Impressive! You completed the Combined Grand Quiz for Weeks 1 & 10!"
-                : t("quizResultComment")}
+                  ? "Impressionnant ! Tu as complété le Grand Quiz combiné de toutes les semaines !"
+                  : "Impressive! You completed the Combined Grand Quiz across all weeks!"
+                : (() => {
+                    const c = allCourses.find((course) => course.id === selectedQuizWeek);
+                    return language === "fr"
+                      ? `Tu as validé les acquis de la Semaine ${c?.weekNumber || 1} (${c?.title.fr}) !`
+                      : `You have completed the milestones of Week ${c?.weekNumber || 1} (${c?.title.en})!`;
+                  })()}
             </p>
           </div>
 

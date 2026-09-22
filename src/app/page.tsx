@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { week01, week10 } from "@/data/courses";
+import { allCourses, getCourseById, week01 } from "@/data/courses";
 import { useLanguage } from "@/context/LanguageContext";
 import { VerseCard } from "@/components/VerseCard";
 import { CourseSelectorModal } from "@/components/CourseSelectorModal";
@@ -24,8 +24,8 @@ export default function CourseOverviewPage() {
   const [memorizedIds, setMemorizedIds] = useState<string[]>([]);
   const [isCourseMenuOpen, setIsCourseMenuOpen] = useState(false);
 
-  // Active course selection (defaults to week01 if 'all' or 'week-01', else week10)
-  const currentWeek = selectedWeekId === "week-10" ? week10 : week01;
+  // Active course selection dynamically resolved from selectedWeekId
+  const currentWeek = getCourseById(selectedWeekId) || week01;
 
   useEffect(() => {
     try {
@@ -78,26 +78,28 @@ export default function CourseOverviewPage() {
         </div>
 
         <div className="flex flex-wrap items-center gap-2 p-1.5 rounded-2xl bg-slate-200/80 dark:bg-slate-900 border border-slate-300/80 dark:border-slate-800 shadow-inner">
-          <button
-            onClick={() => setSelectedWeekId("week-01")}
-            className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all ${
-              currentWeek.id === "week-01"
-                ? "bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20"
-                : "text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white"
-            }`}
-          >
-            {language === "fr" ? "Semaine 1 : Sauveur" : "Week 1: Saviour"}
-          </button>
-          <button
-            onClick={() => setSelectedWeekId("week-10")}
-            className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all ${
-              currentWeek.id === "week-10"
-                ? "bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20"
-                : "text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white"
-            }`}
-          >
-            {language === "fr" ? "Semaine 10 : L'Église" : "Week 10: The Church"}
-          </button>
+          {allCourses.map((c) => {
+            const isSelected = currentWeek.id === c.id;
+            const shortTitle =
+              c.weekNumber === 1
+                ? (language === "fr" ? "Semaine 1 : Sauveur" : "Week 1: Saviour")
+                : c.weekNumber === 2
+                ? (language === "fr" ? "Semaine 2 : Qui est Dieu ?" : "Week 2: Who is God?")
+                : (language === "fr" ? `Semaine ${c.weekNumber} : L'Église` : `Week ${c.weekNumber}: The Church`);
+            return (
+              <button
+                key={c.id}
+                onClick={() => setSelectedWeekId(c.id)}
+                className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all ${
+                  isSelected
+                    ? "bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20"
+                    : "text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white"
+                }`}
+              >
+                {shortTitle}
+              </button>
+            );
+          })}
           <button
             onClick={() => setIsCourseMenuOpen(true)}
             className="flex items-center gap-1 px-3 py-2 rounded-xl text-xs font-bold text-amber-600 dark:text-amber-400 hover:text-amber-500 dark:hover:text-amber-300 hover:bg-amber-500/10 transition-all"

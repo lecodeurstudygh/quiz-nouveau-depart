@@ -152,7 +152,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         setLanguageState(savedLang);
       }
       const savedWeek = localStorage.getItem("nd_selected_week");
-      if (savedWeek === "week-01" || savedWeek === "week-10" || savedWeek === "all") {
+      if (savedWeek) {
         setSelectedWeekIdState(savedWeek);
       }
       const savedSettings = localStorage.getItem("nd_app_settings");

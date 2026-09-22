@@ -103,7 +103,7 @@ export default function QuizPage() {
   const [quizFinished, setQuizFinished] = useState(false);
 
   // Switch quiz week handler
-  const handleSelectQuizWeek = (newWeek: "week-01" | "week-10" | "all") => {
+  const handleSelectQuizWeek = (newWeek: string) => {
     if (newWeek === selectedQuizWeek) return;
     if (Object.keys(answers).length > 0) {
       const confirmed = window.confirm(

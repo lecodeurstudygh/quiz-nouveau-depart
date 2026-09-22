@@ -8,9 +8,10 @@ export async function POST(req: NextRequest) {
     const { action } = body;
 
     if (action === "create") {
-      const { weekId = "week-10", timerSeconds = 20, questionCount = 10 } = body;
+      const weekIdParam = body.weekId || (body.week ? `week-${String(body.week).padStart(2, "0")}` : "week-10");
+      const { timerSeconds = 20, questionCount = 10 } = body;
       const result = liveSessionStore.createSession({
-        weekId,
+        weekId: weekIdParam,
         timerSeconds,
         questionCount,
       });

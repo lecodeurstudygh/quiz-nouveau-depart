@@ -173,10 +173,9 @@ export const liveSessionStore = {
 
     // Select and filter questions
     let candidateQuestions: Question[] = [];
-    if (params.weekId === "week-01") {
-      candidateQuestions = [...week01.questions];
-    } else if (params.weekId === "week-10") {
-      candidateQuestions = [...week10.questions];
+    const selectedCourse = allCourses.find((c) => c.id === params.weekId);
+    if (selectedCourse) {
+      candidateQuestions = [...selectedCourse.questions];
     } else {
       candidateQuestions = allCourses.flatMap((c) => c.questions);
     }

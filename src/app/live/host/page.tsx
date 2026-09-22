@@ -25,6 +25,7 @@ import {
   Crown,
 } from "lucide-react";
 import Link from "next/link";
+import { allCourses } from "@/data/courses";
 
 const OPTION_STYLES = [
   {
@@ -227,9 +228,14 @@ export default function LiveHostPage() {
                 onChange={(e) => setWeekId(e.target.value)}
                 className="w-full bg-stone-100 dark:bg-stone-800 border border-stone-300 dark:border-stone-700 rounded-xl px-4 py-3 text-sm font-medium focus:ring-2 focus:ring-amber-500 outline-none"
               >
-                <option value="week-10">Semaine 10 : L&apos;Église, un corps vivant</option>
-                <option value="week-01">Semaine 1 : Le Péché, la Séparation et le Salut</option>
-                <option value="all">Toutes les semaines combinées</option>
+                {allCourses.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    Semaine {c.weekNumber} : {c.title[language] || c.title.fr}
+                  </option>
+                ))}
+                <option value="all">
+                  {language === "en" ? "All weeks combined" : "Toutes les semaines combinées"}
+                </option>
               </select>
             </div>
 

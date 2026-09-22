@@ -9,8 +9,8 @@ L'objectif est d'ancrer les acquis de façon ludique, accessible et mémorable :
 ---
 
 ## 2. Programme des 10 Semaines
-1. Notre besoin d’un Sauveur / Our Need for a Saviour
-2. Qui est Dieu ? / Who is God?
+1. Notre besoin d'un Sauveur / Our Need for a Saviour *(Actif - 28 versets, 25 questions, 7 Q&A discussion)*
+2. Qui est Dieu ? / Who is God? *(Actif - 22 versets, 25 questions, 7 Q&A discussion)*
 3. Mon identité en Christ / My Identity in Christ
 4. Entendre la voix de Dieu / Hearing God's Voice
 5. Un amour pour la Parole de Dieu / A Love for God's Word
@@ -18,7 +18,7 @@ L'objectif est d'ancrer les acquis de façon ludique, accessible et mémorable :
 7. La personne du Saint-Esprit / The Person of the Holy Spirit
 8. Une vie transformée / A Transformed Life
 9. Une mission à vivre / A Mission to Live
-10. L’Église – Une communauté vivante / The Church – A Living Community
+10. L’Église – Une communauté vivante / The Church – A Living Community *(Actif - 22 versets, 25 questions, 7 Q&A discussion)*
 
 ---
 

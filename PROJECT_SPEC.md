@@ -86,8 +86,9 @@ L'objectif est d'ancrer les acquis de façon ludique, accessible et mémorable :
 
 ## 6. Déploiement & Accès Public
 - **Hébergement :** Vercel (Production HTTPS)
-- **URL Publique de Production :** `https://temporary-express-koto-w3jal2m.vercel.app`
-- **Console Hôte Enseignant (Zoom / Présentiel) :** `/live/host`
-- **Buzzer Mobile Participant :** `/live`
-- **Discussion Q&A Flashcards :** `/discussion`
-- **Flashcards Versets :** `/cards`
+- **URL Publique Officielle :** `https://quiz-nouveau-depart.vercel.app`
+- **Dépôt GitHub :** `https://github.com/lecodeurstudygh/quiz-nouveau-depart`
+- **Console Hôte Enseignant (Zoom / Présentiel) :** `https://quiz-nouveau-depart.vercel.app/live/host`
+- **Buzzer Mobile Participant :** `https://quiz-nouveau-depart.vercel.app/live`
+- **Discussion Q&A Flashcards :** `https://quiz-nouveau-depart.vercel.app/discussion`
+- **Flashcards Versets :** `https://quiz-nouveau-depart.vercel.app/cards`

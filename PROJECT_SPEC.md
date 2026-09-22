@@ -78,6 +78,16 @@ L'objectif est d'ancrer les acquis de façon ludique, accessible et mémorable :
 
 ## 5. Architecture Technique
 - **Frontend :** Next.js (App Router), Tailwind CSS, Lucide React, Framer Motion (animations des cartes).
-- **Backend / Temps Réel :** Node.js, Fastify / Express avec Socket.io pour la synchronisation multi-joueurs.
+- **Backend / Temps Réel :** Next.js Server-Sent Events (SSE) & REST API avec fallback automatique.
 - **Données :** Fichiers TypeScript structurés (`src/data/courses/week-XX.ts`) garantissant la validation des contenus sans hallucination de l'IA.
 - **Adaptateurs externes :** Webhook Meta WhatsApp Cloud API et Zoom Apps SDK.
+
+---
+
+## 6. Déploiement & Accès Public
+- **Hébergement :** Vercel (Production HTTPS)
+- **URL Publique de Production :** `https://temporary-express-koto-w3jal2m.vercel.app`
+- **Console Hôte Enseignant (Zoom / Présentiel) :** `/live/host`
+- **Buzzer Mobile Participant :** `/live`
+- **Discussion Q&A Flashcards :** `/discussion`
+- **Flashcards Versets :** `/cards`

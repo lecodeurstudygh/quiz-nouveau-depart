@@ -25,7 +25,9 @@ export const ALL_COURSES: CourseModuleSummary[] = [
     weekNumber: 2,
     title: { fr: "Qui est Dieu ?", en: "Who is God?" },
     subtitle: { fr: "Le Créateur, la Trinité et Son cœur de Père", en: "The Creator, Trinity, and the Father's heart" },
-    status: "coming_soon",
+    status: "active",
+    versesCount: 22,
+    questionsCount: 25,
     highlightTheme: { fr: "La nature de Dieu", en: "God's nature" },
   },
   {

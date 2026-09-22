@@ -1,8 +1,9 @@
 import { week01 } from "./week-01";
+import { week02 } from "./week-02";
 import { week10 } from "./week-10";
 import { CourseWeek } from "@/types/course";
 
-export const allCourses: CourseWeek[] = [week01, week10];
+export const allCourses: CourseWeek[] = [week01, week02, week10];
 
 export function getCourseByWeek(weekNumber: number): CourseWeek | undefined {
   return allCourses.find((c) => c.weekNumber === weekNumber);
@@ -24,5 +25,4 @@ export function getAllDiscussionCards() {
   return allCourses.flatMap((course) => course.discussionCards || []);
 }
 
-export { week01, week10 };
-
+export { week01, week02, week10 };

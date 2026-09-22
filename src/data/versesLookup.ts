@@ -201,6 +201,69 @@ const SUPPLEMENTARY_VERSES: Record<
     },
     theme: { fr: "Plus que vainqueurs", en: "More than conquerors" },
   },
+  "Romains 8:1": {
+    reference: { fr: "Romains 8:1", en: "Romans 8:1" },
+    translation: { fr: "S21", en: "NIV" },
+    text: {
+      fr: "Il n'y a donc maintenant aucune condamnation pour ceux qui sont en Jésus-Christ.",
+      en: "Therefore, there is now no condemnation for those who are in Christ Jesus.",
+    },
+    theme: { fr: "Aucune condamnation", en: "No condemnation" },
+  },
+  "Psaume 27:10": {
+    reference: { fr: "Psaume 27:10", en: "Psalm 27:10" },
+    translation: { fr: "S21", en: "NIV" },
+    text: {
+      fr: "Même si mon père et ma mère m'abandonnent, l'Éternel me recueillera.",
+      en: "Though my father and mother forsake me, the Lord will receive me.",
+    },
+    theme: { fr: "L'Éternel me recueille", en: "The Lord will receive me" },
+  },
+  "Jacques 4:8": {
+    reference: { fr: "Jacques 4:8", en: "James 4:8" },
+    translation: { fr: "S21", en: "NIV" },
+    text: {
+      fr: "Approchez-vous de Dieu et il s'approchera de vous.",
+      en: "Come near to God and he will come near to you.",
+    },
+    theme: { fr: "S'approcher de Dieu", en: "Draw near to God" },
+  },
+  "Jérémie 29:13": {
+    reference: { fr: "Jérémie 29:13", en: "Jeremiah 29:13" },
+    translation: { fr: "S21", en: "NIV" },
+    text: {
+      fr: "Vous me chercherez et vous me trouverez, si vous me cherchez de tout votre cœur.",
+      en: "You will seek me and find me when you seek me with all your heart.",
+    },
+    theme: { fr: "Chercher de tout son cœur", en: "Seek with all your heart" },
+  },
+  "Éphésiens 2:4-5": {
+    reference: { fr: "Éphésiens 2:4-5", en: "Ephesians 2:4-5" },
+    translation: { fr: "S21", en: "NIV" },
+    text: {
+      fr: "Mais Dieu est riche en compassion. À cause du grand amour dont il nous a aimés, nous qui étions morts en raison de nos fautes, il nous a rendus à la vie avec Christ.",
+      en: "But because of his great love for us, God, who is rich in mercy, made us alive with Christ even when we were dead in transgressions.",
+    },
+    theme: { fr: "Riche en compassion", en: "Rich in mercy" },
+  },
+  "Ézéchiel 34:11-12": {
+    reference: { fr: "Ézéchiel 34:11-12", en: "Ezekiel 34:11-12" },
+    translation: { fr: "S21", en: "NIV" },
+    text: {
+      fr: "En effet, ainsi parle le Seigneur, l'Éternel : Voici que je m'occuperai moi-même de mes brebis, j'en prendrai soin.",
+      en: "For this is what the Sovereign Lord says: I myself will search for my sheep and look after them.",
+    },
+    theme: { fr: "Dieu prend soin de Ses brebis", en: "God looks after His sheep" },
+  },
+  "1 Jean 4:18": {
+    reference: { fr: "1 Jean 4:18", en: "1 John 4:18" },
+    translation: { fr: "S21", en: "NIV" },
+    text: {
+      fr: "Il n'y a pas de peur dans l'amour, mais l'amour parfait bannit la peur, car la peur implique un châtiment.",
+      en: "There is no fear in love. But perfect love drives out fear, because fear has to do with punishment.",
+    },
+    theme: { fr: "L'amour parfait bannit la peur", en: "Perfect love drives out fear" },
+  },
 };
 
 function normalizeRef(ref: string): string {

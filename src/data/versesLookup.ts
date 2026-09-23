@@ -264,6 +264,105 @@ const SUPPLEMENTARY_VERSES: Record<
     },
     theme: { fr: "L'amour parfait bannit la peur", en: "Perfect love drives out fear" },
   },
+  "Luc 15:11-24": {
+    reference: { fr: "Luc 15:11-24", en: "Luke 15:11-24" },
+    translation: { fr: "S21", en: "NIV" },
+    text: {
+      fr: "Un homme avait deux fils... Le plus jeune dit : « Père, donne-moi la part d'héritage »... Quand il fut encore loin, son père le vit et fut ému de compassion, il courut se jeter à son cou et l'embrassa... Le père dit à ses serviteurs : « Apportez vite le plus beau vêtement et mettez-le-lui... Car mon fils que voici était mort et il est revenu à la vie ! »",
+      en: "There was a man who had two sons... The younger said: 'Father, give me my share of the estate'... While he was still a long way off, his father saw him and was filled with compassion; he ran to his son, threw his arms around him and kissed him... The father said: 'Quick! Bring the best robe and put it on him... For this son of mine was dead and is alive again!'",
+    },
+    theme: { fr: "La parabole du fils prodigue", en: "The prodigal son parable" },
+  },
+  "Luc 15:3-7": {
+    reference: { fr: "Luc 15:3-7", en: "Luke 15:3-7" },
+    translation: { fr: "S21", en: "NIV" },
+    text: {
+      fr: "Quel homme parmi vous, s'il a 100 brebis et qu'il en perde une, ne laisse les 99 autres dans le désert pour aller à la recherche de celle qui est perdue jusqu'à ce qu'il la retrouve ? Lorsqu'il l'a retrouvée, il la met avec joie sur ses épaules et, de retour à la maison, il appelle ses amis... Il y aura de même plus de joie dans le ciel pour un seul pécheur qui se repent...",
+      en: "Suppose one of you has a hundred sheep and loses one of them. Doesn't he leave the ninety-nine in the open country and go after the lost sheep until he finds it? And when he finds it, he joyfully puts it on his shoulders and goes home... There will be more rejoicing in heaven over one sinner who repents...",
+    },
+    theme: { fr: "La parabole de la brebis perdue", en: "The lost sheep parable" },
+  },
+  "Luc 15": {
+    reference: { fr: "Luc 15", en: "Luke 15" },
+    translation: { fr: "S21", en: "NIV" },
+    text: {
+      fr: "Chapitre des trois paraboles de la grâce : la brebis perdue (v. 3-7), la pièce perdue (v. 8-10) et le fils prodigue (v. 11-32). Jésus révèle le cœur compatissant du Père qui cherche, relève et célèbre avec joie le retour de ceux qui étaient égarés.",
+      en: "Chapter of the three parables of scandalous grace: the lost sheep (v. 3-7), the lost coin (v. 8-10), and the prodigal son (v. 11-32). Jesus reveals the compassionate heart of the Father who relentlessly pursues, restores, and celebrates the return of the lost.",
+    },
+    theme: { fr: "Le cœur du Père pour les perdus", en: "The Father's heart for the lost" },
+  },
+  "Matthieu 16:18": {
+    reference: { fr: "Matthieu 16:18", en: "Matthew 16:18" },
+    translation: { fr: "S21", en: "NIV" },
+    text: {
+      fr: "Et moi, je te dis que tu es Pierre, et que sur cette pierre je bâtirai mon Église, et que les portes du séjour des morts ne prévaudront point contre elle.",
+      en: "And I tell you that you are Peter, and on this rock I will build my church, and the gates of Hades will not overcome it.",
+    },
+    theme: { fr: "La promesse de Jésus pour Son Église", en: "Jesus' promise for His Church" },
+  },
+  "1 Jean 3:1-2": {
+    reference: { fr: "1 Jean 3:1-2", en: "1 John 3:1-2" },
+    translation: { fr: "S21", en: "NIV" },
+    text: {
+      fr: "Voyez quel amour le Père nous a témoigné pour que nous soyons appelés enfants de Dieu ! Et nous le sommes... Bien-aimés, nous sommes maintenant enfants de Dieu, et ce que nous serons n'a pas encore été révélé; mais nous savons que, lorsqu'il paraîtra, nous serons semblables à lui, parce que nous le verrons tel qu'il est.",
+      en: "See what great love the Father has lavished on us, that we should be called children of God! And that is what we are!... Dear friends, now we are children of God, and what we will be has not yet been made known. But we know that when Christ appears, we shall be like him, for we shall see him as he is.",
+    },
+    theme: { fr: "Enfants de Dieu et espérance glorieuse", en: "Children of God and glorious hope" },
+  },
+  "Psaume 103:13": {
+    reference: { fr: "Psaume 103:13", en: "Psalm 103:13" },
+    translation: { fr: "S21", en: "NIV" },
+    text: {
+      fr: "Comme un père a compassion de ses enfants, l'Éternel a compassion de ceux qui le craignent.",
+      en: "As a father has compassion on his children, so the Lord has compassion on those who fear him.",
+    },
+    theme: { fr: "La compassion paternelle de Dieu", en: "The Father's tender compassion" },
+  },
+  "Romains 8:15": {
+    reference: { fr: "Romains 8:15", en: "Romans 8:15" },
+    translation: { fr: "S21", en: "NIV" },
+    text: {
+      fr: "Et vous n'avez pas reçu un esprit d'esclavage pour être encore dans la crainte, mais vous avez reçu un Esprit d'adoption, par lequel nous crions : « Abba ! Père ! »",
+      en: "The Spirit you received does not make you slaves, so that you live in fear again; rather, the Spirit you received brought about your adoption to sonship. And by him we cry, 'Abba, Father.'",
+    },
+    theme: { fr: "L'Esprit d'adoption et le cri Abba", en: "The Spirit of adoption and Abba cry" },
+  },
+  "Jean 10:11": {
+    reference: { fr: "Jean 10:11", en: "John 10:11" },
+    translation: { fr: "S21", en: "NIV" },
+    text: {
+      fr: "Je suis le bon berger. Le bon berger donne sa vie pour ses brebis.",
+      en: "I am the good shepherd. The good shepherd lays down his life for the sheep.",
+    },
+    theme: { fr: "Le Bon Berger", en: "The Good Shepherd" },
+  },
+  "Matthieu 5:14-16": {
+    reference: { fr: "Matthieu 5:14-16", en: "Matthew 5:14-16" },
+    translation: { fr: "S21", en: "NIV" },
+    text: {
+      fr: "Vous êtes la lumière du monde. Une ville située sur une montagne ne peut être cachée... Que votre lumière brille ainsi devant les hommes, afin qu'ils voient vos bonnes œuvres et rendent gloire à votre Père qui est dans les cieux.",
+      en: "You are the light of the world. A town built on a hill cannot be hidden... let your light shine before others, that they may see your good deeds and glorify your Father in heaven.",
+    },
+    theme: { fr: "La lumière du monde", en: "Light of the world" },
+  },
+  "Matthieu 28:19-20": {
+    reference: { fr: "Matthieu 28:19-20", en: "Matthew 28:19-20" },
+    translation: { fr: "S21", en: "NIV" },
+    text: {
+      fr: "Allez, faites de toutes les nations des disciples, les baptisant au nom du Père, du Fils et du Saint-Esprit, et enseignez-leur à observer tout ce que je vous ai prescrit. Et voici, je suis avec vous tous les jours, jusqu'à la fin du monde.",
+      en: "Therefore go and make disciples of all nations, baptizing them in the name of the Father and of the Son and of the Holy Spirit, and teaching them to obey everything I have commanded you. And surely I am with you always, to the very end of the age.",
+    },
+    theme: { fr: "La Grande Mission", en: "The Great Commission" },
+  },
+  "Jacques 2:10-12": {
+    reference: { fr: "Jacques 2:10-12", en: "James 2:10-12" },
+    translation: { fr: "S21", en: "NIV" },
+    text: {
+      fr: "Car quiconque observe toute la loi, mais pèche contre un seul commandement, devient coupable de tous... Parlez et agissez comme devant être jugés par une loi de liberté.",
+      en: "For whoever keeps the whole law and yet stumbles at just one point is guilty of breaking all of it... Speak and act as those who are going to be judged by the law that gives freedom.",
+    },
+    theme: { fr: "La loi de liberté", en: "The law of freedom" },
+  },
 };
 
 function normalizeRef(ref: string): string {
@@ -271,6 +370,7 @@ function normalizeRef(ref: string): string {
     .toLowerCase()
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[.,:;()]/g, " ")
     .replace(/\s+/g, " ")
     .trim();
 }
@@ -282,6 +382,7 @@ export function findVerseByReference(
   if (!rawRef) return null;
 
   const normalizedQuery = normalizeRef(rawRef);
+  if (!normalizedQuery) return null;
 
   // 1. Search in allCourses verses
   for (const course of allCourses) {
@@ -293,7 +394,9 @@ export function findVerseByReference(
         refFR === normalizedQuery ||
         refEN === normalizedQuery ||
         normalizedQuery.includes(refFR) ||
-        refFR.includes(normalizedQuery)
+        refFR.includes(normalizedQuery) ||
+        normalizedQuery.includes(refEN) ||
+        refEN.includes(normalizedQuery)
       ) {
         return {
           reference: v.reference[language] || v.reference.fr,
@@ -319,7 +422,11 @@ export function findVerseByReference(
       frNorm === normalizedQuery ||
       enNorm === normalizedQuery ||
       normalizedQuery.includes(keyNorm) ||
-      keyNorm.includes(normalizedQuery)
+      keyNorm.includes(normalizedQuery) ||
+      normalizedQuery.includes(frNorm) ||
+      frNorm.includes(normalizedQuery) ||
+      normalizedQuery.includes(enNorm) ||
+      enNorm.includes(normalizedQuery)
     ) {
       return {
         reference: sup.reference[language] || sup.reference.fr,

@@ -91,11 +91,11 @@ function LivePlayerContent() {
     e.preventDefault();
     const cleanPin = pinInput.replace(/\s+/g, "");
     if (!cleanPin || cleanPin.length !== 6) {
-      setJoinError("Le code PIN doit comporter 6 chiffres.");
+      setJoinError(language === "fr" ? "Le code PIN doit comporter 6 chiffres." : "The PIN code must be 6 digits.");
       return;
     }
     if (!nameInput.trim()) {
-      setJoinError("Veuillez saisir votre prénom ou pseudo.");
+      setJoinError(language === "fr" ? "Veuillez saisir votre prénom ou pseudo." : "Please enter your name or nickname.");
       return;
     }
 
@@ -116,7 +116,7 @@ function LivePlayerContent() {
 
       const data = await res.json();
       if (!res.ok || data.error) {
-        setJoinError(data.error || "Impossible de rejoindre la session.");
+        setJoinError(data.error || (language === "fr" ? "Impossible de rejoindre la session." : "Unable to join the session."));
         setIsJoining(false);
         return;
       }
@@ -130,7 +130,7 @@ function LivePlayerContent() {
       setActivePin(cleanPin);
       setPlayerId(data.playerId);
     } catch {
-      setJoinError("Erreur de connexion. Vérifiez votre réseau.");
+      setJoinError(language === "fr" ? "Erreur de connexion. Vérifiez votre réseau." : "Connection error. Check your network.");
     } finally {
       setIsJoining(false);
     }
@@ -159,13 +159,15 @@ function LivePlayerContent() {
           <div className="text-center space-y-2">
             <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-amber-400 px-3 py-1 bg-amber-950/60 border border-amber-500/30 rounded-full">
               <Sparkles className="w-3.5 h-3.5" />
-              <span>Quiz Live • Nouveau Départ</span>
+              <span>{language === "fr" ? "Quiz Live • Nouveau Départ" : "Live Quiz • New Beginnings"}</span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
-              Rejoindre la Partie
+              {language === "fr" ? "Rejoindre la Partie" : "Join the Game"}
             </h1>
             <p className="text-stone-400 text-xs sm:text-sm">
-              Entrez le code PIN affiché par l&apos;enseignant sur Zoom ou à l&apos;écran.
+              {language === "fr"
+                ? "Entrez le code PIN affiché par l'enseignant sur Zoom ou à l'écran."
+                : "Enter the PIN code displayed by the teacher on Zoom or on screen."}
             </p>
           </div>
 
@@ -173,7 +175,7 @@ function LivePlayerContent() {
             {/* PIN Input */}
             <div>
               <label className="block text-xs font-bold uppercase tracking-wider text-stone-400 mb-1.5">
-                Code PIN du Jeu
+                {language === "fr" ? "Code PIN du Jeu" : "Game PIN Code"}
               </label>
               <input
                 type="text"
@@ -189,14 +191,14 @@ function LivePlayerContent() {
             {/* Name Input */}
             <div>
               <label className="block text-xs font-bold uppercase tracking-wider text-stone-400 mb-1.5">
-                Votre Prénom ou Pseudo
+                {language === "fr" ? "Votre Prénom ou Pseudo" : "Your Name or Nickname"}
               </label>
               <input
                 type="text"
                 maxLength={20}
                 value={nameInput}
                 onChange={(e) => setNameInput(e.target.value)}
-                placeholder="Ex: David, Sarah..."
+                placeholder={language === "fr" ? "Ex: David, Sarah..." : "e.g. David, Sarah..."}
                 className="w-full bg-stone-950 border border-stone-700 focus:border-amber-400 rounded-2xl px-4 py-3 text-base font-semibold text-white outline-none"
               />
             </div>
@@ -204,7 +206,7 @@ function LivePlayerContent() {
             {/* Avatar Selector */}
             <div>
               <label className="block text-xs font-bold uppercase tracking-wider text-stone-400 mb-2">
-                Choisissez votre Avatar
+                {language === "fr" ? "Choisissez votre Avatar" : "Choose your Avatar"}
               </label>
               <div className="grid grid-cols-4 gap-2">
                 {AVATARS.map((av) => (
@@ -237,7 +239,15 @@ function LivePlayerContent() {
               disabled={isJoining}
               className="w-full py-4 rounded-2xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-stone-950 font-black text-base shadow-xl flex items-center justify-center gap-2 transition-transform active:scale-95"
             >
-              <span>{isJoining ? "Connexion..." : "C'est parti !"}</span>
+              <span>
+                {isJoining
+                  ? language === "fr"
+                    ? "Connexion..."
+                    : "Connecting..."
+                  : language === "fr"
+                  ? "C'est parti !"
+                  : "Let's Go!"}
+              </span>
               <ArrowRight className="w-5 h-5" />
             </button>
           </form>
@@ -248,8 +258,10 @@ function LivePlayerContent() {
               href="/live/host"
               className="text-xs text-stone-500 hover:text-amber-400 transition-colors inline-flex items-center gap-1.5"
             >
-              <span>Vous animez la session ?</span>
-              <span className="font-bold underline underline-offset-2">Écran Enseignant (Zoom) ➔</span>
+              <span>{language === "fr" ? "Vous animez la session ?" : "Hosting the session?"}</span>
+              <span className="font-bold underline underline-offset-2">
+                {language === "fr" ? "Écran Enseignant (Zoom) ➔" : "Teacher Screen (Zoom) ➔"}
+              </span>
             </Link>
           </div>
         </div>
@@ -272,12 +284,14 @@ function LivePlayerContent() {
             </h2>
             <div className="inline-flex items-center gap-2 text-xs text-emerald-400 font-bold">
               <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping" />
-              <span>Connecté à la partie</span>
+              <span>{language === "fr" ? "Connecté à la partie" : "Connected to the game"}</span>
             </div>
           </div>
 
           <div className="p-4 bg-stone-950 rounded-2xl border border-stone-800 text-xs text-stone-400 leading-relaxed">
-            Regardez l&apos;écran de l&apos;enseignant sur Zoom ou dans la salle. Le quiz va bientôt commencer !
+            {language === "fr"
+              ? "Regardez l'écran de l'enseignant sur Zoom ou dans la salle. Le quiz va bientôt commencer !"
+              : "Watch the teacher's screen on Zoom or in the room. The quiz will start soon!"}
           </div>
         </div>
       </div>
@@ -297,10 +311,12 @@ function LivePlayerContent() {
               <Check className="w-10 h-10 stroke-[3]" />
             </div>
             <h2 className="text-xl font-black text-white">
-              Réponse enregistrée !
+              {language === "fr" ? "Réponse enregistrée !" : "Answer recorded!"}
             </h2>
             <p className="text-xs text-stone-400">
-              En attente des autres participants... Les résultats arrivent sur l&apos;écran principal.
+              {language === "fr"
+                ? "En attente des autres participants... Les résultats arrivent sur l'écran principal."
+                : "Waiting for other players... Results will appear on the main screen."}
             </p>
           </div>
         </div>
@@ -372,7 +388,13 @@ function LivePlayerContent() {
 
           <div className="space-y-1">
             <h2 className="text-2xl font-black">
-              {isCorrect ? "Bonne Réponse !" : "Pas Tout à Fait..."}
+              {isCorrect
+                ? language === "fr"
+                  ? "Bonne Réponse !"
+                  : "Correct Answer!"
+                : language === "fr"
+                ? "Pas Tout à Fait..."
+                : "Not Quite..."}
             </h2>
             {isCorrect ? (
               <div className="text-3xl font-black text-emerald-400 font-mono">
@@ -380,7 +402,7 @@ function LivePlayerContent() {
               </div>
             ) : (
               <div className="text-sm font-semibold text-rose-300">
-                +0 pt pour cette question
+                {language === "fr" ? "+0 pt pour cette question" : "+0 pts for this question"}
               </div>
             )}
           </div>
@@ -388,12 +410,17 @@ function LivePlayerContent() {
           {isCorrect && myPlayer && myPlayer.streak > 1 && (
             <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-orange-950/80 border border-orange-500/50 rounded-full text-xs font-bold text-orange-400">
               <Flame className="w-3.5 h-3.5 fill-current" />
-              <span>Série de {myPlayer.streak} d&apos;affilée !</span>
+              <span>
+                {language === "fr"
+                  ? `Série de ${myPlayer.streak} d'affilée !`
+                  : `${myPlayer.streak} streak in a row!`}
+              </span>
             </div>
           )}
 
           <div className="pt-2 text-xs text-stone-300 border-t border-white/10">
-            Score total : <span className="font-bold">{myPlayer?.score} pts</span>
+            {language === "fr" ? "Score total :" : "Total score:"}{" "}
+            <span className="font-bold">{myPlayer?.score} pts</span>
           </div>
         </div>
       </div>
@@ -413,18 +440,20 @@ function LivePlayerContent() {
 
           <div className="space-y-1">
             <span className="text-xs uppercase tracking-widest text-stone-400 font-bold">
-              Votre Position
+              {language === "fr" ? "Votre Position" : "Your Rank"}
             </span>
             <div className="text-4xl font-black text-amber-400 font-mono">
               #{myRank}
             </div>
             <div className="text-sm font-bold text-stone-200">
-              {myPlayer?.score} points
+              {myPlayer?.score} {language === "fr" ? "points" : "points"}
             </div>
           </div>
 
           <p className="text-xs text-stone-400">
-            Regardez l&apos;écran de l&apos;enseignant pour voir le Top 5 en direct !
+            {language === "fr"
+              ? "Regardez l'écran de l'enseignant pour voir le Top 5 en direct !"
+              : "Watch the teacher's screen to see the live Top 5!"}
           </p>
         </div>
       </div>
@@ -441,12 +470,14 @@ function LivePlayerContent() {
           <div className="text-5xl">👑</div>
 
           <div className="space-y-1">
-            <h2 className="text-2xl font-black text-white">Partie Terminée !</h2>
+            <h2 className="text-2xl font-black text-white">
+              {language === "fr" ? "Partie Terminée !" : "Game Over!"}
+            </h2>
             <div className="text-4xl font-black text-amber-400 font-mono">
               #{myRank}
             </div>
             <p className="text-sm font-bold text-stone-300">
-              Score final : {myPlayer?.score} pts
+              {language === "fr" ? `Score final : ${myPlayer?.score} pts` : `Final score: ${myPlayer?.score} pts`}
             </p>
           </div>
 
@@ -455,7 +486,7 @@ function LivePlayerContent() {
               href="/"
               className="block w-full py-3 rounded-xl bg-amber-400 hover:bg-amber-300 text-stone-950 font-bold text-sm transition-colors"
             >
-              Retour à l&apos;accueil
+              {language === "fr" ? "Retour à l'accueil" : "Back to Home"}
             </Link>
           </div>
         </div>
@@ -467,11 +498,12 @@ function LivePlayerContent() {
 }
 
 export default function LivePlayerPage() {
+  const { language } = useLanguage();
   return (
     <Suspense
       fallback={
         <div className="min-h-screen bg-stone-950 flex items-center justify-center text-amber-400 font-mono text-sm">
-          Chargement du mode Live...
+          {language === "fr" ? "Chargement du mode Live..." : "Loading Live Mode..."}
         </div>
       }
     >

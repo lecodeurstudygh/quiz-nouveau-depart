@@ -191,139 +191,45 @@ export default function CourseOverviewPage() {
         </div>
       </div>
 
-      {/* 3 Core Lessons of the Selected Week */}
-      <div className="space-y-4">
-        <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
-          <Compass className="w-5 h-5 text-amber-500 dark:text-amber-400" />
-          <span>
-            {currentWeek.id === "week-01"
-              ? language === "fr"
-                ? "Les 3 Piliers de la Semaine 1"
-                : "The 3 Pillars of Week 1"
-              : language === "fr"
-                ? "Les 3 Piliers de la Semaine 10"
-                : "The 3 Pillars of Week 10"}
-          </span>
-        </h2>
+      {/* Core Lessons / Pillars of the Selected Week */}
+      {currentWeek.pillars && currentWeek.pillars.length > 0 && (
+        <div className="space-y-4">
+          <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
+            <Compass className="w-5 h-5 text-amber-500 dark:text-amber-400" />
+            <span>
+              {language === "fr"
+                ? `Les 3 Piliers de la Semaine ${currentWeek.weekNumber}`
+                : `The 3 Pillars of Week ${currentWeek.weekNumber}`}
+            </span>
+          </h2>
 
-        {currentWeek.id === "week-01" ? (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            {/* Pillar 1 Week 1 */}
-            <div className="rounded-3xl glass-card p-6 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 transition-all space-y-3">
-              <div className="w-10 h-10 rounded-xl bg-rose-500/15 text-rose-500 dark:text-rose-400 flex items-center justify-center font-bold">
-                1
+            {currentWeek.pillars.map((pillar) => (
+              <div
+                key={pillar.badgeNumber}
+                className="rounded-3xl glass-card p-6 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 transition-all space-y-3"
+              >
+                <div
+                  className={`w-10 h-10 rounded-xl ${
+                    pillar.color || "bg-amber-500/15 text-amber-600 dark:text-amber-400"
+                  } flex items-center justify-center font-bold`}
+                >
+                  {pillar.badgeNumber}
+                </div>
+                <h3 className="text-lg font-bold text-slate-900 dark:text-white">
+                  {pillar.title[language]}
+                </h3>
+                <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                  {pillar.description[language]}
+                </p>
+                <div className="pt-2 text-xs font-mono text-amber-600 dark:text-amber-300 font-semibold">
+                  {pillar.verses}
+                </div>
               </div>
-              <h3 className="text-lg font-bold text-slate-900 dark:text-white">
-                {language === "fr" ? "La Chute & le Péché" : "The Fall & Sin"}
-              </h3>
-              <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                {language === "fr"
-                  ? "L'homme a choisi l'indépendance. Le mot hébreu « hhatah » signifie 'manquer la cible'. Le péché sépare l'homme de son Créateur et produit la mort spirituelle."
-                  : "Man chose independence. The Hebrew word 'hhatah' literally means 'missing the mark'. Sin separates humanity from God and causes spiritual death."}
-              </p>
-              <div className="pt-2 text-xs font-mono text-amber-600 dark:text-amber-300 font-semibold">
-                Romains 6:23 • Psaumes 51:5
-              </div>
-            </div>
-
-            {/* Pillar 2 Week 1 */}
-            <div className="rounded-3xl glass-card p-6 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 transition-all space-y-3">
-              <div className="w-10 h-10 rounded-xl bg-amber-500/15 text-amber-600 dark:text-amber-400 flex items-center justify-center font-bold">
-                2
-              </div>
-              <h3 className="text-lg font-bold text-slate-900 dark:text-white">
-                {language === "fr"
-                  ? "La Provision à la Croix"
-                  : "The Provision on the Cross"}
-              </h3>
-              <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                {language === "fr"
-                  ? "Incapable de combler le fossé par la religion ou de bonnes œuvres, Jésus est venu comme sacrifice parfait. Il a pris nos fautes pour nous donner Sa justice."
-                  : "Unable to bridge the gulf by philosophy or good works, Jesus became our flawless substitute, taking our sin to clothe us in His righteousness."}
-              </p>
-              <div className="pt-2 text-xs font-mono text-amber-600 dark:text-amber-300 font-semibold">
-                Jean 3:16 • 2 Cor 5:21
-              </div>
-            </div>
-
-            {/* Pillar 3 Week 1 */}
-            <div className="rounded-3xl glass-card p-6 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 transition-all space-y-3">
-              <div className="w-10 h-10 rounded-xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-bold">
-                3
-              </div>
-              <h3 className="text-lg font-bold text-slate-900 dark:text-white">
-                {language === "fr"
-                  ? "La Repentance & la Foi"
-                  : "Repentance & Faith"}
-              </h3>
-              <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                {language === "fr"
-                  ? "Se repentir (« metanoia », changer de mentalité ; « shub », faire demi-tour) et croire de tout son cœur que Jésus est ressuscité pour naître de nouveau."
-                  : "Repenting ('metanoia', mindset shift; 'shub', turning back) and declaring Jesus Lord to receive forgiveness and spiritual new birth."}
-              </p>
-              <div className="pt-2 text-xs font-mono text-amber-600 dark:text-amber-300 font-semibold">
-                Romains 10:9 • Éphésiens 2:8-9
-              </div>
-            </div>
+            ))}
           </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            {/* Pillar 1 Week 10 */}
-            <div className="rounded-3xl glass-card p-6 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 transition-all space-y-3">
-              <div className="w-10 h-10 rounded-xl bg-sky-500/15 text-sky-600 dark:text-sky-400 flex items-center justify-center font-bold">
-                1
-              </div>
-              <h3 className="text-lg font-bold text-slate-900 dark:text-white">
-                {language === "fr" ? "La Mission de l'Église" : "The Mission of the Church"}
-              </h3>
-              <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                {language === "fr"
-                  ? "L'Église n'est pas un lieu passif mais un aimant vivant qui attire les gens vers Dieu. Jésus a promis qu'Il bâtira Son Église et que rien ne l'emportera contre elle."
-                  : "The Church is not a passive gathering but a living magnet drawing people to God. Jesus promised He builds His Church and Hades will not prevail."}
-              </p>
-              <div className="pt-2 text-xs font-mono text-amber-600 dark:text-amber-300 font-semibold">
-                Matthieu 16:18 • Jean 17:16
-              </div>
-            </div>
-
-            {/* Pillar 2 Week 10 */}
-            <div className="rounded-3xl glass-card p-6 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 transition-all space-y-3">
-              <div className="w-10 h-10 rounded-xl bg-amber-500/15 text-amber-600 dark:text-amber-400 flex items-center justify-center font-bold">
-                2
-              </div>
-              <h3 className="text-lg font-bold text-slate-900 dark:text-white">
-                {language === "fr" ? "Appelés Hors du Monde" : "Called Out of the World"}
-              </h3>
-              <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                {language === "fr"
-                  ? "« Ekklesia » signifie appelé hors de. Nous recevons un appel divin, un appel à la communion avec Dieu, des ténèbres à Sa lumière et dans Son nouveau Royaume."
-                  : "“Ekklesia” means called out of. We receive a divine call, into fellowship with God, out of darkness into light and into His new Kingdom."}
-              </p>
-              <div className="pt-2 text-xs font-mono text-amber-600 dark:text-amber-300 font-semibold">
-                1 Pierre 2:9 • 1 Thess 2:12
-              </div>
-            </div>
-
-            {/* Pillar 3 Week 10 */}
-            <div className="rounded-3xl glass-card p-6 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 transition-all space-y-3">
-              <div className="w-10 h-10 rounded-xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-bold">
-                3
-              </div>
-              <h3 className="text-lg font-bold text-slate-900 dark:text-white">
-                {language === "fr" ? "Une Communauté Vivante" : "A Living Community"}
-              </h3>
-              <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                {language === "fr"
-                  ? "Attractive, relationnelle (l'unité célèbre la diversité) et en mission (restaurer le monde). Nous vivons cette réalité dans les Connect Groups et en servant."
-                  : "Attractive, relational (unity celebrates diversity), and on mission. We live this out through Connect Groups, serving teams and loving our city."}
-              </p>
-              <div className="pt-2 text-xs font-mono text-amber-600 dark:text-amber-300 font-semibold">
-                Actes 2:46-47 • Romains 12:2
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
+        </div>
+      )}
 
       {/* Featured 3D Verses Carousel / Cards Preview */}
       <div className="space-y-4">

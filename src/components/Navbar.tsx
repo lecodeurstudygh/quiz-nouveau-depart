@@ -30,19 +30,19 @@ export const Navbar: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 gap-2 sm:gap-4">
             {/* Logo / Brand */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 sm:gap-3 shrink-0">
               <Link
                 href="/"
-                className="flex items-center gap-2.5 group transition-transform duration-200 active:scale-95"
+                className="flex items-center gap-2.5 group transition-transform duration-200 active:scale-95 shrink-0"
               >
-                <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-500 to-amber-300 flex items-center justify-center shadow-lg shadow-amber-500/20 text-slate-950 font-black">
+                <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-500 to-amber-300 flex items-center justify-center shadow-lg shadow-amber-500/20 text-slate-950 font-black shrink-0">
                   <Sparkles className="w-4 h-4 text-slate-950 fill-slate-950" />
                 </div>
-                <div className="flex flex-col">
-                  <span className="text-base sm:text-lg font-black tracking-tight text-slate-900 dark:text-white group-hover:text-amber-500 dark:group-hover:text-amber-300 transition-colors">
+                <div className="flex flex-col shrink-0">
+                  <span className="text-sm sm:text-base md:text-lg font-black tracking-tight text-slate-900 dark:text-white whitespace-nowrap group-hover:text-amber-500 dark:group-hover:text-amber-300 transition-colors">
                     {t("appName")}
                   </span>
-                  <span className="text-[10px] sm:text-[11px] font-bold text-amber-600 dark:text-amber-400 tracking-wider uppercase">
+                  <span className="text-[9px] sm:text-[10px] md:text-[11px] font-bold text-amber-600 dark:text-amber-400 tracking-wider uppercase whitespace-nowrap">
                     {t("appTagline")}
                   </span>
                 </div>
@@ -52,19 +52,19 @@ export const Navbar: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setIsCourseMenuOpen(true)}
-                className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-500/30 transition-all active:scale-95 shadow-sm"
+                className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-500/30 transition-all active:scale-95 shadow-sm shrink-0"
                 title={t("openCourseMenu")}
               >
-                <Compass className="w-3.5 h-3.5 text-amber-500" />
-                <span className="truncate max-w-[170px]">
+                <Compass className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+                <span className="truncate max-w-[130px] xl:max-w-[190px]">
                   {language === "fr" ? "Semaine" : "Week"} {currentCourse.weekNumber} : {currentCourse.title[language]}
                 </span>
-                <ChevronDown className="w-3 h-3 text-amber-500/70" />
+                <ChevronDown className="w-3 h-3 text-amber-500/70 shrink-0" />
               </button>
             </div>
 
             {/* Desktop Navigation Links */}
-            <nav className="hidden md:flex items-center gap-1 bg-slate-100 dark:bg-slate-900/60 p-1.5 rounded-full border border-slate-200 dark:border-slate-800/80">
+            <nav className="hidden md:flex items-center gap-1 bg-slate-100 dark:bg-slate-900/60 p-1.5 rounded-full border border-slate-200 dark:border-slate-800/80 shrink-0">
               {navLinks.map((link) => {
                 const Icon = link.icon;
                 const isActive = pathname === link.href || (link.href === "/live" && pathname.startsWith("/live"));
@@ -72,7 +72,7 @@ export const Navbar: React.FC = () => {
                   <Link
                     key={link.href}
                     href={link.href}
-                    className={`flex items-center gap-2 px-3.5 py-1.5 rounded-full text-sm font-medium transition-all duration-200 ${
+                    className={`flex items-center gap-2 px-3.5 py-1.5 rounded-full text-sm font-medium transition-all duration-200 whitespace-nowrap ${
                       isActive
                         ? "bg-amber-500 text-slate-950 shadow-md shadow-amber-500/25 font-semibold"
                         : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/60 dark:hover:bg-slate-800/60"
@@ -89,12 +89,12 @@ export const Navbar: React.FC = () => {
             </nav>
 
             {/* Right Action Bar: Course Menu, Language Selector, Theme Switch & Settings */}
-            <div className="flex items-center gap-2 sm:gap-2.5">
+            <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
               {/* Mobile Course Switcher Button */}
               <button
                 type="button"
                 onClick={() => setIsCourseMenuOpen(true)}
-                className="lg:hidden flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-bold bg-amber-500/10 text-amber-600 dark:text-amber-300 border border-amber-500/30"
+                className="lg:hidden flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-bold bg-amber-500/10 text-amber-600 dark:text-amber-300 border border-amber-500/30 shrink-0"
                 title={t("openCourseMenu")}
               >
                 <Compass className="w-3.5 h-3.5 text-amber-500" />
@@ -102,35 +102,19 @@ export const Navbar: React.FC = () => {
                 <ChevronDown className="w-3 h-3 text-amber-500/70" />
               </button>
 
-              {/* Language Selector Pill */}
-              <div className="flex items-center bg-slate-100 dark:bg-slate-900/80 p-1 rounded-full border border-slate-200 dark:border-slate-800 shadow-inner">
-                <button
-                  type="button"
-                  onClick={() => setLanguage("fr")}
-                  className={`px-2.5 py-1 text-xs font-bold rounded-full transition-all duration-200 flex items-center gap-1 ${
-                    language === "fr"
-                      ? "bg-amber-500 text-slate-950 shadow-sm"
-                      : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200"
-                  }`}
-                  title="Passer en Français"
-                >
-                  <span className="text-xs">🇫🇷</span>
-                  <span>FR</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setLanguage("en")}
-                  className={`px-2.5 py-1 text-xs font-bold rounded-full transition-all duration-200 flex items-center gap-1 ${
-                    language === "en"
-                      ? "bg-amber-500 text-slate-950 shadow-sm"
-                      : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200"
-                  }`}
-                  title="Switch to English"
-                >
-                  <span className="text-xs">🇬🇧</span>
-                  <span>EN</span>
-                </button>
-              </div>
+              {/* Single Compact Language Toggle Button (FR / EN) */}
+              <button
+                type="button"
+                onClick={() => setLanguage(language === "fr" ? "en" : "fr")}
+                className="h-9 sm:h-10 px-2.5 rounded-full flex items-center gap-1.5 text-xs font-bold bg-slate-100 dark:bg-slate-900/80 hover:bg-slate-200/80 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 transition-all duration-200 active:scale-95 shadow-sm shrink-0"
+                title={language === "fr" ? "Passer en anglais (Switch to English)" : "Passer en français (Switch to French)"}
+                aria-label="Toggle language FR/EN"
+              >
+                <span className="text-sm">{language === "fr" ? "🇫🇷" : "🇬🇧"}</span>
+                <span className="font-black text-amber-600 dark:text-amber-400">
+                  {language === "fr" ? "FR" : "EN"}
+                </span>
+              </button>
 
               {/* Discrete & Elegant Light / Dark Mode Toggle Icon */}
               <button

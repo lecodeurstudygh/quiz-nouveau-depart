@@ -27,6 +27,38 @@ export const week10: CourseWeek = {
     fr: "Sers-tu dans ou en dehors de l'église ? Vois avec ton leader comment tu pourrais t'impliquer (rejoindre un Connect Group, servir dans une équipe) afin de grandir et faire une différence au sein de ta communauté locale.",
     en: "Do you serve in or outside the church? Talk to your leader about how you could get involved (joining a Connect Group, serving on a team) in order to grow and make a difference in your local community.",
   },
+  pillars: [
+    {
+      badgeNumber: 1,
+      title: { fr: "La Mission de l'Église", en: "The Mission of the Church" },
+      description: {
+        fr: "L'Église n'est pas un lieu passif mais un aimant vivant qui attire les gens vers Dieu. Jésus a promis qu'Il bâtira Son Église et que rien ne l'emportera contre elle.",
+        en: "The Church is not a passive gathering but a living magnet drawing people to God. Jesus promised He builds His Church and Hades will not prevail.",
+      },
+      verses: "Matthieu 16:18 • Jean 17:16",
+      color: "bg-sky-500/15 text-sky-600 dark:text-sky-400",
+    },
+    {
+      badgeNumber: 2,
+      title: { fr: "Appelés Hors du Monde", en: "Called Out of the World" },
+      description: {
+        fr: "« Ekklesia » signifie appelé hors de. Nous recevons un appel divin, un appel à la communion avec Dieu, des ténèbres à Sa lumière et dans Son nouveau Royaume.",
+        en: "“Ekklesia” means called out of. We receive a divine call, into fellowship with God, out of darkness into light and into His new Kingdom.",
+      },
+      verses: "1 Pierre 2:9 • 1 Thess 2:12",
+      color: "bg-amber-500/15 text-amber-600 dark:text-amber-400",
+    },
+    {
+      badgeNumber: 3,
+      title: { fr: "Une Communauté Vivante", en: "A Living Community" },
+      description: {
+        fr: "Attractive, relationnelle (l'unité célèbre la diversité) et en mission (restaurer le monde). Nous vivons cette réalité dans les Connect Groups et en servant.",
+        en: "Attractive, relational (unity celebrates diversity), and on mission. We live this out through Connect Groups, serving teams and loving our city.",
+      },
+      verses: "Actes 2:46-47 • Romains 12:2",
+      color: "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400",
+    },
+  ],
   verses: [
     {
       id: "mat-16-17-18",

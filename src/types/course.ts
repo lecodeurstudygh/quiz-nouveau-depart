@@ -80,6 +80,14 @@ export interface DiscussionCard {
   practicalTakeaway?: LocalizedString;
 }
 
+export interface CoursePillar {
+  badgeNumber: number;
+  title: LocalizedString;
+  description: LocalizedString;
+  verses: string;
+  color?: string; // Tailwind color class or identifier e.g. "bg-amber-500/15 text-amber-600 dark:text-amber-400"
+}
+
 export interface CourseWeek {
   id: string;                 // e.g. "week-01"
   weekNumber: number;         // 1 to 10
@@ -89,6 +97,7 @@ export interface CourseWeek {
   bigIdea: LocalizedString;
   targetPrayer: LocalizedString;
   nextStep: LocalizedString;
+  pillars?: CoursePillar[];
   verses: BibleVerse[];
   questions: Question[];
   discussionCards?: DiscussionCard[];

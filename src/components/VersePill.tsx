@@ -275,8 +275,8 @@ export const InlineVerseLink: React.FC<InlineVerseLinkProps> = ({ reference }) =
 };
 
 // 3. Interactive Answer Text Renderer: Detects citations and transforms them into interactive links
-const BIBLE_REF_PATTERN =
-  /((?:[123]\s+)?[A-Za-zÀ-ÿ]+(?:\s+[A-Za-zÀ-ÿ]+)?\s+\d+:\d+(?:-\d+)?)/g;
+const BIBLE_REF_SPLIT_REGEX =
+  /((?:[123]\s+)?[A-Za-zÀ-ÿ]+(?:\s+[A-Za-zÀ-ÿ]+)?\s+\d+(?::\d+(?:-\d+)?)?)/g;
 
 interface InteractiveAnswerTextProps {
   text: string;
@@ -288,18 +288,17 @@ export const InteractiveAnswerText: React.FC<InteractiveAnswerTextProps> = ({ te
   if (!text) return null;
 
   // Split text by bible reference pattern while capturing matches
-  const parts = text.split(BIBLE_REF_PATTERN);
+  const parts = text.split(BIBLE_REF_SPLIT_REGEX);
 
   return (
     <div className="text-sm sm:text-base text-slate-100 leading-relaxed whitespace-pre-line font-sans">
       {parts.map((part, index) => {
-        // Test if this part matches a bible reference and exists in our verse directory
-        if (BIBLE_REF_PATTERN.test(part)) {
-          // Reset regex state
-          BIBLE_REF_PATTERN.lastIndex = 0;
-          const matchDetail = findVerseByReference(part, language);
+        const trimmed = part ? part.trim() : "";
+        // Check if trimmed part corresponds to a known verse in our dictionary
+        if (trimmed && trimmed.length >= 4) {
+          const matchDetail = findVerseByReference(trimmed, language);
           if (matchDetail) {
-            return <InlineVerseLink key={index} reference={part} />;
+            return <InlineVerseLink key={index} reference={trimmed} />;
           }
         }
         return <React.Fragment key={index}>{part}</React.Fragment>;

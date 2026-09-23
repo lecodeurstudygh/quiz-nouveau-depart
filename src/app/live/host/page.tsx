@@ -157,7 +157,7 @@ export default function LiveHostPage() {
         <div className="bg-stone-900 border border-stone-700 rounded-3xl p-6 sm:p-8 max-w-sm w-full text-center space-y-4 shadow-2xl animate-in zoom-in-95 duration-200">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold uppercase tracking-wider text-amber-400">
-              Rejoindre en direct
+              {language === "fr" ? "Rejoindre en direct" : "Join Live"}
             </span>
             <button
               type="button"
@@ -170,7 +170,7 @@ export default function LiveHostPage() {
 
           <div className="p-4 bg-stone-950 rounded-2xl border border-stone-800">
             <div className="text-xs text-stone-400 mb-1 font-semibold uppercase tracking-wider">
-              Code PIN du Jeu
+              {language === "fr" ? "Code PIN du Jeu" : "Game PIN Code"}
             </div>
             <div className="text-4xl font-mono font-black text-amber-400 tracking-widest">
               {state.pin.slice(0, 3)} {state.pin.slice(3)}
@@ -182,7 +182,9 @@ export default function LiveHostPage() {
           </div>
 
           <p className="text-xs text-stone-400 leading-relaxed">
-            Scannez directement avec l&apos;appareil photo ou allez sur :<br />
+            {language === "fr"
+              ? "Scannez directement avec l'appareil photo ou allez sur :"
+              : "Scan directly with your camera or go to:"}<br />
             <span className="font-mono text-stone-200 font-bold break-all">{playerUrl}</span>
           </p>
 
@@ -191,7 +193,7 @@ export default function LiveHostPage() {
             onClick={() => setShowQrModal(false)}
             className="w-full py-3 bg-amber-400 hover:bg-amber-300 text-stone-950 font-bold rounded-xl text-sm transition-colors shadow-lg"
           >
-            Fermer et continuer
+            {language === "fr" ? "Fermer et continuer" : "Close and continue"}
           </button>
         </div>
       </div>
@@ -206,22 +208,26 @@ export default function LiveHostPage() {
           <div className="flex items-center gap-3 mb-6">
             <span className="w-3 h-3 rounded-full bg-red-500 animate-ping" />
             <span className="text-xs uppercase tracking-widest font-bold text-red-600 dark:text-red-400">
-              Session Enseignant • Live Zoom & Présentiel
+              {language === "fr"
+                ? "Session Enseignant • Live Zoom & Présentiel"
+                : "Teacher Session • Live Zoom & In-Person"}
             </span>
           </div>
 
           <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight mb-2">
-            Créer une Session Live
+            {language === "fr" ? "Créer une Session Live" : "Create a Live Session"}
           </h1>
           <p className="text-stone-500 dark:text-stone-400 text-sm mb-8">
-            Générez un code PIN pour animer un quiz interactif synchronisé avec vos participants sur Zoom ou vidéoprojecteur.
+            {language === "fr"
+              ? "Générez un code PIN pour animer un quiz interactif synchronisé avec vos participants sur Zoom ou vidéoprojecteur."
+              : "Generate a PIN code to run a synchronized interactive quiz with your participants on Zoom or projector."}
           </p>
 
           <div className="space-y-6">
             {/* Week selector */}
             <div>
               <label className="block text-xs font-semibold uppercase tracking-wider text-stone-600 dark:text-stone-300 mb-2">
-                Chapitre / Thématique
+                {language === "fr" ? "Chapitre / Thématique" : "Chapter / Topic"}
               </label>
               <select
                 value={weekId}
@@ -230,7 +236,7 @@ export default function LiveHostPage() {
               >
                 {allCourses.map((c) => (
                   <option key={c.id} value={c.id}>
-                    Semaine {c.weekNumber} : {c.title[language] || c.title.fr}
+                    {language === "fr" ? "Semaine" : "Week"} {c.weekNumber} : {c.title[language] || c.title.fr}
                   </option>
                 ))}
                 <option value="all">
@@ -242,7 +248,7 @@ export default function LiveHostPage() {
             {/* Timer selector */}
             <div>
               <label className="block text-xs font-semibold uppercase tracking-wider text-stone-600 dark:text-stone-300 mb-2">
-                Temps de réponse par question
+                {language === "fr" ? "Temps de réponse par question" : "Time limit per question"}
               </label>
               <div className="grid grid-cols-3 gap-3">
                 {[15, 20, 30].map((sec) => (
@@ -256,7 +262,7 @@ export default function LiveHostPage() {
                         : "bg-stone-100 dark:bg-stone-800 border-stone-200 dark:border-stone-700 hover:border-amber-400 text-stone-700 dark:text-stone-300"
                     }`}
                   >
-                    {sec} secondes
+                    {sec} {language === "fr" ? "secondes" : "seconds"}
                   </button>
                 ))}
               </div>
@@ -265,7 +271,7 @@ export default function LiveHostPage() {
             {/* Question count */}
             <div>
               <label className="block text-xs font-semibold uppercase tracking-wider text-stone-600 dark:text-stone-300 mb-2">
-                Nombre de questions
+                {language === "fr" ? "Nombre de questions" : "Number of questions"}
               </label>
               <div className="grid grid-cols-3 gap-3">
                 {[5, 8, 10].map((count) => (
@@ -291,7 +297,7 @@ export default function LiveHostPage() {
               className="w-full mt-4 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-stone-950 font-bold py-4 rounded-2xl shadow-xl hover:shadow-2xl transition-all flex items-center justify-center gap-2 text-base"
             >
               <Sparkles className="w-5 h-5" />
-              Lancer la Salle d&apos;Attente
+              {language === "fr" ? "Lancer la Salle d'Attente" : "Open Waiting Room"}
             </button>
           </div>
         </div>
@@ -310,7 +316,9 @@ export default function LiveHostPage() {
           <div className="flex items-center gap-3">
             <div className="w-3 h-3 rounded-full bg-red-500 animate-pulse" />
             <h2 className="text-sm font-bold uppercase tracking-widest text-stone-400">
-              Nouveau Départ • Salle d&apos;Attente Live
+              {language === "fr"
+                ? "Nouveau Départ • Salle d'Attente Live"
+                : "New Beginnings • Live Waiting Room"}
             </h2>
           </div>
 
@@ -320,7 +328,9 @@ export default function LiveHostPage() {
               className="flex items-center gap-2 text-xs font-semibold px-4 py-2 rounded-full bg-stone-900 border border-stone-800 hover:border-amber-500 text-stone-300 transition-colors"
             >
               {copiedLink ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
-              {copiedLink ? "Lien copié !" : "Copier le lien direct"}
+              {copiedLink
+                ? language === "fr" ? "Lien copié !" : "Link copied!"
+                : language === "fr" ? "Copier le lien direct" : "Copy direct link"}
             </button>
           </div>
         </div>
@@ -330,12 +340,14 @@ export default function LiveHostPage() {
           {/* Instructions & PIN */}
           <div className="space-y-6 text-center lg:text-left">
             <p className="text-stone-400 text-sm font-medium">
-              Sur votre smartphone, rejoignez la partie en saisissant le code PIN :
+              {language === "fr"
+                ? "Sur votre smartphone, rejoignez la partie en saisissant le code PIN :"
+                : "On your smartphone, join the game by entering the PIN code:"}
             </p>
 
             <div className="inline-block p-6 sm:p-8 bg-stone-900/90 border border-amber-500/30 rounded-3xl shadow-2xl shadow-amber-500/10 backdrop-blur-md">
               <span className="text-xs uppercase tracking-widest text-amber-400 font-bold block mb-1">
-                Code PIN du Jeu
+                {language === "fr" ? "Code PIN du Jeu" : "Game PIN Code"}
               </span>
               <div className="text-5xl sm:text-7xl font-black tracking-widest text-amber-400 font-mono">
                 {state.pin.slice(0, 3)} {state.pin.slice(3)}
@@ -343,7 +355,7 @@ export default function LiveHostPage() {
             </div>
 
             <div className="text-xs text-stone-500">
-              Ou accédez à l&apos;adresse web :{" "}
+              {language === "fr" ? "Ou accédez à l'adresse web :" : "Or visit the web address:"}{" "}
               <span className="text-stone-300 font-mono font-bold">
                 {playerUrl.replace(/https?:\/\//, "")}
               </span>
@@ -354,7 +366,9 @@ export default function LiveHostPage() {
           <div className="flex flex-col items-center justify-center space-y-3">
             <QRCodeDisplay url={playerUrl} size={220} />
             <p className="text-xs text-stone-400 font-medium">
-              Scannez directement avec l&apos;appareil photo de votre téléphone
+              {language === "fr"
+                ? "Scannez directement avec l'appareil photo de votre téléphone"
+                : "Scan directly with your phone's camera"}
             </p>
           </div>
         </div>
@@ -365,7 +379,9 @@ export default function LiveHostPage() {
             <div className="flex items-center gap-3">
               <Users className="w-5 h-5 text-amber-400" />
               <span className="text-lg font-bold">
-                {playersList.length} participant{playersList.length > 1 ? "s" : ""} connecté{playersList.length > 1 ? "s" : ""}
+                {language === "fr"
+                  ? `${playersList.length} participant${playersList.length > 1 ? "s" : ""} connecté${playersList.length > 1 ? "s" : ""}`
+                  : `${playersList.length} participant${playersList.length > 1 ? "s" : ""} connected`}
               </span>
             </div>
 
@@ -379,7 +395,9 @@ export default function LiveHostPage() {
               }`}
             >
               <Play className="w-5 h-5 fill-current" />
-              Démarrer le Quiz ({playersList.length})
+              {language === "fr"
+                ? `Démarrer le Quiz (${playersList.length})`
+                : `Start Quiz (${playersList.length})`}
             </button>
           </div>
 
@@ -387,7 +405,9 @@ export default function LiveHostPage() {
           <div className="flex flex-wrap gap-2 max-h-36 overflow-y-auto pr-2">
             {playersList.length === 0 ? (
               <div className="text-stone-500 text-sm italic py-2">
-                En attente des premiers participants...
+                {language === "fr"
+                  ? "En attente des premiers participants..."
+                  : "Waiting for participants to join..."}
               </div>
             ) : (
               playersList.map((p) => (
@@ -426,7 +446,7 @@ export default function LiveHostPage() {
               type="button"
               onClick={() => setShowQrModal(true)}
               className="flex items-center gap-1.5 px-3 py-1 bg-stone-900 hover:bg-stone-800 border border-amber-500/40 rounded-full text-xs font-mono font-bold text-amber-400 transition-all hover:scale-105 shadow-sm"
-              title="Cliquer pour afficher le QR Code pour les retardataires"
+              title={language === "fr" ? "Cliquer pour afficher le QR Code pour les retardataires" : "Click to view QR code for late arrivals"}
             >
               <span className="text-[10px] uppercase text-stone-400">PIN :</span>
               <span className="tracking-widest">{state.pin}</span>
@@ -449,7 +469,9 @@ export default function LiveHostPage() {
           <div className="flex items-center gap-2 text-sm text-stone-400 font-semibold">
             <Users className="w-4 h-4" />
             <span>
-              {answeredCount} / {totalPlayers} ont répondu
+              {language === "fr"
+                ? `${answeredCount} / ${totalPlayers} ont répondu`
+                : `${answeredCount} / ${totalPlayers} answered`}
             </span>
           </div>
         </div>
@@ -496,7 +518,7 @@ export default function LiveHostPage() {
             onClick={() => sendHostAction({ type: "reveal_answer" })}
             className="flex items-center gap-2 px-6 py-3 rounded-xl bg-stone-800 hover:bg-stone-700 text-stone-200 font-bold text-sm transition-colors"
           >
-            Révéler la réponse
+            {language === "fr" ? "Révéler la réponse" : "Reveal Answer"}
             <ArrowRight className="w-4 h-4" />
           </button>
         </div>
@@ -519,7 +541,9 @@ export default function LiveHostPage() {
         <div className="flex items-center justify-between border-b border-stone-800 pb-4">
           <div className="flex items-center gap-3">
             <div className="text-sm font-bold uppercase tracking-widest text-amber-400">
-              Résultats • Question {state.currentQuestionIndex + 1} / {state.totalQuestions}
+              {language === "fr"
+                ? `Résultats • Question ${state.currentQuestionIndex + 1} / ${state.totalQuestions}`
+                : `Results • Question ${state.currentQuestionIndex + 1} / ${state.totalQuestions}`}
             </div>
 
             {/* Persistent Late-Joiner PIN badge */}
@@ -527,7 +551,7 @@ export default function LiveHostPage() {
               type="button"
               onClick={() => setShowQrModal(true)}
               className="flex items-center gap-1.5 px-3 py-1 bg-stone-900 hover:bg-stone-800 border border-amber-500/40 rounded-full text-xs font-mono font-bold text-amber-400 transition-all hover:scale-105 shadow-sm"
-              title="Cliquer pour afficher le QR Code pour les retardataires"
+              title={language === "fr" ? "Cliquer pour afficher le QR Code pour les retardataires" : "Click to view QR code for late arrivals"}
             >
               <span className="text-[10px] uppercase text-stone-400">PIN :</span>
               <span className="tracking-widest">{state.pin}</span>
@@ -538,7 +562,7 @@ export default function LiveHostPage() {
             onClick={() => sendHostAction({ type: "show_leaderboard" })}
             className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-amber-400 hover:bg-amber-300 text-stone-950 font-black text-sm shadow-lg transition-transform hover:scale-105"
           >
-            <span>Voir le Classement</span>
+            <span>{language === "fr" ? "Voir le Classement" : "View Leaderboard"}</span>
             <Trophy className="w-4 h-4" />
           </button>
         </div>
@@ -604,7 +628,7 @@ export default function LiveHostPage() {
             <div className="p-6 bg-stone-900 border border-amber-500/30 rounded-3xl shadow-xl space-y-2 text-left animate-in fade-in slide-in-from-bottom-2 duration-300">
               <div className="flex items-center gap-2 text-amber-400 text-xs font-bold uppercase tracking-wider">
                 <BookOpen className="w-4 h-4" />
-                <span>Éclairage Biblique & Pastoral</span>
+                <span>{language === "fr" ? "Éclairage Biblique & Pastoral" : "Biblical & Pastoral Insight"}</span>
                 {state.biblicalReference && (
                   <span className="text-stone-400">({state.biblicalReference})</span>
                 )}
@@ -634,7 +658,11 @@ export default function LiveHostPage() {
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2 text-amber-400 text-sm font-bold uppercase tracking-widest">
               <Trophy className="w-5 h-5" />
-              <span>Classement Général • Question {state.currentQuestionIndex + 1} / {state.totalQuestions}</span>
+              <span>
+                {language === "fr"
+                  ? `Classement Général • Question ${state.currentQuestionIndex + 1} / ${state.totalQuestions}`
+                  : `Current Standings • Question ${state.currentQuestionIndex + 1} / ${state.totalQuestions}`}
+              </span>
             </div>
 
             {/* Persistent Late-Joiner PIN badge */}
@@ -642,7 +670,7 @@ export default function LiveHostPage() {
               type="button"
               onClick={() => setShowQrModal(true)}
               className="flex items-center gap-1.5 px-3 py-1 bg-stone-900 hover:bg-stone-800 border border-amber-500/40 rounded-full text-xs font-mono font-bold text-amber-400 transition-all hover:scale-105 shadow-sm"
-              title="Cliquer pour afficher le QR Code pour les retardataires"
+              title={language === "fr" ? "Cliquer pour afficher le QR Code pour les retardataires" : "Click to view QR code for late arrivals"}
             >
               <span className="text-[10px] uppercase text-stone-400">PIN :</span>
               <span className="tracking-widest">{state.pin}</span>
@@ -659,7 +687,11 @@ export default function LiveHostPage() {
             }}
             className="flex items-center gap-2 px-8 py-3 rounded-2xl bg-amber-400 hover:bg-amber-300 text-stone-950 font-black text-base shadow-xl transition-transform hover:scale-105"
           >
-            <span>{isLastQuestion ? "Podium Final !" : "Question Suivante"}</span>
+            <span>
+              {isLastQuestion
+                ? language === "fr" ? "Podium Final !" : "Final Podium!"
+                : language === "fr" ? "Question Suivante" : "Next Question"}
+            </span>
             <ArrowRight className="w-5 h-5" />
           </button>
         </div>
@@ -723,10 +755,12 @@ export default function LiveHostPage() {
         <div className="text-center space-y-2 pt-4">
           <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-amber-400 px-4 py-1.5 bg-amber-950/50 border border-amber-500/30 rounded-full">
             <Crown className="w-4 h-4" />
-            <span>Grand Podium Nouveau Départ</span>
+            <span>{language === "fr" ? "Grand Podium Nouveau Départ" : "New Beginnings Grand Podium"}</span>
           </div>
           <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-white">
-            Félicitations à tous les participants !
+            {language === "fr"
+              ? "Félicitations à tous les participants !"
+              : "Congratulations to all participants!"}
           </h1>
         </div>
 
@@ -792,14 +826,14 @@ export default function LiveHostPage() {
             className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-stone-900 border border-stone-800 hover:border-stone-700 text-stone-300 font-bold text-sm transition-colors"
           >
             <RotateCcw className="w-4 h-4" />
-            Nouvelle Session
+            {language === "fr" ? "Nouvelle Session" : "New Session"}
           </button>
 
           <Link
             href="/"
             className="px-6 py-3 rounded-2xl bg-amber-400 hover:bg-amber-300 text-stone-950 font-bold text-sm transition-colors"
           >
-            Retour aux Cours
+            {language === "fr" ? "Retour aux Cours" : "Back to Courses"}
           </Link>
         </div>
       </div>

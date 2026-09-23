@@ -27,6 +27,38 @@ export const week01: CourseWeek = {
     fr: "Continue à assister aux services de l'Église et aux prochaines sessions du cours Nouveau Départ.",
     en: "Continue to attend church services and the upcoming New Beginnings course sessions.",
   },
+  pillars: [
+    {
+      badgeNumber: 1,
+      title: { fr: "La Chute & le Péché", en: "The Fall & Sin" },
+      description: {
+        fr: "L'homme a choisi l'indépendance. Le mot hébreu « hhatah » signifie 'manquer la cible'. Le péché sépare l'homme de son Créateur et produit la mort spirituelle.",
+        en: "Man chose independence. The Hebrew word 'hhatah' literally means 'missing the mark'. Sin separates humanity from God and causes spiritual death.",
+      },
+      verses: "Romains 6:23 • Psaumes 51:5",
+      color: "bg-rose-500/15 text-rose-500 dark:text-rose-400",
+    },
+    {
+      badgeNumber: 2,
+      title: { fr: "La Provision à la Croix", en: "The Provision on the Cross" },
+      description: {
+        fr: "Incapable de combler le fossé par la religion ou de bonnes œuvres, Jésus est venu comme sacrifice parfait. Il a pris nos fautes pour nous donner Sa justice.",
+        en: "Unable to bridge the gulf by philosophy or good works, Jesus became our flawless substitute, taking our sin to clothe us in His righteousness.",
+      },
+      verses: "Jean 3:16 • 2 Cor 5:21",
+      color: "bg-amber-500/15 text-amber-600 dark:text-amber-400",
+    },
+    {
+      badgeNumber: 3,
+      title: { fr: "La Repentance & la Foi", en: "Repentance & Faith" },
+      description: {
+        fr: "Se repentir (« metanoia », changer de mentalité ; « shub », faire demi-tour) et croire de tout son cœur que Jésus est ressuscité pour naître de nouveau.",
+        en: "Repenting ('metanoia', mindset shift; 'shub', turning back) and declaring Jesus Lord to receive forgiveness and spiritual new birth.",
+      },
+      verses: "Romains 10:9 • Éphésiens 2:8-9",
+      color: "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400",
+    },
+  ],
   verses: [
     {
       id: "rom-6-23",

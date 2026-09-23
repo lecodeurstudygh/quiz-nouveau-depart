@@ -27,6 +27,38 @@ export const week02: CourseWeek = {
     fr: "Passe du temps quotidien dans la présence du Père cette semaine sans formalisme. Essaie de Lui parler différemment en L'appelant « Papa » ou « Abba ». Remercie-Le pour 3 vérités éternelles : tu es Son enfant (pour toujours), Il t'aime (pour toujours) et Il est fier de toi (pour toujours) !",
     en: "Spend intentional daily time in the Father's presence this week without religious formality. Practice talking to Him familiarly as 'Daddy' or 'Abba'. Thank Him for 3 everlasting truths: you are His child (forever), He loves you (forever), and He is proud of you (forever)!",
   },
+  pillars: [
+    {
+      badgeNumber: 1,
+      title: { fr: "« Tu es mon enfant »", en: "“You Are My Child”" },
+      description: {
+        fr: "Par l'Esprit d'adoption, nous crions « Abba ! Père ! ». Dieu brise l'esprit de rejet et d'esclavage pour nous accueillir dans Son intimité comme Ses enfants bien-aimés.",
+        en: "Through the Spirit of adoption, we cry 'Abba! Father!'. God shatters rejection and fear to welcome us intimately as His beloved sons and daughters.",
+      },
+      verses: "Romains 8:15-16 • 2 Corinthiens 6:18",
+      color: "bg-sky-500/15 text-sky-600 dark:text-sky-400",
+    },
+    {
+      badgeNumber: 2,
+      title: { fr: "« Je t'aime sans condition »", en: "“I Love You Unconditionally”" },
+      description: {
+        fr: "Un amour parfait, inconditionnel et éternel. Alors que nous étions encore pécheurs, Christ est mort pour nous. Rien ne pourra jamais nous séparer de Son amour.",
+        en: "A perfect, unconditional, and eternal love. While we were still sinners, Christ died for us. Nothing in all creation can ever separate us from His love.",
+      },
+      verses: "1 Jean 3:1 • Romains 8:38-39 • Romains 5:8",
+      color: "bg-rose-500/15 text-rose-500 dark:text-rose-400",
+    },
+    {
+      badgeNumber: 3,
+      title: { fr: "« Je suis fier de toi »", en: "“I Am Proud of You”" },
+      description: {
+        fr: "Dieu ne voit pas seulement qui tu es aujourd'hui, Il voit ton potentiel divin et ce que tu deviendras en Christ. Il se réjouit de toi et achève Son œuvre avec patience.",
+        en: "God sees not only who you are today, but your divine potential and who you will become in Christ. He rejoices over you and patiently finishes His good work.",
+      },
+      verses: "1 Jean 3:2 • Matthieu 3:17 • Philippiens 1:6",
+      color: "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400",
+    },
+  ],
   verses: [
     {
       id: "2cor-6-18",

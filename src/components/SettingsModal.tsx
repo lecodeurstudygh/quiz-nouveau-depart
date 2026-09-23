@@ -2,7 +2,7 @@
 
 import React, { useEffect } from "react";
 import { useLanguage } from "@/context/LanguageContext";
-import { X, SlidersHorizontal, Volume2, VolumeX, RotateCcw } from "lucide-react";
+import { X, SlidersHorizontal, Volume2, VolumeX, RotateCcw, Music, ExternalLink } from "lucide-react";
 
 export const SettingsModal: React.FC = () => {
   const {
@@ -84,8 +84,8 @@ export const SettingsModal: React.FC = () => {
                 <p className="font-semibold text-slate-800 dark:text-slate-200">{t("soundSetting")}</p>
                 <p className="text-xs text-slate-500 dark:text-slate-400">
                   {language === "fr"
-                    ? "Méditation & concentration instrumentale"
-                    : "Soft background reflection ambiance"}
+                    ? "Méditation & louange instrumentale"
+                    : "Worship & reflection instrumental track"}
                 </p>
               </div>
               <button
@@ -109,6 +109,33 @@ export const SettingsModal: React.FC = () => {
                   </>
                 )}
               </button>
+            </div>
+
+            {/* Currently Active Instrumental Track Info */}
+            <div className="p-3 bg-amber-500/10 dark:bg-amber-950/20 border border-amber-500/20 rounded-2xl flex items-center justify-between gap-3 text-xs">
+              <div className="flex items-center gap-2.5 min-w-0">
+                <div className="w-7 h-7 rounded-lg bg-amber-500/20 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
+                  <Music className="w-3.5 h-3.5" />
+                </div>
+                <div className="truncate">
+                  <span className="font-bold text-slate-800 dark:text-slate-200 block truncate">
+                    I Surrender (Guitar Instrumental)
+                  </span>
+                  <span className="text-[11px] text-amber-600 dark:text-amber-400">
+                    Hillsong Instrumentals • Album Depths
+                  </span>
+                </div>
+              </div>
+              <a
+                href="https://www.youtube.com/watch?v=CAbZ1zfa_6w"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="shrink-0 inline-flex items-center gap-1 text-[11px] font-semibold text-slate-500 dark:text-slate-400 hover:text-amber-600 dark:hover:text-amber-300 underline"
+                title={language === "fr" ? "Ouvrir la vidéo sur YouTube" : "Open video on YouTube"}
+              >
+                <span>YouTube</span>
+                <ExternalLink className="w-3 h-3" />
+              </a>
             </div>
 
             {settings.soundEnabled && (

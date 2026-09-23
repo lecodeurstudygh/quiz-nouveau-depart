@@ -1,141 +1,193 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 
-/**
- * Ambient Audio Synthesizer utilizing Web Audio API
- * Generates soft, peaceful ambient pad chords (D major / A major contemplative spiritual resonance)
- * Completely safe across all browsers (WebKit, Safari, Chromium, Firefox).
- */
+declare global {
+  interface Window {
+    YT?: any;
+    onYouTubeIframeAPIReady?: () => void;
+  }
+}
+
+// Default stream: Hillsong Instrumentals - I Surrender (Guitar Instrumental, album Depths)
+export const YOUTUBE_AMBIENT_TRACK = {
+  id: "CAbZ1zfa_6w",
+  title: "I Surrender (Guitar Instrumental)",
+  artist: "Hillsong Instrumentals",
+  url: "https://www.youtube.com/watch?v=CAbZ1zfa_6w",
+};
+
+// Local audio path if user places an MP3 inside /public/audio/
+export const LOCAL_AUDIO_PATH = "/audio/instrumental.mp3";
+
 export const AudioPlayer: React.FC = () => {
   const { settings } = useLanguage();
-  const audioCtxRef = useRef<AudioContext | null>(null);
-  const gainNodeRef = useRef<GainNode | null>(null);
-  const oscNodesRef = useRef<OscillatorNode[]>([]);
+  const [hasLocalFile, setHasLocalFile] = useState<boolean>(false);
+  const audioTagRef = useRef<HTMLAudioElement | null>(null);
+  const ytPlayerRef = useRef<any>(null);
+  const isYtReadyRef = useRef<boolean>(false);
 
-  const stopAndCleanupAudio = () => {
-    // Stop and disconnect all oscillators
-    try {
-      oscNodesRef.current.forEach((osc) => {
-        try {
-          osc.stop();
-          osc.disconnect();
-        } catch {
-          // Ignore if already stopped
-        }
-      });
-    } catch {
-      // Ignore
-    }
-    oscNodesRef.current = [];
-
-    // Disconnect master gain
-    if (gainNodeRef.current) {
-      try {
-        gainNodeRef.current.disconnect();
-      } catch {
-        // Ignore
-      }
-      gainNodeRef.current = null;
-    }
-
-    // Safely close audio context
-    if (audioCtxRef.current) {
-      try {
-        const ctx = audioCtxRef.current;
-        if (ctx.state !== "closed") {
-          const closePromise = ctx.close();
-          if (closePromise && typeof closePromise.catch === "function") {
-            closePromise.catch(() => {});
-          }
-        }
-      } catch {
-        // Ignore
-      }
-      audioCtxRef.current = null;
-    }
-  };
-
+  // Check if a local audio file is available in /public/audio/instrumental.mp3
   useEffect(() => {
-    if (!settings.soundEnabled) {
-      stopAndCleanupAudio();
-      return;
+    if (typeof window === "undefined") return;
+
+    fetch(LOCAL_AUDIO_PATH, { method: "HEAD" })
+      .then((res) => {
+        if (res.ok) setHasLocalFile(true);
+      })
+      .catch(() => {
+        // Local file not present, YouTube stream will be used
+      });
+  }, []);
+
+  // 1. LOCAL AUDIO MANAGEMENT (HTML5 <audio>)
+  useEffect(() => {
+    if (!hasLocalFile) return;
+
+    if (!audioTagRef.current) {
+      const audio = new Audio(LOCAL_AUDIO_PATH);
+      audio.loop = true;
+      audio.volume = settings.soundVolume;
+      audioTagRef.current = audio;
     }
 
-    try {
-      const AudioCtxClass =
-        window.AudioContext ||
-        (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+    const audio = audioTagRef.current;
+    audio.volume = settings.soundVolume;
 
-      if (!AudioCtxClass) return;
-
-      const ctx = new AudioCtxClass();
-      audioCtxRef.current = ctx;
-
-      const masterGain = ctx.createGain();
-      masterGain.gain.setValueAtTime(settings.soundVolume * 0.15, ctx.currentTime);
-      masterGain.connect(ctx.destination);
-      gainNodeRef.current = masterGain;
-
-      // Soothing D major chord frequencies: D3 (146.83 Hz), A3 (220 Hz), F#4 (369.99 Hz), D4 (293.66 Hz)
-      const freqs = [146.83, 220.0, 293.66, 369.99];
-      const oscillators: OscillatorNode[] = [];
-
-      freqs.forEach((freq, idx) => {
-        const osc = ctx.createOscillator();
-        const oscGain = ctx.createGain();
-
-        // Soft sine wave for ethereal peaceful sound
-        osc.type = "sine";
-        osc.frequency.setValueAtTime(freq, ctx.currentTime);
-
-        // Gentle subtle vibrato / slow modulation
-        const lfo = ctx.createOscillator();
-        const lfoGain = ctx.createGain();
-        lfo.frequency.setValueAtTime(0.2 + idx * 0.05, ctx.currentTime);
-        lfoGain.gain.setValueAtTime(1.5, ctx.currentTime);
-        lfo.connect(osc.frequency);
-        lfo.start();
-
-        oscGain.gain.setValueAtTime(0.25, ctx.currentTime);
-        osc.connect(oscGain);
-        oscGain.connect(masterGain);
-        osc.start();
-
-        oscillators.push(osc);
-        oscillators.push(lfo);
+    if (settings.soundEnabled) {
+      audio.play().catch(() => {
+        // Autoplay may need user gesture
       });
-
-      oscNodesRef.current = oscillators;
-    } catch {
-      // AudioContext might require user gesture on some browsers
+    } else {
+      audio.pause();
     }
 
     return () => {
-      stopAndCleanupAudio();
+      audio.pause();
     };
-  }, [settings.soundEnabled]);
+  }, [hasLocalFile, settings.soundEnabled]);
 
-  // Adjust volume dynamically
+  // Adjust local audio volume
   useEffect(() => {
-    if (
-      gainNodeRef.current &&
-      audioCtxRef.current &&
-      audioCtxRef.current.state === "running"
-    ) {
-      try {
-        gainNodeRef.current.gain.setTargetAtTime(
-          settings.soundVolume * 0.15,
-          audioCtxRef.current.currentTime,
-          0.1
-        );
-      } catch {
-        // Ignore
-      }
+    if (audioTagRef.current) {
+      audioTagRef.current.volume = settings.soundVolume;
     }
   }, [settings.soundVolume]);
 
-  return null;
-};
+  // 2. YOUTUBE IFRAME STREAM (Used when no local MP3 file is present)
+  useEffect(() => {
+    if (hasLocalFile || typeof window === "undefined") return;
 
+    // Load YouTube Iframe API script if not yet loaded
+    if (!window.YT) {
+      const existingScript = document.querySelector('script[src*="youtube.com/iframe_api"]');
+      if (!existingScript) {
+        const tag = document.createElement("script");
+        tag.src = "https://www.youtube.com/iframe_api";
+        const firstScriptTag = document.getElementsByTagName("script")[0];
+        if (firstScriptTag && firstScriptTag.parentNode) {
+          firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+        } else {
+          document.body.appendChild(tag);
+        }
+      }
+    }
+
+    const initYtPlayer = () => {
+      if (ytPlayerRef.current || !window.YT || !window.YT.Player) return;
+
+      const playerContainer = document.getElementById("yt-ambient-player");
+      if (!playerContainer) return;
+
+      try {
+        ytPlayerRef.current = new window.YT.Player("yt-ambient-player", {
+          height: "1",
+          width: "1",
+          videoId: YOUTUBE_AMBIENT_TRACK.id,
+          playerVars: {
+            autoplay: 0,
+            controls: 0,
+            disablekb: 1,
+            fs: 0,
+            iv_load_policy: 3,
+            loop: 1,
+            playlist: YOUTUBE_AMBIENT_TRACK.id, // Required by YouTube for looping
+            modestbranding: 1,
+            rel: 0,
+            showinfo: 0,
+          },
+          events: {
+            onReady: (event: any) => {
+              isYtReadyRef.current = true;
+              event.target.setVolume(Math.round(settings.soundVolume * 100));
+              if (settings.soundEnabled) {
+                event.target.playVideo();
+              }
+            },
+            onStateChange: (event: any) => {
+              // Ensure continuous loop when video ends
+              if (event.data === window.YT.PlayerState.ENDED) {
+                event.target.playVideo();
+              }
+            },
+          },
+        });
+      } catch (err) {
+        console.error("YouTube Player init error:", err);
+      }
+    };
+
+    if (window.YT && window.YT.Player) {
+      initYtPlayer();
+    } else {
+      const prevCallback = window.onYouTubeIframeAPIReady;
+      window.onYouTubeIframeAPIReady = () => {
+        if (prevCallback) prevCallback();
+        initYtPlayer();
+      };
+    }
+  }, [hasLocalFile]);
+
+  // Handle Play / Pause for YouTube Player
+  useEffect(() => {
+    if (hasLocalFile || !ytPlayerRef.current || !isYtReadyRef.current) return;
+    try {
+      if (settings.soundEnabled) {
+        ytPlayerRef.current.playVideo();
+      } else {
+        ytPlayerRef.current.pauseVideo();
+      }
+    } catch {
+      // Ignore
+    }
+  }, [hasLocalFile, settings.soundEnabled]);
+
+  // Handle Volume change for YouTube Player
+  useEffect(() => {
+    if (hasLocalFile || !ytPlayerRef.current || !isYtReadyRef.current) return;
+    try {
+      ytPlayerRef.current.setVolume(Math.round(settings.soundVolume * 100));
+    } catch {
+      // Ignore
+    }
+  }, [hasLocalFile, settings.soundVolume]);
+
+  return (
+    <div
+      style={{
+        position: "fixed",
+        top: -9999,
+        left: -9999,
+        width: 1,
+        height: 1,
+        opacity: 0.01,
+        pointerEvents: "none",
+        zIndex: -9999,
+      }}
+      aria-hidden="true"
+    >
+      <div id="yt-ambient-player" />
+    </div>
+  );
+};

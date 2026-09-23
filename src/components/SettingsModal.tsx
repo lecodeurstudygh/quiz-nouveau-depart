@@ -2,7 +2,8 @@
 
 import React, { useEffect } from "react";
 import { useLanguage } from "@/context/LanguageContext";
-import { X, SlidersHorizontal, Volume2, VolumeX, RotateCcw, Music, ExternalLink } from "lucide-react";
+import { X, SlidersHorizontal, Volume2, VolumeX, RotateCcw, Music } from "lucide-react";
+import { AUDIO_TRACKS } from "@/components/AudioPlayer";
 
 export const SettingsModal: React.FC = () => {
   const {
@@ -111,31 +112,66 @@ export const SettingsModal: React.FC = () => {
               </button>
             </div>
 
-            {/* Currently Active Instrumental Track Info */}
-            <div className="p-3 bg-amber-500/10 dark:bg-amber-950/20 border border-amber-500/20 rounded-2xl flex items-center justify-between gap-3 text-xs">
-              <div className="flex items-center gap-2.5 min-w-0">
-                <div className="w-7 h-7 rounded-lg bg-amber-500/20 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
-                  <Music className="w-3.5 h-3.5" />
-                </div>
-                <div className="truncate">
-                  <span className="font-bold text-slate-800 dark:text-slate-200 block truncate">
-                    I Surrender (Guitar Instrumental)
-                  </span>
-                  <span className="text-[11px] text-amber-600 dark:text-amber-400">
-                    Hillsong Instrumentals • Album Depths
-                  </span>
-                </div>
+            {/* Track Selector */}
+            <div className="space-y-1.5 pt-1">
+              <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                {language === "fr" ? "Piste instrumentale sélectionnée :" : "Selected Instrumental Track:"}
+              </label>
+              <div className="space-y-1.5">
+                {AUDIO_TRACKS.map((track) => {
+                  const isSelected = settings.soundTrack === track.id;
+                  return (
+                    <button
+                      key={track.id}
+                      type="button"
+                      onClick={() => updateSettings({ soundTrack: track.id })}
+                      className={`w-full p-2.5 rounded-xl border text-left flex items-center justify-between gap-2.5 transition-all ${
+                        isSelected
+                          ? "bg-amber-500/15 border-amber-500/50 shadow-sm ring-1 ring-amber-500/40"
+                          : "bg-slate-100/70 dark:bg-slate-900/60 border-slate-200 dark:border-slate-800 hover:border-amber-400/50"
+                      }`}
+                    >
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        <div
+                          className={`w-6 h-6 rounded-lg flex items-center justify-center shrink-0 ${
+                            isSelected
+                              ? "bg-amber-500 text-slate-950 font-bold"
+                              : "bg-slate-200 dark:bg-slate-800 text-slate-500 dark:text-slate-400"
+                          }`}
+                        >
+                          <Music className="w-3.5 h-3.5" />
+                        </div>
+                        <div className="truncate">
+                          <span
+                            className={`text-xs font-bold block truncate ${
+                              isSelected
+                                ? "text-amber-600 dark:text-amber-300"
+                                : "text-slate-800 dark:text-slate-200"
+                            }`}
+                          >
+                            {track.title}
+                          </span>
+                          <span className="text-[10px] text-slate-500 dark:text-slate-400 block truncate">
+                            {track.artist}
+                          </span>
+                        </div>
+                      </div>
+
+                      <span
+                        className={`text-[10px] px-2 py-0.5 rounded-full font-bold shrink-0 ${
+                          track.sourceType === "local"
+                            ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30"
+                            : "bg-rose-500/15 text-rose-600 dark:text-rose-400 border border-rose-500/30"
+                        }`}
+                      >
+                        {track.sourceType === "local"
+                          ? language === "fr" ? "MP3 Local" : "Local MP3"
+                          : "YouTube"}
+                      </span>
+                    </button>
+                  );
+                })}
               </div>
-              <a
-                href="https://www.youtube.com/watch?v=CAbZ1zfa_6w"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="shrink-0 inline-flex items-center gap-1 text-[11px] font-semibold text-slate-500 dark:text-slate-400 hover:text-amber-600 dark:hover:text-amber-300 underline"
-                title={language === "fr" ? "Ouvrir la vidéo sur YouTube" : "Open video on YouTube"}
-              >
-                <span>YouTube</span>
-                <ExternalLink className="w-3 h-3" />
-              </a>
             </div>
 
             {settings.soundEnabled && (

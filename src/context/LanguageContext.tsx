@@ -3,10 +3,11 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { Language, LocalizedString } from "@/types/course";
 
-interface SettingsState {
+export interface SettingsState {
   theme: "dark" | "light";
   soundEnabled: boolean;
   soundVolume: number;
+  soundTrack: "amazing-grace" | "hillsong" | "jesu-joy";
 }
 
 interface LanguageContextType {
@@ -142,6 +143,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     theme: "dark",
     soundEnabled: false,
     soundVolume: 0.3,
+    soundTrack: "amazing-grace",
   });
 
   // Load persisted language, week and settings on mount
@@ -167,6 +169,10 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
               typeof parsed.soundVolume === "number" && !isNaN(parsed.soundVolume)
                 ? Math.min(Math.max(parsed.soundVolume, 0), 1)
                 : 0.3,
+            soundTrack:
+              parsed.soundTrack === "hillsong" || parsed.soundTrack === "jesu-joy"
+                ? parsed.soundTrack
+                : "amazing-grace",
           }));
         }
       }

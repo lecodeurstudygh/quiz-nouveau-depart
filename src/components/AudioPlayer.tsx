@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 
 declare global {
@@ -10,76 +10,69 @@ declare global {
   }
 }
 
-// Default stream: Hillsong Instrumentals - I Surrender (Guitar Instrumental, album Depths)
-export const YOUTUBE_AMBIENT_TRACK = {
-  id: "CAbZ1zfa_6w",
-  title: "I Surrender (Guitar Instrumental)",
-  artist: "Hillsong Instrumentals",
-  url: "https://www.youtube.com/watch?v=CAbZ1zfa_6w",
-};
+export interface AudioTrackConfig {
+  id: "amazing-grace" | "hillsong" | "jesu-joy";
+  title: string;
+  artist: string;
+  sourceType: "local" | "youtube";
+  src: string;
+}
 
-// Local audio path if user places an MP3 inside /public/audio/
-export const LOCAL_AUDIO_PATH = "/audio/instrumental.mp3";
+export const AUDIO_TRACKS: AudioTrackConfig[] = [
+  {
+    id: "amazing-grace",
+    title: "Amazing Grace (Orchestre à cordes doux)",
+    artist: "USAFB Strolling Strings • Libre & Domaine Public",
+    sourceType: "local",
+    src: "/audio/amazing-grace.mp3",
+  },
+  {
+    id: "hillsong",
+    title: "I Surrender (Guitar Instrumental)",
+    artist: "Hillsong Instrumentals • Album Depths",
+    sourceType: "youtube",
+    src: "CAbZ1zfa_6w",
+  },
+  {
+    id: "jesu-joy",
+    title: "Jésus, que ma joie demeure (Piano & Cordes)",
+    artist: "J.S. Bach • Kevin MacLeod (CC-BY)",
+    sourceType: "local",
+    src: "/audio/jesu-joy-of-mans-desiring.mp3",
+  },
+];
 
 export const AudioPlayer: React.FC = () => {
   const { settings } = useLanguage();
-  const [hasLocalFile, setHasLocalFile] = useState<boolean>(false);
   const audioTagRef = useRef<HTMLAudioElement | null>(null);
   const ytPlayerRef = useRef<any>(null);
   const isYtReadyRef = useRef<boolean>(false);
 
-  // Check if a local audio file is available in /public/audio/instrumental.mp3
+  const currentTrack =
+    AUDIO_TRACKS.find((t) => t.id === settings.soundTrack) || AUDIO_TRACKS[0];
+
+  // 1. Initialize HTML5 Audio element once
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    fetch(LOCAL_AUDIO_PATH, { method: "HEAD" })
-      .then((res) => {
-        if (res.ok) setHasLocalFile(true);
-      })
-      .catch(() => {
-        // Local file not present, YouTube stream will be used
-      });
-  }, []);
-
-  // 1. LOCAL AUDIO MANAGEMENT (HTML5 <audio>)
-  useEffect(() => {
-    if (!hasLocalFile) return;
-
     if (!audioTagRef.current) {
-      const audio = new Audio(LOCAL_AUDIO_PATH);
+      const audio = new Audio();
       audio.loop = true;
-      audio.volume = settings.soundVolume;
+      audio.preload = "auto";
       audioTagRef.current = audio;
     }
 
-    const audio = audioTagRef.current;
-    audio.volume = settings.soundVolume;
-
-    if (settings.soundEnabled) {
-      audio.play().catch(() => {
-        // Autoplay may need user gesture
-      });
-    } else {
-      audio.pause();
-    }
-
     return () => {
-      audio.pause();
+      if (audioTagRef.current) {
+        audioTagRef.current.pause();
+      }
     };
-  }, [hasLocalFile, settings.soundEnabled]);
+  }, []);
 
-  // Adjust local audio volume
+  // 2. Initialize YouTube Player once
   useEffect(() => {
-    if (audioTagRef.current) {
-      audioTagRef.current.volume = settings.soundVolume;
-    }
-  }, [settings.soundVolume]);
+    if (typeof window === "undefined") return;
 
-  // 2. YOUTUBE IFRAME STREAM (Used when no local MP3 file is present)
-  useEffect(() => {
-    if (hasLocalFile || typeof window === "undefined") return;
-
-    // Load YouTube Iframe API script if not yet loaded
     if (!window.YT) {
       const existingScript = document.querySelector('script[src*="youtube.com/iframe_api"]');
       if (!existingScript) {
@@ -94,17 +87,16 @@ export const AudioPlayer: React.FC = () => {
       }
     }
 
-    const initYtPlayer = () => {
+    const initYt = () => {
       if (ytPlayerRef.current || !window.YT || !window.YT.Player) return;
-
-      const playerContainer = document.getElementById("yt-ambient-player");
-      if (!playerContainer) return;
+      const container = document.getElementById("yt-ambient-player");
+      if (!container) return;
 
       try {
         ytPlayerRef.current = new window.YT.Player("yt-ambient-player", {
           height: "1",
           width: "1",
-          videoId: YOUTUBE_AMBIENT_TRACK.id,
+          videoId: "CAbZ1zfa_6w",
           playerVars: {
             autoplay: 0,
             controls: 0,
@@ -112,7 +104,7 @@ export const AudioPlayer: React.FC = () => {
             fs: 0,
             iv_load_policy: 3,
             loop: 1,
-            playlist: YOUTUBE_AMBIENT_TRACK.id, // Required by YouTube for looping
+            playlist: "CAbZ1zfa_6w",
             modestbranding: 1,
             rel: 0,
             showinfo: 0,
@@ -121,12 +113,11 @@ export const AudioPlayer: React.FC = () => {
             onReady: (event: any) => {
               isYtReadyRef.current = true;
               event.target.setVolume(Math.round(settings.soundVolume * 100));
-              if (settings.soundEnabled) {
+              if (settings.soundEnabled && currentTrack.sourceType === "youtube") {
                 event.target.playVideo();
               }
             },
             onStateChange: (event: any) => {
-              // Ensure continuous loop when video ends
               if (event.data === window.YT.PlayerState.ENDED) {
                 event.target.playVideo();
               }
@@ -134,44 +125,86 @@ export const AudioPlayer: React.FC = () => {
           },
         });
       } catch (err) {
-        console.error("YouTube Player init error:", err);
+        console.error("YouTube init error", err);
       }
     };
 
     if (window.YT && window.YT.Player) {
-      initYtPlayer();
+      initYt();
     } else {
       const prevCallback = window.onYouTubeIframeAPIReady;
       window.onYouTubeIframeAPIReady = () => {
         if (prevCallback) prevCallback();
-        initYtPlayer();
+        initYt();
       };
     }
-  }, [hasLocalFile]);
+  }, []);
 
-  // Handle Play / Pause for YouTube Player
+  // 3. Coordinate Playback between Local MP3 and YouTube Stream
   useEffect(() => {
-    if (hasLocalFile || !ytPlayerRef.current || !isYtReadyRef.current) return;
-    try {
-      if (settings.soundEnabled) {
-        ytPlayerRef.current.playVideo();
-      } else {
-        ytPlayerRef.current.pauseVideo();
+    const audio = audioTagRef.current;
+    const isLocal = currentTrack.sourceType === "local";
+
+    if (isLocal) {
+      // Pause YouTube if running
+      if (ytPlayerRef.current && isYtReadyRef.current) {
+        try {
+          ytPlayerRef.current.pauseVideo();
+        } catch {
+          // Ignore
+        }
       }
-    } catch {
-      // Ignore
-    }
-  }, [hasLocalFile, settings.soundEnabled]);
 
-  // Handle Volume change for YouTube Player
-  useEffect(() => {
-    if (hasLocalFile || !ytPlayerRef.current || !isYtReadyRef.current) return;
-    try {
-      ytPlayerRef.current.setVolume(Math.round(settings.soundVolume * 100));
-    } catch {
-      // Ignore
+      if (audio) {
+        // Change src if needed
+        if (!audio.src.endsWith(currentTrack.src)) {
+          audio.src = currentTrack.src;
+          audio.load();
+        }
+        audio.volume = settings.soundVolume;
+
+        if (settings.soundEnabled) {
+          audio.play().catch(() => {
+            // Browser autoplay restrictions until user clicks
+          });
+        } else {
+          audio.pause();
+        }
+      }
+    } else {
+      // Current track is YouTube
+      if (audio) {
+        audio.pause();
+      }
+
+      if (ytPlayerRef.current && isYtReadyRef.current) {
+        try {
+          ytPlayerRef.current.setVolume(Math.round(settings.soundVolume * 100));
+          if (settings.soundEnabled) {
+            ytPlayerRef.current.playVideo();
+          } else {
+            ytPlayerRef.current.pauseVideo();
+          }
+        } catch {
+          // Ignore
+        }
+      }
     }
-  }, [hasLocalFile, settings.soundVolume]);
+  }, [currentTrack, settings.soundEnabled, settings.soundVolume]);
+
+  // 4. Dynamic Volume updates
+  useEffect(() => {
+    if (audioTagRef.current) {
+      audioTagRef.current.volume = settings.soundVolume;
+    }
+    if (ytPlayerRef.current && isYtReadyRef.current) {
+      try {
+        ytPlayerRef.current.setVolume(Math.round(settings.soundVolume * 100));
+      } catch {
+        // Ignore
+      }
+    }
+  }, [settings.soundVolume]);
 
   return (
     <div

@@ -109,8 +109,18 @@ export const DiscussionCard: React.FC<DiscussionCardProps> = ({
       >
         {/* ================= RECTO (FRONT - QUESTION) ================= */}
         <div
-          className={`card-face card-face-front rounded-3xl p-6 sm:p-7 flex flex-col justify-between shadow-2xl border border-white/10 border-t-white/20 bg-neutral-950 bg-gradient-to-br ${gradientTheme} hover:border-[#c5a059]/40 transition-all duration-300`}
+          className={`card-face card-face-front rounded-3xl p-6 sm:p-7 flex flex-col justify-between shadow-2xl border border-white/10 border-t-white/20 bg-neutral-950 bg-gradient-to-br ${gradientTheme} hover:border-[#c5a059]/40 transition-all duration-300 overflow-hidden`}
         >
+          {/* Subtle B&W Film Negative / Acoustic Photography Texture Layer */}
+          <div className="absolute inset-0 rounded-3xl overflow-hidden pointer-events-none opacity-20 dark:opacity-25 mix-blend-luminosity">
+            <img
+              src={card.questionNumber % 2 === 0 ? "/images/cards/piano_strings.jpg" : "/images/cards/cello_wood.jpg"}
+              alt=""
+              className="w-full h-full object-cover grayscale contrast-150 brightness-75 scale-105"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/55 to-transparent" />
+          </div>
+
           {/* Subtle acoustic glow overlays */}
           <div className="absolute inset-0 bg-neutral-950/45 pointer-events-none rounded-3xl" />
           <div className="absolute -top-16 -right-16 w-48 h-48 bg-[#c5a059]/15 rounded-full blur-3xl pointer-events-none" />
@@ -155,10 +165,10 @@ export const DiscussionCard: React.FC<DiscussionCardProps> = ({
 
           {/* Center: Question */}
           <div className="relative z-10 my-auto text-center space-y-4 px-2 sm:px-4 max-w-full">
-            <span className="inline-block text-[11px] font-bold text-[#c5a059] tracking-widest uppercase">
+            <span className="inline-block text-[11px] font-semibold text-[#c5a059] tracking-[0.16em] uppercase">
               {card.theme ? card.theme[language] : t("discussionTag")}
             </span>
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-black text-white leading-snug drop-shadow-md">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-white leading-snug drop-shadow-md">
               « {card.question[language]} »
             </h2>
             <div className="inline-flex items-center gap-1.5 text-xs text-[#e4c88e]/90 font-medium bg-[#c5a059]/15 px-3.5 py-1 rounded-full border border-[#c5a059]/30">
@@ -190,10 +200,19 @@ export const DiscussionCard: React.FC<DiscussionCardProps> = ({
 
         {/* ================= VERSO (BACK - ANSWER) ================= */}
         <div
-          className={`card-face card-face-back rounded-3xl p-6 sm:p-7 flex flex-col justify-between shadow-2xl border border-[#c5a059]/30 border-t-[#c5a059]/50 bg-neutral-950 bg-gradient-to-tr ${gradientTheme}`}
+          className={`card-face card-face-back rounded-3xl p-6 sm:p-7 flex flex-col justify-between shadow-2xl border border-[#c5a059]/30 border-t-[#c5a059]/50 bg-neutral-950 bg-gradient-to-tr ${gradientTheme} overflow-hidden`}
         >
           {/* High contrast backdrop */}
           <div className="absolute inset-0 bg-[#0c0c0e]/95 pointer-events-none rounded-3xl" />
+
+          {/* Subtle B&W Film Texture on Verso */}
+          <div className="absolute inset-0 rounded-3xl overflow-hidden pointer-events-none opacity-10 mix-blend-luminosity">
+            <img
+              src="/images/cards/piano_strings.jpg"
+              alt=""
+              className="w-full h-full object-cover grayscale contrast-150 brightness-75 scale-105"
+            />
+          </div>
 
           {/* Top Bar on Back */}
           <div className="relative z-10 flex items-center justify-between pb-3 border-b border-white/10 gap-2">

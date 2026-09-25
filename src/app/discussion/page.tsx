@@ -200,8 +200,8 @@ export default function DiscussionPage() {
       {/* Sober Header: Title on Left, Compact Counter on Right */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 py-1">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-black text-neutral-900 dark:text-white tracking-tight">
-            {t("discussionTitle")}
+          <h1 className="text-2xl sm:text-4xl font-light text-neutral-900 dark:text-white tracking-tight">
+            <span className="font-semibold">{language === "fr" ? "Questions" : "Discussion"}</span> & {language === "fr" ? "Réflexion spirituelle" : "Spiritual Reflection"}
           </h1>
           <p className="text-xs sm:text-sm text-neutral-600 dark:text-zinc-400 mt-1">
             {t("discussionSubtitle")}

@@ -264,10 +264,8 @@ export default function CardsPage() {
       {/* Sober Header: Clean Title on Left, Compact Counter on Right */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 py-1">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-black text-neutral-900 dark:text-white tracking-tight">
-            {language === "fr"
-              ? "Mémorisation & méditation des Écritures"
-              : "Scripture Memorization & Meditation"}
+          <h1 className="text-2xl sm:text-4xl font-light text-neutral-900 dark:text-white tracking-tight">
+            <span className="font-semibold">{language === "fr" ? "Mémorisation" : "Memorization"}</span> & {language === "fr" ? "méditation des Écritures" : "Scripture Meditation"}
           </h1>
         </div>
 

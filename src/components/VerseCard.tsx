@@ -81,8 +81,18 @@ export const VerseCard: React.FC<VerseCardProps> = ({
       >
         {/* ================= RECTO (FRONT) ================= */}
         <div
-          className={`card-face card-face-front rounded-3xl p-6 flex flex-col justify-between shadow-2xl border border-white/10 border-t-white/20 bg-neutral-950 bg-gradient-to-br ${gradientTheme} hover:border-[#c5a059]/40 transition-all duration-300`}
+          className={`card-face card-face-front rounded-3xl p-6 flex flex-col justify-between shadow-2xl border border-white/10 border-t-white/20 bg-neutral-950 bg-gradient-to-br ${gradientTheme} hover:border-[#c5a059]/40 transition-all duration-300 overflow-hidden`}
         >
+          {/* Subtle B&W Film Negative / Acoustic Photography Texture Layer */}
+          <div className="absolute inset-0 rounded-3xl overflow-hidden pointer-events-none opacity-20 dark:opacity-25 mix-blend-luminosity">
+            <img
+              src={bgIndex % 2 === 0 ? "/images/cards/piano_strings.jpg" : "/images/cards/cello_wood.jpg"}
+              alt=""
+              className="w-full h-full object-cover grayscale contrast-150 brightness-75 scale-105"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
+          </div>
+
           {/* Ambient overlay & subtle acoustic glow */}
           <div className="absolute inset-0 bg-neutral-950/45 pointer-events-none rounded-3xl" />
           <div className="absolute -top-16 -right-16 w-48 h-48 bg-[#c5a059]/15 rounded-full blur-3xl pointer-events-none" />
@@ -120,11 +130,11 @@ export const VerseCard: React.FC<VerseCardProps> = ({
 
           {/* Center: Prominent Scripture Reference & Theme */}
           <div className="relative z-10 my-auto text-center space-y-2.5 px-3 max-w-full overflow-hidden">
-            <span className="inline-block text-[11px] font-bold text-[#c5a059] tracking-widest uppercase">
+            <span className="inline-block text-[11px] font-semibold text-[#c5a059] tracking-[0.16em] uppercase">
               {verse.theme[language]}
             </span>
             <h3
-              className={`font-serif font-black tracking-tight text-white drop-shadow-md break-words hyphens-auto leading-tight max-w-full ${
+              className={`font-sans font-extrabold tracking-tight text-white drop-shadow-md break-words hyphens-auto leading-tight max-w-full ${
                 verse.reference[language].length > 18
                   ? "text-xl sm:text-2xl"
                   : verse.reference[language].length > 13
@@ -154,10 +164,19 @@ export const VerseCard: React.FC<VerseCardProps> = ({
 
         {/* ================= VERSO (BACK) ================= */}
         <div
-          className={`card-face card-face-back rounded-3xl p-6 flex flex-col justify-between shadow-2xl border border-[#c5a059]/30 border-t-[#c5a059]/50 bg-neutral-950 bg-gradient-to-tr ${gradientTheme}`}
+          className={`card-face card-face-back rounded-3xl p-6 flex flex-col justify-between shadow-2xl border border-[#c5a059]/30 border-t-[#c5a059]/50 bg-neutral-950 bg-gradient-to-tr ${gradientTheme} overflow-hidden`}
         >
           {/* Contrast-enhancing readability backdrop */}
           <div className="absolute inset-0 bg-[#0c0c0e]/95 pointer-events-none rounded-3xl" />
+
+          {/* Subtle B&W Film Texture on Verso */}
+          <div className="absolute inset-0 rounded-3xl overflow-hidden pointer-events-none opacity-10 mix-blend-luminosity">
+            <img
+              src="/images/cards/cello_wood.jpg"
+              alt=""
+              className="w-full h-full object-cover grayscale contrast-150 brightness-75 scale-105"
+            />
+          </div>
 
           {/* Verso Header */}
           <div className="relative z-10 flex items-center justify-between pb-3 border-b border-white/10 gap-2">

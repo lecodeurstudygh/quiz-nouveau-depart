@@ -21,17 +21,17 @@ interface VerseCardProps {
   className?: string;
 }
 
-// Nature-inspired gradient themes that provide visual depth behind cards
+// Nature-inspired gradient themes with Hillsong Preludes depth (warm organic dark undertones)
 const CARD_BACKGROUND_THEMES = [
-  "from-slate-900 via-indigo-950 to-slate-950", // Midnight mountain
-  "from-blue-950 via-cyan-950 to-slate-950",    // Ocean mist
-  "from-amber-950/80 via-stone-900 to-slate-950", // Golden dawn
-  "from-emerald-950 via-slate-900 to-slate-950", // Forest serenity
-  "from-purple-950 via-slate-900 to-slate-950",  // Twilight summit
-  "from-teal-950 via-slate-900 to-slate-950",    // Celestial stream
-  "from-rose-950/70 via-slate-900 to-slate-950",  // Sunset glow
-  "from-sky-950 via-indigo-950 to-slate-950",    // Alpine horizon
-  "from-amber-950/60 via-slate-950 to-slate-900", // Sacred desert
+  "from-[#221c17] via-[#16120f] to-[#0c0a08]",   // Warm Amber & Cello
+  "from-[#1c1c24] via-[#14141a] to-[#0c0c10]",   // Grand Piano Ebony
+  "from-[#241d16] via-[#18130e] to-[#0f0b08]",   // Acoustic Sand & Sun
+  "from-[#19201c] via-[#121614] to-[#0b0e0c]",   // Olive Mountain Dusk
+  "from-[#231b26] via-[#17111a] to-[#0e0a11]",   // Twilight Meditation
+  "from-[#181e24] via-[#11151a] to-[#0a0d11]",   // Quiet Waters Deep
+  "from-[#261b1e] via-[#191114] to-[#100a0d]",   // Velvet Evening Bronze
+  "from-[#1c1d26] via-[#13141a] to-[#0c0c11]",   // Celestial Horizon
+  "from-[#251f16] via-[#19140e] to-[#0f0b08]",   // Sanctuary Hearth
 ];
 
 export const VerseCard: React.FC<VerseCardProps> = ({
@@ -64,7 +64,7 @@ export const VerseCard: React.FC<VerseCardProps> = ({
         particleCount: 25,
         spread: 50,
         origin: { y: 0.8 },
-        colors: ["#f59e0b", "#fbbf24", "#38bdf8"],
+        colors: ["#c5a059", "#e4c88e", "#ffffff"],
       });
     }
     onToggleMemorized(verse.id);
@@ -81,17 +81,17 @@ export const VerseCard: React.FC<VerseCardProps> = ({
       >
         {/* ================= RECTO (FRONT) ================= */}
         <div
-          className={`card-face card-face-front rounded-3xl p-6 flex flex-col justify-between shadow-xl border border-white/10 bg-slate-950 bg-gradient-to-br ${gradientTheme}`}
+          className={`card-face card-face-front rounded-3xl p-6 flex flex-col justify-between shadow-2xl border border-white/10 border-t-white/20 bg-neutral-950 bg-gradient-to-br ${gradientTheme} hover:border-[#c5a059]/40 transition-all duration-300`}
         >
-          {/* Ambient overlay & subtle glow */}
-          <div className="absolute inset-0 bg-slate-950/50 pointer-events-none rounded-3xl" />
-          <div className="absolute -top-16 -right-16 w-44 h-44 bg-amber-500/10 rounded-full blur-2xl pointer-events-none" />
-          <div className="absolute -bottom-16 -left-16 w-44 h-44 bg-indigo-500/10 rounded-full blur-2xl pointer-events-none" />
+          {/* Ambient overlay & subtle acoustic glow */}
+          <div className="absolute inset-0 bg-neutral-950/45 pointer-events-none rounded-3xl" />
+          <div className="absolute -top-16 -right-16 w-48 h-48 bg-[#c5a059]/15 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute -bottom-16 -left-16 w-48 h-48 bg-white/5 rounded-full blur-3xl pointer-events-none" />
 
           {/* Top Bar on Card Front */}
           <div className="relative z-10 flex items-center justify-between">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-slate-900/90 text-amber-300 border border-white/10">
-              {verse.isKeyVerse && <Sparkles className="w-3.5 h-3.5 fill-amber-300" />}
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-neutral-900/90 text-[#c5a059] border border-white/10 shadow-sm">
+              {verse.isKeyVerse && <Sparkles className="w-3.5 h-3.5 fill-[#c5a059] text-[#c5a059]" />}
               {verse.isKeyVerse
                 ? language === "fr"
                   ? "Verset Clé"
@@ -103,10 +103,10 @@ export const VerseCard: React.FC<VerseCardProps> = ({
             <button
               type="button"
               onClick={handleToggleMemorized}
-              className={`p-2 rounded-xl transition-all duration-200 ${
+              className={`p-2 rounded-full transition-all duration-200 ${
                 isMemorized
-                  ? "bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20"
-                  : "bg-slate-900/80 text-slate-300 hover:text-white hover:bg-slate-800 border border-white/10"
+                  ? "bg-[#c5a059] text-black shadow-md shadow-[#c5a059]/25 font-bold"
+                  : "bg-white/10 hover:bg-white/20 text-white border border-white/15"
               }`}
               title={isMemorized ? t("unmemorizeBtn") : t("memorizeBtn")}
             >
@@ -120,7 +120,7 @@ export const VerseCard: React.FC<VerseCardProps> = ({
 
           {/* Center: Prominent Scripture Reference & Theme */}
           <div className="relative z-10 my-auto text-center space-y-2.5 px-3 max-w-full overflow-hidden">
-            <span className="inline-block text-[11px] font-bold text-amber-400/90 tracking-widest uppercase">
+            <span className="inline-block text-[11px] font-bold text-[#c5a059] tracking-widest uppercase">
               {verse.theme[language]}
             </span>
             <h3
@@ -134,18 +134,18 @@ export const VerseCard: React.FC<VerseCardProps> = ({
             >
               {verse.reference[language]}
             </h3>
-            <p className="text-xs text-slate-300/80 font-mono tracking-wider">
+            <p className="text-xs text-neutral-300/80 font-mono tracking-wider">
               {language === "fr" ? "Version Segond 21" : "NIV Translation"}
             </p>
           </div>
 
           {/* Bottom hint to flip */}
-          <div className="relative z-10 pt-4 border-t border-white/10 flex items-center justify-between text-xs text-slate-400 gap-2">
-            <span className="flex items-center gap-1.5 text-[11px] text-slate-300 font-medium truncate max-w-[60%]">
-              <BookOpen className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+          <div className="relative z-10 pt-4 border-t border-white/10 flex items-center justify-between text-xs text-neutral-400 gap-2">
+            <span className="flex items-center gap-1.5 text-[11px] text-neutral-300 font-medium truncate max-w-[60%]">
+              <BookOpen className="w-3.5 h-3.5 text-[#c5a059] shrink-0" />
               <span className="truncate">{verse.book[language]} {verse.chapter}</span>
             </span>
-            <span className="flex items-center gap-1 text-[11px] group-hover:text-amber-300 transition-colors shrink-0">
+            <span className="flex items-center gap-1 text-[11px] group-hover:text-[#c5a059] transition-colors shrink-0">
               <Rotate3d className="w-3.5 h-3.5 animate-pulse" />
               <span>{t("flipCardInstruction")}</span>
             </span>
@@ -154,18 +154,18 @@ export const VerseCard: React.FC<VerseCardProps> = ({
 
         {/* ================= VERSO (BACK) ================= */}
         <div
-          className={`card-face card-face-back rounded-3xl p-6 flex flex-col justify-between shadow-2xl border border-amber-500/30 bg-slate-950 bg-gradient-to-tr ${gradientTheme}`}
+          className={`card-face card-face-back rounded-3xl p-6 flex flex-col justify-between shadow-2xl border border-[#c5a059]/30 border-t-[#c5a059]/50 bg-neutral-950 bg-gradient-to-tr ${gradientTheme}`}
         >
           {/* Contrast-enhancing readability backdrop */}
-          <div className="absolute inset-0 bg-slate-950/95 pointer-events-none rounded-3xl" />
+          <div className="absolute inset-0 bg-[#0c0c0e]/95 pointer-events-none rounded-3xl" />
 
           {/* Verso Header */}
           <div className="relative z-10 flex items-center justify-between pb-3 border-b border-white/10 gap-2">
             <div className="flex items-center gap-2 min-w-0 flex-1">
-              <span className="text-sm font-bold text-amber-300 tracking-tight truncate">
+              <span className="text-sm font-bold text-[#c5a059] tracking-tight truncate">
                 {verse.reference[language]}
               </span>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-white/10 text-slate-300 border border-white/10 shrink-0">
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-white/10 text-neutral-300 border border-white/10 shrink-0">
                 {verse.translation[language]}
               </span>
             </div>
@@ -175,7 +175,7 @@ export const VerseCard: React.FC<VerseCardProps> = ({
               <button
                 type="button"
                 onClick={handleCopy}
-                className="p-1.5 rounded-lg text-slate-300 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 transition-colors"
+                className="p-1.5 rounded-full text-neutral-300 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 transition-colors"
                 title={t("copyVerseBtn")}
               >
                 {copied ? (
@@ -189,10 +189,10 @@ export const VerseCard: React.FC<VerseCardProps> = ({
               <button
                 type="button"
                 onClick={handleToggleMemorized}
-                className={`p-1.5 rounded-lg transition-colors ${
+                className={`p-1.5 rounded-full transition-colors ${
                   isMemorized
-                    ? "bg-amber-500 text-slate-950"
-                    : "text-slate-300 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10"
+                    ? "bg-[#c5a059] text-black font-bold"
+                    : "text-neutral-300 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10"
                 }`}
                 title={isMemorized ? t("unmemorizeBtn") : t("memorizeBtn")}
               >
@@ -207,11 +207,11 @@ export const VerseCard: React.FC<VerseCardProps> = ({
 
           {/* Verso Scripture Text Content */}
           <div className="relative z-10 my-auto py-2 overflow-y-auto max-h-[260px] sm:max-h-[340px] pr-1">
-            <p className="text-base sm:text-lg leading-relaxed font-serif text-slate-100 italic">
+            <p className="text-base sm:text-lg leading-relaxed font-serif text-neutral-100 italic">
               « {verse.text[language]} »
             </p>
             {verse.context && (
-              <p className="mt-3 text-xs text-amber-200/80 leading-normal border-l-2 border-amber-500/50 pl-2.5 font-sans">
+              <p className="mt-3 text-xs text-[#e4c88e]/90 leading-normal border-l-2 border-[#c5a059]/60 pl-2.5 font-sans">
                 {verse.context[language]}
               </p>
             )}
@@ -221,7 +221,7 @@ export const VerseCard: React.FC<VerseCardProps> = ({
           <div className="relative z-10 pt-3 border-t border-white/10 flex items-center justify-between text-xs">
             <span
               className={`text-[11px] font-semibold flex items-center gap-1 ${
-                isMemorized ? "text-emerald-400" : "text-slate-400"
+                isMemorized ? "text-emerald-400" : "text-neutral-400"
               }`}
             >
               {isMemorized ? (
@@ -234,7 +234,7 @@ export const VerseCard: React.FC<VerseCardProps> = ({
               )}
             </span>
 
-            <span className="flex items-center gap-1 text-[11px] text-slate-400 group-hover:text-amber-300 transition-colors">
+            <span className="flex items-center gap-1 text-[11px] text-neutral-400 group-hover:text-[#c5a059] transition-colors">
               <Rotate3d className="w-3.5 h-3.5" />
               <span>{t("flipCardInstruction")}</span>
             </span>

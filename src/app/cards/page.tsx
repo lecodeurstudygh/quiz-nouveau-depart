@@ -264,7 +264,7 @@ export default function CardsPage() {
       {/* Sober Header: Clean Title on Left, Compact Counter on Right */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 py-1">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-black text-neutral-900 dark:text-white tracking-tight">
             {language === "fr"
               ? "Mémorisation & méditation des Écritures"
               : "Scripture Memorization & Meditation"}
@@ -272,19 +272,19 @@ export default function CardsPage() {
         </div>
 
         {/* Compact Progress Pill */}
-        <div className="flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 shadow-sm self-start sm:self-auto">
-          <BookmarkCheck className="w-4 h-4 text-emerald-500 dark:text-emerald-400" />
-          <span className="text-xs font-semibold text-slate-700 dark:text-zinc-300">
+        <div className="flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-white dark:bg-zinc-900/90 border border-neutral-200 dark:border-zinc-800 shadow-sm self-start sm:self-auto">
+          <BookmarkCheck className="w-4 h-4 text-[#c5a059]" />
+          <span className="text-xs font-semibold text-neutral-700 dark:text-zinc-300">
             {t("memorized")} :
           </span>
-          <span className="text-xs font-mono font-bold text-amber-600 dark:text-amber-400">
+          <span className="text-xs font-mono font-bold text-[#9e7d32] dark:text-[#c5a059]">
             {currentMemorizedCount} / {baseVerses.length} ({memorizedPercentage}%)
           </span>
         </div>
       </div>
 
       {/* Unified Single-Line Toolbar: Dropdown Filters, Search, Actions & Mode Switcher */}
-      <div className="flex flex-wrap items-center justify-between gap-2.5 p-2.5 sm:p-3 rounded-2xl bg-white/80 dark:bg-zinc-900/80 border border-slate-200 dark:border-zinc-800 shadow-sm backdrop-blur-md">
+      <div className="flex flex-wrap items-center justify-between gap-2.5 p-2.5 sm:p-3 rounded-3xl bg-white/90 dark:bg-zinc-900/80 border border-neutral-200 dark:border-zinc-800 shadow-sm backdrop-blur-md">
         {/* Dropdowns Group */}
         <div className="flex flex-wrap items-center gap-2">
           {/* Week Select Dropdown */}
@@ -298,7 +298,7 @@ export default function CardsPage() {
                 setShuffledOrder(null);
                 setFocusIndex(0);
               }}
-              className="appearance-none pl-3 pr-8 py-1.5 text-xs font-semibold rounded-xl bg-slate-100 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 text-slate-800 dark:text-zinc-200 hover:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500 cursor-pointer"
+              className="appearance-none pl-3.5 pr-8 py-1.5 text-xs font-semibold rounded-full bg-neutral-100 dark:bg-zinc-800 border border-neutral-200 dark:border-zinc-700 text-neutral-800 dark:text-zinc-200 hover:border-[#c5a059] focus:outline-none focus:ring-1 focus:ring-[#c5a059] cursor-pointer"
             >
               {allCourses.map((c) => (
                 <option key={c.id} value={c.id}>
@@ -313,7 +313,7 @@ export default function CardsPage() {
                   : `All Weeks (${getAllVerses().length})`}
               </option>
             </select>
-            <ChevronDown className="w-3.5 h-3.5 absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+            <ChevronDown className="w-3.5 h-3.5 absolute right-2.5 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none" />
           </div>
 
           {/* Theme Select Dropdown */}
@@ -324,7 +324,7 @@ export default function CardsPage() {
                 setSelectedSemanticTheme(e.target.value ? e.target.value : null);
                 setFocusIndex(0);
               }}
-              className="appearance-none pl-3 pr-8 py-1.5 text-xs font-semibold rounded-xl bg-slate-100 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 text-slate-800 dark:text-zinc-200 hover:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500 cursor-pointer"
+              className="appearance-none pl-3.5 pr-8 py-1.5 text-xs font-semibold rounded-full bg-neutral-100 dark:bg-zinc-800 border border-neutral-200 dark:border-zinc-700 text-neutral-800 dark:text-zinc-200 hover:border-[#c5a059] focus:outline-none focus:ring-1 focus:ring-[#c5a059] cursor-pointer"
             >
               <option value="">
                 {language === "fr" ? "Tous les thèmes" : "All Themes"}
@@ -335,7 +335,7 @@ export default function CardsPage() {
                 </option>
               ))}
             </select>
-            <ChevronDown className="w-3.5 h-3.5 absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+            <ChevronDown className="w-3.5 h-3.5 absolute right-2.5 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none" />
           </div>
 
           {/* Verses Status Select Dropdown */}
@@ -346,7 +346,7 @@ export default function CardsPage() {
                 setFilterMode(e.target.value as "all" | "key" | "memorized" | "toReview");
                 setFocusIndex(0);
               }}
-              className="appearance-none pl-3 pr-8 py-1.5 text-xs font-semibold rounded-xl bg-slate-100 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 text-slate-800 dark:text-zinc-200 hover:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500 cursor-pointer"
+              className="appearance-none pl-3.5 pr-8 py-1.5 text-xs font-semibold rounded-full bg-neutral-100 dark:bg-zinc-800 border border-neutral-200 dark:border-zinc-700 text-neutral-800 dark:text-zinc-200 hover:border-[#c5a059] focus:outline-none focus:ring-1 focus:ring-[#c5a059] cursor-pointer"
             >
               <option value="all">
                 {language === "fr"
@@ -369,7 +369,7 @@ export default function CardsPage() {
                   : `To Review (${baseVerses.length - currentMemorizedCount})`}
               </option>
             </select>
-            <ChevronDown className="w-3.5 h-3.5 absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+            <ChevronDown className="w-3.5 h-3.5 absolute right-2.5 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none" />
           </div>
         </div>
 
@@ -377,7 +377,7 @@ export default function CardsPage() {
         <div className="flex items-center gap-2 flex-wrap">
           {/* Search Input */}
           <div className="relative w-36 sm:w-48">
-            <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400" />
+            <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" />
             <input
               type="text"
               placeholder={language === "fr" ? "Recherche..." : "Search..."}
@@ -386,7 +386,7 @@ export default function CardsPage() {
                 setSearchQuery(e.target.value);
                 setFocusIndex(0);
               }}
-              className="w-full pl-8 pr-2.5 py-1.5 text-xs bg-slate-100 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-zinc-500 focus:outline-none focus:border-amber-500 transition-colors"
+              className="w-full pl-8 pr-3 py-1.5 text-xs bg-neutral-100 dark:bg-zinc-800 border border-neutral-200 dark:border-zinc-700 rounded-full text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-zinc-500 focus:outline-none focus:border-[#c5a059] transition-colors"
             />
           </div>
 
@@ -394,7 +394,7 @@ export default function CardsPage() {
           <button
             type="button"
             onClick={handleShuffle}
-            className="p-1.5 rounded-xl bg-slate-100 dark:bg-zinc-800 text-slate-600 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-zinc-700 transition-colors shadow-sm"
+            className="p-2 rounded-full bg-neutral-100 dark:bg-zinc-800 text-neutral-600 dark:text-zinc-300 hover:text-neutral-900 dark:hover:text-white border border-neutral-200 dark:border-zinc-700 transition-colors shadow-sm"
             title={t("shuffleBtn")}
           >
             <Shuffle className="w-3.5 h-3.5" />
@@ -404,21 +404,21 @@ export default function CardsPage() {
           <button
             type="button"
             onClick={handleResetOrder}
-            className="p-1.5 rounded-xl bg-slate-100 dark:bg-zinc-800 text-slate-600 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-zinc-700 transition-colors shadow-sm"
+            className="p-2 rounded-full bg-neutral-100 dark:bg-zinc-800 text-neutral-600 dark:text-zinc-300 hover:text-neutral-900 dark:hover:text-white border border-neutral-200 dark:border-zinc-700 transition-colors shadow-sm"
             title={t("resetDeckBtn")}
           >
             <RotateCcw className="w-3.5 h-3.5" />
           </button>
 
           {/* View Mode Toggle: Focus (1 par 1) vs Grille */}
-          <div className="flex items-center p-0.5 rounded-xl bg-slate-200/80 dark:bg-zinc-800 border border-slate-300/80 dark:border-zinc-700 shadow-inner">
+          <div className="flex items-center p-0.5 rounded-full bg-neutral-200/80 dark:bg-zinc-800 border border-neutral-300/80 dark:border-zinc-700 shadow-inner">
             <button
               type="button"
               onClick={() => handleSetViewMode("focus")}
-              className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold transition-all ${
+              className={`flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold transition-all ${
                 viewMode === "focus"
-                  ? "bg-amber-500 text-slate-950 shadow-sm"
-                  : "text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white"
+                  ? "bg-neutral-900 text-white dark:bg-white dark:text-neutral-950 shadow-sm"
+                  : "text-neutral-600 dark:text-zinc-400 hover:text-neutral-900 dark:hover:text-white"
               }`}
               title={t("modeFocus")}
             >
@@ -428,10 +428,10 @@ export default function CardsPage() {
             <button
               type="button"
               onClick={() => handleSetViewMode("grid")}
-              className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold transition-all ${
+              className={`flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold transition-all ${
                 viewMode === "grid"
-                  ? "bg-amber-500 text-slate-950 shadow-sm"
-                  : "text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white"
+                  ? "bg-neutral-900 text-white dark:bg-white dark:text-neutral-950 shadow-sm"
+                  : "text-neutral-600 dark:text-zinc-400 hover:text-neutral-900 dark:hover:text-white"
               }`}
               title={t("modeGrid")}
             >
@@ -444,12 +444,12 @@ export default function CardsPage() {
 
       {/* Main Content Area */}
       {filteredVerses.length === 0 ? (
-        <div className="text-center py-16 rounded-3xl glass-card border border-slate-200 dark:border-zinc-800 space-y-3">
-          <Layers className="w-10 h-10 text-slate-400 dark:text-zinc-500 mx-auto" />
-          <h3 className="text-lg font-bold text-slate-900 dark:text-white">
+        <div className="text-center py-16 rounded-3xl glass-card border border-neutral-200 dark:border-zinc-800 space-y-3">
+          <Layers className="w-10 h-10 text-neutral-400 dark:text-zinc-500 mx-auto" />
+          <h3 className="text-lg font-bold text-neutral-900 dark:text-white">
             {language === "fr" ? "Aucun verset trouvé" : "No verses found"}
           </h3>
-          <p className="text-xs text-slate-500 dark:text-zinc-400">
+          <p className="text-xs text-neutral-500 dark:text-zinc-400">
             {language === "fr"
               ? "Essaie de modifier tes filtres ou ta recherche."
               : "Try adjusting your filters or search query."}
@@ -457,7 +457,7 @@ export default function CardsPage() {
           <button
             type="button"
             onClick={handleResetOrder}
-            className="mt-2 px-4 py-2 rounded-xl bg-amber-500 text-slate-950 text-xs font-bold"
+            className="mt-2 px-5 py-2 rounded-full bg-neutral-900 text-white dark:bg-white dark:text-neutral-950 text-xs font-bold shadow-sm"
           >
             {t("resetDeckBtn")}
           </button>
@@ -477,22 +477,22 @@ export default function CardsPage() {
           </div>
 
           {/* Focus Navigation Controls */}
-          <div className="flex items-center justify-between gap-3 bg-white/90 dark:bg-zinc-900/90 p-3 rounded-2xl border border-slate-200 dark:border-zinc-800 shadow-md backdrop-blur-xl">
+          <div className="flex items-center justify-between gap-3 bg-white/90 dark:bg-zinc-900/90 p-3 rounded-full border border-neutral-200 dark:border-zinc-800 shadow-md backdrop-blur-xl">
             <button
               type="button"
               onClick={handlePrevFocus}
               disabled={focusIndex === 0}
-              className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 disabled:opacity-30 disabled:pointer-events-none text-xs font-bold text-slate-800 dark:text-white transition-all active:scale-95"
+              className="flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-neutral-100 dark:bg-white/5 hover:bg-neutral-200 dark:hover:bg-white/10 disabled:opacity-30 disabled:pointer-events-none text-xs font-bold text-neutral-800 dark:text-white transition-all active:scale-95"
             >
               <ChevronLeft className="w-4 h-4" />
               <span>{t("navPrevious")}</span>
             </button>
 
             <div className="text-center">
-              <span className="text-xs font-mono font-bold text-amber-600 dark:text-amber-400">
+              <span className="text-xs font-mono font-bold text-[#9e7d32] dark:text-[#c5a059]">
                 {focusIndex + 1} {t("ofQuestion")} {filteredVerses.length}
               </span>
-              <div className="text-[10px] text-slate-500 dark:text-zinc-400 font-medium">
+              <div className="text-[10px] text-neutral-500 dark:text-zinc-400 font-medium">
                 {currentFocusVerse.isKeyVerse
                   ? language === "fr"
                     ? "★ Verset Clé"
@@ -505,7 +505,7 @@ export default function CardsPage() {
               type="button"
               onClick={handleNextFocus}
               disabled={focusIndex >= filteredVerses.length - 1}
-              className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 disabled:opacity-30 disabled:pointer-events-none text-xs font-bold text-slate-950 shadow-md shadow-amber-500/20 transition-all active:scale-95"
+              className="flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-neutral-900 text-white dark:bg-white dark:text-neutral-950 hover:bg-neutral-800 dark:hover:bg-zinc-200 disabled:opacity-30 disabled:pointer-events-none text-xs font-bold shadow-sm transition-all active:scale-95"
             >
               <span>{t("navNextShort")}</span>
               <ChevronRight className="w-4 h-4" />
@@ -513,9 +513,9 @@ export default function CardsPage() {
           </div>
 
           {/* Slender Progress Track */}
-          <div className="w-full bg-slate-200 dark:bg-zinc-800 rounded-full h-1.5 overflow-hidden">
+          <div className="w-full bg-neutral-200 dark:bg-zinc-800 rounded-full h-1.5 overflow-hidden">
             <div
-              className="bg-amber-500 h-full transition-all duration-300 rounded-full"
+              className="bg-[#c5a059] h-full transition-all duration-300 rounded-full"
               style={{
                 width: `${((focusIndex + 1) / filteredVerses.length) * 100}%`,
               }}
@@ -523,7 +523,7 @@ export default function CardsPage() {
           </div>
 
           {/* Keyboard hint & Mode switch shortcut */}
-          <div className="flex items-center justify-between text-[11px] text-slate-500 dark:text-zinc-400 px-1">
+          <div className="flex items-center justify-between text-[11px] text-neutral-500 dark:text-zinc-400 px-1">
             <span>
               {language === "fr"
                 ? "Touches ← et → pour naviguer • Clic pour retourner"
@@ -532,7 +532,7 @@ export default function CardsPage() {
             <button
               type="button"
               onClick={() => handleSetViewMode("grid")}
-              className="text-amber-600 dark:text-amber-400 hover:underline font-semibold"
+              className="text-[#9e7d32] dark:text-[#c5a059] hover:underline font-semibold"
             >
               {language === "fr" ? "Tout afficher en grille" : "Show all in grid"}
             </button>

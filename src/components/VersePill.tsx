@@ -23,7 +23,7 @@ interface FloatingTooltipProps {
 const FloatingTooltip: React.FC<FloatingTooltipProps> = ({ verse, pos, language }) => {
   return (
     <div
-      className="fixed z-[9999] w-72 sm:w-80 p-3.5 rounded-2xl bg-slate-950/95 border border-amber-500/40 shadow-2xl backdrop-blur-xl pointer-events-none text-left animate-fade-in"
+      className="fixed z-[9999] w-72 sm:w-80 p-3.5 rounded-2xl bg-[#0e0e13]/95 border border-[#c5a059]/40 shadow-2xl backdrop-blur-xl pointer-events-none text-left animate-fade-in text-zinc-100"
       style={{
         top: `${pos.top}px`,
         left: `${pos.left}px`,
@@ -37,16 +37,16 @@ const FloatingTooltip: React.FC<FloatingTooltipProps> = ({ verse, pos, language 
           <span className="text-xs font-bold text-amber-300 truncate">
             {verse.reference}
           </span>
-          <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-white/10 text-slate-300 shrink-0">
+          <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-white/10 text-zinc-300 shrink-0">
             {verse.translation}
           </span>
         </div>
-        <span className="text-[9px] font-mono uppercase text-slate-400 font-semibold shrink-0">
+        <span className="text-[9px] font-mono uppercase text-zinc-400 font-semibold shrink-0">
           {language === "fr" ? "Aperçu" : "Preview"}
         </span>
       </div>
 
-      <p className="text-xs text-slate-100 font-serif italic line-clamp-4 leading-relaxed">
+      <p className="text-xs text-zinc-100 font-serif italic line-clamp-4 leading-relaxed">
         « {verse.text} »
       </p>
 
@@ -58,8 +58,8 @@ const FloatingTooltip: React.FC<FloatingTooltipProps> = ({ verse, pos, language 
       <div
         className={`absolute border-4 border-transparent ${
           pos.placement === "above"
-            ? "top-full border-t-slate-950 -mt-0.5"
-            : "bottom-full border-b-slate-950 -mb-0.5"
+            ? "top-full border-t-[#0e0e13] -mt-0.5"
+            : "bottom-full border-b-[#0e0e13] -mb-0.5"
         }`}
         style={{ left: `${pos.arrowLeft}px`, transform: "translateX(-50%)" }}
       />
@@ -160,7 +160,7 @@ export const VersePill: React.FC<VersePillProps> = ({ reference }) => {
         onClick={handleClick}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        className="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-lg bg-amber-500/15 hover:bg-amber-500/30 text-amber-300 border border-amber-500/30 hover:border-amber-400 transition-all duration-150 active:scale-95 shadow-sm group/pill cursor-pointer"
+        className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1 rounded-full bg-amber-500/15 hover:bg-amber-500/30 text-amber-300 border border-amber-500/30 hover:border-amber-400 transition-all duration-150 active:scale-95 shadow-sm group/pill cursor-pointer"
         title={
           language === "fr"
             ? `Cliquer pour lire ${reference}`

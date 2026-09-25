@@ -37,7 +37,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr" className={`dark ${inter.variable} ${playfair.variable}`} suppressHydrationWarning>
-      <body className="bg-slate-50 text-slate-900 dark:bg-[#09090b] dark:text-zinc-100 min-h-screen flex flex-col font-sans antialiased transition-colors duration-200">
+      <body className="bg-[#f6f6f6] text-neutral-900 dark:bg-[#0b0b0e] dark:text-zinc-100 min-h-screen flex flex-col font-sans antialiased transition-colors duration-200">
         <LanguageProvider>
           <AudioPlayer />
           <Navbar />

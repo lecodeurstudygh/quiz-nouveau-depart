@@ -46,7 +46,7 @@ export const SettingsModal: React.FC = () => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 dark:bg-slate-950/80 backdrop-blur-md animate-fade-in">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 dark:bg-black/80 backdrop-blur-md animate-fade-in">
       {/* Click backdrop to dismiss */}
       <div
         className="absolute inset-0"
@@ -54,15 +54,15 @@ export const SettingsModal: React.FC = () => {
         aria-hidden="true"
       />
 
-      <div className="relative w-full max-w-md glass-panel rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-200 dark:border-slate-700/60 z-10 animate-slide-up">
+      <div className="relative w-full max-w-md glass-panel rounded-3xl p-6 sm:p-8 shadow-2xl border border-neutral-200/80 dark:border-zinc-800/80 z-10 animate-slide-up">
         {/* Header */}
-        <div className="flex items-center justify-between pb-5 border-b border-slate-200 dark:border-slate-800">
+        <div className="flex items-center justify-between pb-5 border-b border-neutral-200 dark:border-zinc-800/80">
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-500 dark:text-amber-400 flex items-center justify-center">
-              <SlidersHorizontal className="w-5 h-5" />
+            <div className="w-9 h-9 rounded-full bg-amber-500/15 text-amber-700 dark:text-[#d6b26d] flex items-center justify-center border border-amber-500/20">
+              <SlidersHorizontal className="w-4 h-4" />
             </div>
             <div>
-              <h2 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight">
+              <h2 className="text-xl font-bold text-neutral-900 dark:text-zinc-100 tracking-tight">
                 {t("settingsTitle")}
               </h2>
             </div>
@@ -70,7 +70,7 @@ export const SettingsModal: React.FC = () => {
           <button
             type="button"
             onClick={() => setIsSettingsOpen(false)}
-            className="w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:text-slate-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+            className="w-8 h-8 rounded-full flex items-center justify-center text-neutral-400 hover:text-neutral-700 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-zinc-800 transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -82,8 +82,8 @@ export const SettingsModal: React.FC = () => {
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <div>
-                <p className="font-semibold text-slate-800 dark:text-slate-200">{t("soundSetting")}</p>
-                <p className="text-xs text-slate-500 dark:text-slate-400">
+                <p className="font-semibold text-neutral-800 dark:text-zinc-200">{t("soundSetting")}</p>
+                <p className="text-xs text-neutral-500 dark:text-zinc-400">
                   {language === "fr"
                     ? "Méditation & louange instrumentale"
                     : "Worship & reflection instrumental track"}
@@ -92,10 +92,10 @@ export const SettingsModal: React.FC = () => {
               <button
                 type="button"
                 onClick={() => updateSettings({ soundEnabled: !settings.soundEnabled })}
-                className={`px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-2 border transition-all ${
+                className={`px-3.5 py-1.5 rounded-full text-xs font-bold flex items-center gap-2 border transition-all ${
                   settings.soundEnabled
-                    ? "bg-amber-500/20 text-amber-600 dark:text-amber-300 border-amber-500/40"
-                    : "bg-slate-100 dark:bg-slate-900 text-slate-500 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:text-slate-900 dark:hover:text-slate-200"
+                    ? "bg-amber-500/15 text-amber-700 dark:text-[#d6b26d] border-amber-500/40"
+                    : "bg-neutral-100 dark:bg-zinc-900 text-neutral-500 dark:text-zinc-400 border-neutral-200 dark:border-zinc-800 hover:text-neutral-900 dark:hover:text-zinc-200"
                 }`}
               >
                 {settings.soundEnabled ? (
@@ -114,7 +114,7 @@ export const SettingsModal: React.FC = () => {
 
             {/* Track Selector */}
             <div className="space-y-1.5 pt-1">
-              <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+              <label className="block text-[11px] font-bold uppercase tracking-wider text-neutral-500 dark:text-zinc-400">
                 {language === "fr" ? "Piste instrumentale sélectionnée :" : "Selected Instrumental Track:"}
               </label>
               <div className="space-y-1.5">
@@ -125,18 +125,18 @@ export const SettingsModal: React.FC = () => {
                       key={track.id}
                       type="button"
                       onClick={() => updateSettings({ soundTrack: track.id })}
-                      className={`w-full p-2.5 rounded-xl border text-left flex items-center justify-between gap-2.5 transition-all ${
+                      className={`w-full p-3 rounded-2xl border text-left flex items-center justify-between gap-2.5 transition-all ${
                         isSelected
-                          ? "bg-amber-500/15 border-amber-500/50 shadow-sm ring-1 ring-amber-500/40"
-                          : "bg-slate-100/70 dark:bg-slate-900/60 border-slate-200 dark:border-slate-800 hover:border-amber-400/50"
+                          ? "bg-neutral-900 text-white dark:bg-zinc-900 dark:text-white border-neutral-900 dark:border-[#c5a059] shadow-md ring-1 ring-neutral-900 dark:ring-[#c5a059]/40"
+                          : "bg-white/80 dark:bg-zinc-900/60 border-neutral-200 dark:border-zinc-800/80 hover:border-neutral-300 dark:hover:border-zinc-700"
                       }`}
                     >
                       <div className="flex items-center gap-2.5 min-w-0">
                         <div
-                          className={`w-6 h-6 rounded-lg flex items-center justify-center shrink-0 ${
+                          className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 ${
                             isSelected
-                              ? "bg-amber-500 text-slate-950 font-bold"
-                              : "bg-slate-200 dark:bg-slate-800 text-slate-500 dark:text-slate-400"
+                              ? "bg-white text-neutral-950 dark:bg-[#c5a059] dark:text-zinc-950 font-bold"
+                              : "bg-neutral-100 dark:bg-zinc-800 text-neutral-500 dark:text-zinc-400"
                           }`}
                         >
                           <Music className="w-3.5 h-3.5" />
@@ -145,13 +145,13 @@ export const SettingsModal: React.FC = () => {
                           <span
                             className={`text-xs font-bold block truncate ${
                               isSelected
-                                ? "text-amber-600 dark:text-amber-300"
-                                : "text-slate-800 dark:text-slate-200"
+                                ? "text-white dark:text-[#d6b26d]"
+                                : "text-neutral-800 dark:text-zinc-200"
                             }`}
                           >
                             {track.title}
                           </span>
-                          <span className="text-[10px] text-slate-500 dark:text-slate-400 block truncate">
+                          <span className={`text-[10px] block truncate ${isSelected ? "text-neutral-300 dark:text-zinc-400" : "text-neutral-500 dark:text-zinc-400"}`}>
                             {track.artist}
                           </span>
                         </div>
@@ -176,7 +176,7 @@ export const SettingsModal: React.FC = () => {
 
             {settings.soundEnabled && (
               <div className="flex items-center gap-3 pt-2">
-                <span className="text-xs text-slate-500 dark:text-slate-400 min-w-[70px]">
+                <span className="text-xs text-neutral-500 dark:text-zinc-400 min-w-[70px]">
                   {t("soundVolumeLabel")}
                 </span>
                 <input
@@ -188,9 +188,9 @@ export const SettingsModal: React.FC = () => {
                   onChange={(e) =>
                     updateSettings({ soundVolume: parseFloat(e.target.value) })
                   }
-                  className="w-full accent-amber-500 h-1.5 bg-slate-200 dark:bg-slate-800 rounded-lg cursor-pointer"
+                  className="w-full accent-amber-500 h-1.5 bg-neutral-200 dark:bg-zinc-800 rounded-lg cursor-pointer"
                 />
-                <span className="text-xs font-mono text-slate-500 dark:text-slate-400">
+                <span className="text-xs font-mono text-neutral-500 dark:text-zinc-400">
                   {Math.round(settings.soundVolume * 100)}%
                 </span>
               </div>
@@ -198,12 +198,12 @@ export const SettingsModal: React.FC = () => {
           </div>
 
           {/* 2. Reset Memorization Progress */}
-          <div className="pt-4 border-t border-slate-200 dark:border-slate-800/80 flex items-center justify-between">
+          <div className="pt-4 border-t border-neutral-200 dark:border-zinc-800/80 flex items-center justify-between">
             <div>
-              <p className="font-semibold text-slate-800 dark:text-slate-200">
+              <p className="font-semibold text-neutral-800 dark:text-zinc-200">
                 {language === "fr" ? "Mémoire des versets" : "Verse Memory"}
               </p>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
+              <p className="text-xs text-neutral-500 dark:text-zinc-400">
                 {language === "fr"
                   ? "Remettre à zéro les versets cochés"
                   : "Reset marked memorized cards"}
@@ -212,7 +212,7 @@ export const SettingsModal: React.FC = () => {
             <button
               type="button"
               onClick={handleResetMemorization}
-              className="px-3 py-1.5 rounded-xl text-xs font-medium text-rose-500 dark:text-rose-400 hover:text-rose-600 dark:hover:text-rose-300 hover:bg-rose-500/10 border border-rose-500/20 transition-all flex items-center gap-1.5"
+              className="px-3.5 py-1.5 rounded-full text-xs font-medium text-rose-500 dark:text-rose-400 hover:text-rose-600 dark:hover:text-rose-300 hover:bg-rose-500/10 border border-rose-500/20 transition-all flex items-center gap-1.5"
             >
               <RotateCcw className="w-3.5 h-3.5" />
               <span>{t("resetDeckBtn")}</span>
@@ -221,11 +221,11 @@ export const SettingsModal: React.FC = () => {
         </div>
 
         {/* Footer */}
-        <div className="pt-4 border-t border-slate-200 dark:border-slate-800 flex justify-end">
+        <div className="pt-4 border-t border-neutral-200 dark:border-zinc-800/80 flex justify-end">
           <button
             type="button"
             onClick={() => setIsSettingsOpen(false)}
-            className="px-6 py-2.5 rounded-xl bg-amber-500 text-slate-950 text-sm font-bold shadow-lg shadow-amber-500/20 hover:bg-amber-400 transition-all active:scale-95"
+            className="px-6 py-2.5 rounded-full bg-neutral-900 hover:bg-black text-white dark:bg-white dark:hover:bg-neutral-100 dark:text-zinc-950 text-sm font-bold shadow-md transition-all active:scale-95"
           >
             {t("closeBtn")}
           </button>

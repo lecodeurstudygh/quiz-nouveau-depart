@@ -200,28 +200,28 @@ export default function DiscussionPage() {
       {/* Sober Header: Title on Left, Compact Counter on Right */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 py-1">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-black text-neutral-900 dark:text-white tracking-tight">
             {t("discussionTitle")}
           </h1>
-          <p className="text-xs sm:text-sm text-slate-600 dark:text-zinc-400 mt-1">
+          <p className="text-xs sm:text-sm text-neutral-600 dark:text-zinc-400 mt-1">
             {t("discussionSubtitle")}
           </p>
         </div>
 
         {/* Compact Counter Badge */}
-        <div className="flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 shadow-sm self-start sm:self-auto">
-          <MessageSquareText className="w-4 h-4 text-amber-500" />
-          <span className="text-xs font-semibold text-slate-700 dark:text-zinc-300">
+        <div className="flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-white dark:bg-zinc-900/90 border border-neutral-200 dark:border-zinc-800 shadow-sm self-start sm:self-auto">
+          <MessageSquareText className="w-4 h-4 text-[#c5a059]" />
+          <span className="text-xs font-semibold text-neutral-700 dark:text-zinc-300">
             {language === "fr" ? "Questions répertoriées :" : "Questions listed:"}
           </span>
-          <span className="text-xs font-mono font-bold text-amber-600 dark:text-amber-400">
+          <span className="text-xs font-mono font-bold text-[#9e7d32] dark:text-[#c5a059]">
             {filteredCards.length} / {baseCards.length}
           </span>
         </div>
       </div>
 
       {/* Unified Single-Line Toolbar: Dropdown Filters, Search, Actions & Mode Switcher */}
-      <div className="flex flex-wrap items-center justify-between gap-2.5 p-2.5 sm:p-3 rounded-2xl bg-white/80 dark:bg-zinc-900/80 border border-slate-200 dark:border-zinc-800 shadow-sm backdrop-blur-md">
+      <div className="flex flex-wrap items-center justify-between gap-2.5 p-2.5 sm:p-3 rounded-3xl bg-white/90 dark:bg-zinc-900/80 border border-neutral-200 dark:border-zinc-800 shadow-sm backdrop-blur-md">
         {/* Dropdowns Group */}
         <div className="flex flex-wrap items-center gap-2">
           {/* Week Select Dropdown */}
@@ -235,7 +235,7 @@ export default function DiscussionPage() {
                 setShuffledOrder(null);
                 setFocusIndex(0);
               }}
-              className="appearance-none pl-3 pr-8 py-1.5 text-xs font-semibold rounded-xl bg-slate-100 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 text-slate-800 dark:text-zinc-200 hover:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500 cursor-pointer"
+              className="appearance-none pl-3.5 pr-8 py-1.5 text-xs font-semibold rounded-full bg-neutral-100 dark:bg-zinc-800 border border-neutral-200 dark:border-zinc-700 text-neutral-800 dark:text-zinc-200 hover:border-[#c5a059] focus:outline-none focus:ring-1 focus:ring-[#c5a059] cursor-pointer"
             >
               {allCourses.map((c) => (
                 <option key={c.id} value={c.id}>
@@ -250,7 +250,7 @@ export default function DiscussionPage() {
                   : `All Weeks (${getAllDiscussionCards().length} Q&A)`}
               </option>
             </select>
-            <ChevronDown className="w-3.5 h-3.5 absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+            <ChevronDown className="w-3.5 h-3.5 absolute right-2.5 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none" />
           </div>
 
           {/* Theme Select Dropdown */}
@@ -262,7 +262,7 @@ export default function DiscussionPage() {
                   setSelectedTheme(e.target.value ? e.target.value : null);
                   setFocusIndex(0);
                 }}
-                className="appearance-none pl-3 pr-8 py-1.5 text-xs font-semibold rounded-xl bg-slate-100 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 text-slate-800 dark:text-zinc-200 hover:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500 cursor-pointer max-w-[180px] sm:max-w-[220px] truncate"
+                className="appearance-none pl-3.5 pr-8 py-1.5 text-xs font-semibold rounded-full bg-neutral-100 dark:bg-zinc-800 border border-neutral-200 dark:border-zinc-700 text-neutral-800 dark:text-zinc-200 hover:border-[#c5a059] focus:outline-none focus:ring-1 focus:ring-[#c5a059] cursor-pointer max-w-[180px] sm:max-w-[220px] truncate"
               >
                 <option value="">
                   {language === "fr" ? "Tous les thèmes" : "All Themes"}
@@ -273,7 +273,7 @@ export default function DiscussionPage() {
                   </option>
                 ))}
               </select>
-              <ChevronDown className="w-3.5 h-3.5 absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+              <ChevronDown className="w-3.5 h-3.5 absolute right-2.5 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none" />
             </div>
           )}
         </div>
@@ -282,7 +282,7 @@ export default function DiscussionPage() {
         <div className="flex items-center gap-2 flex-1 sm:flex-initial justify-end">
           {/* Search Input */}
           <div className="relative flex-1 sm:w-48 md:w-56">
-            <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+            <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none" />
             <input
               type="text"
               placeholder={language === "fr" ? "Rechercher Q&A..." : "Search Q&A..."}
@@ -291,7 +291,7 @@ export default function DiscussionPage() {
                 setSearchQuery(e.target.value);
                 setFocusIndex(0);
               }}
-              className="w-full pl-8 pr-2.5 py-1.5 text-xs bg-slate-100 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-zinc-500 focus:outline-none focus:border-amber-500 transition-colors"
+              className="w-full pl-8 pr-3 py-1.5 text-xs bg-neutral-100 dark:bg-zinc-800 border border-neutral-200 dark:border-zinc-700 rounded-full text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-zinc-500 focus:outline-none focus:border-[#c5a059] transition-colors"
             />
           </div>
 
@@ -299,7 +299,7 @@ export default function DiscussionPage() {
           <button
             type="button"
             onClick={handleShuffle}
-            className="p-1.5 rounded-xl bg-slate-100 dark:bg-zinc-800 text-slate-600 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-zinc-700 transition-colors shadow-sm"
+            className="p-2 rounded-full bg-neutral-100 dark:bg-zinc-800 text-neutral-600 dark:text-zinc-300 hover:text-neutral-900 dark:hover:text-white border border-neutral-200 dark:border-zinc-700 transition-colors shadow-sm"
             title={t("shuffleBtn")}
           >
             <Shuffle className="w-3.5 h-3.5" />
@@ -309,21 +309,21 @@ export default function DiscussionPage() {
           <button
             type="button"
             onClick={handleResetOrder}
-            className="p-1.5 rounded-xl bg-slate-100 dark:bg-zinc-800 text-slate-600 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-zinc-700 transition-colors shadow-sm"
+            className="p-2 rounded-full bg-neutral-100 dark:bg-zinc-800 text-neutral-600 dark:text-zinc-300 hover:text-neutral-900 dark:hover:text-white border border-neutral-200 dark:border-zinc-700 transition-colors shadow-sm"
             title={t("resetDeckBtn")}
           >
             <RotateCcw className="w-3.5 h-3.5" />
           </button>
 
           {/* View Mode Toggle: Focus (1 par 1) vs Grille */}
-          <div className="flex items-center p-0.5 rounded-xl bg-slate-200/80 dark:bg-zinc-800 border border-slate-300/80 dark:border-zinc-700 shadow-inner">
+          <div className="flex items-center p-0.5 rounded-full bg-neutral-200/80 dark:bg-zinc-800 border border-neutral-300/80 dark:border-zinc-700 shadow-inner">
             <button
               type="button"
               onClick={() => handleSetViewMode("focus")}
-              className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold transition-all ${
+              className={`flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold transition-all ${
                 viewMode === "focus"
-                  ? "bg-amber-500 text-slate-950 shadow-sm"
-                  : "text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white"
+                  ? "bg-neutral-900 text-white dark:bg-white dark:text-neutral-950 shadow-sm"
+                  : "text-neutral-600 dark:text-zinc-400 hover:text-neutral-900 dark:hover:text-white"
               }`}
               title={t("modeFocus")}
             >
@@ -333,10 +333,10 @@ export default function DiscussionPage() {
             <button
               type="button"
               onClick={() => handleSetViewMode("grid")}
-              className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold transition-all ${
+              className={`flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold transition-all ${
                 viewMode === "grid"
-                  ? "bg-amber-500 text-slate-950 shadow-sm"
-                  : "text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white"
+                  ? "bg-neutral-900 text-white dark:bg-white dark:text-neutral-950 shadow-sm"
+                  : "text-neutral-600 dark:text-zinc-400 hover:text-neutral-900 dark:hover:text-white"
               }`}
               title={t("modeGrid")}
             >
@@ -349,12 +349,12 @@ export default function DiscussionPage() {
 
       {/* Main Content Area */}
       {filteredCards.length === 0 ? (
-        <div className="text-center py-16 rounded-3xl glass-card border border-slate-200 dark:border-zinc-800 space-y-3">
-          <MessageSquareText className="w-10 h-10 text-slate-400 dark:text-zinc-500 mx-auto" />
-          <h3 className="text-lg font-bold text-slate-900 dark:text-white">
+        <div className="text-center py-16 rounded-3xl glass-card border border-neutral-200 dark:border-zinc-800 space-y-3">
+          <MessageSquareText className="w-10 h-10 text-neutral-400 dark:text-zinc-500 mx-auto" />
+          <h3 className="text-lg font-bold text-neutral-900 dark:text-white">
             {t("discussionEmpty")}
           </h3>
-          <p className="text-xs text-slate-500 dark:text-zinc-400">
+          <p className="text-xs text-neutral-500 dark:text-zinc-400">
             {language === "fr"
               ? "Essaie de modifier tes filtres ou ta recherche."
               : "Try adjusting your filters or search query."}
@@ -362,7 +362,7 @@ export default function DiscussionPage() {
           <button
             type="button"
             onClick={handleResetOrder}
-            className="mt-2 px-4 py-2 rounded-xl bg-amber-500 text-slate-950 text-xs font-bold"
+            className="mt-2 px-5 py-2 rounded-full bg-neutral-900 text-white dark:bg-white dark:text-neutral-950 text-xs font-bold shadow-sm"
           >
             {t("resetDeckBtn")}
           </button>
@@ -382,12 +382,12 @@ export default function DiscussionPage() {
           </div>
 
           {/* Focus Navigation Bar */}
-          <div className="flex items-center justify-between gap-3 bg-white/90 dark:bg-zinc-900/90 p-3 rounded-2xl border border-slate-200 dark:border-zinc-800 shadow-md backdrop-blur-xl">
+          <div className="flex items-center justify-between gap-3 bg-white/90 dark:bg-zinc-900/90 p-3 rounded-full border border-neutral-200 dark:border-zinc-800 shadow-md backdrop-blur-xl">
             <button
               type="button"
               onClick={handlePrevFocus}
               disabled={focusIndex === 0}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold bg-slate-100 dark:bg-zinc-800 text-slate-800 dark:text-zinc-200 hover:bg-amber-500 hover:text-slate-950 disabled:opacity-40 disabled:pointer-events-none transition-all duration-200 shadow-sm"
+              className="flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold bg-neutral-100 dark:bg-zinc-800 text-neutral-800 dark:text-zinc-200 hover:bg-neutral-200 dark:hover:bg-zinc-700 disabled:opacity-40 disabled:pointer-events-none transition-all duration-200 shadow-sm"
               title={language === "fr" ? "Question précédente (flèche gauche)" : "Previous question (left arrow)"}
             >
               <ChevronLeft className="w-4 h-4" />
@@ -396,18 +396,18 @@ export default function DiscussionPage() {
 
             {/* Step Counter & Dot Jumpers */}
             <div className="flex flex-col items-center gap-1">
-              <span className="text-xs font-mono font-bold text-slate-700 dark:text-zinc-300">
+              <span className="text-xs font-mono font-bold text-neutral-700 dark:text-zinc-300">
                 {language === "fr" ? "Question" : "Question"}{" "}
-                <span className="text-amber-600 dark:text-amber-400 font-black">
+                <span className="text-[#9e7d32] dark:text-[#c5a059] font-black">
                   {focusIndex + 1}
                 </span>{" "}
                 {t("discussionCounter")} {filteredCards.length}
               </span>
 
               {/* Progress Line */}
-              <div className="w-32 sm:w-48 h-1.5 bg-slate-200 dark:bg-zinc-800 rounded-full overflow-hidden">
+              <div className="w-32 sm:w-48 h-1.5 bg-neutral-200 dark:bg-zinc-800 rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-amber-500 rounded-full transition-all duration-300 ease-out"
+                  className="h-full bg-[#c5a059] rounded-full transition-all duration-300 ease-out"
                   style={{
                     width: `${((focusIndex + 1) / filteredCards.length) * 100}%`,
                   }}
@@ -419,7 +419,7 @@ export default function DiscussionPage() {
               type="button"
               onClick={handleNextFocus}
               disabled={focusIndex === filteredCards.length - 1}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold bg-slate-100 dark:bg-zinc-800 text-slate-800 dark:text-zinc-200 hover:bg-amber-500 hover:text-slate-950 disabled:opacity-40 disabled:pointer-events-none transition-all duration-200 shadow-sm"
+              className="flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold bg-neutral-900 text-white dark:bg-white dark:text-neutral-950 hover:bg-neutral-800 dark:hover:bg-zinc-200 disabled:opacity-40 disabled:pointer-events-none transition-all duration-200 shadow-sm"
               title={language === "fr" ? "Question suivante (flèche droite)" : "Next question (right arrow)"}
             >
               <span className="hidden sm:inline">{t("navNextShort")}</span>
@@ -428,18 +428,18 @@ export default function DiscussionPage() {
           </div>
 
           {/* Quick Jump Dot Carousel for Questions */}
-          <div className="flex items-center justify-center gap-1.5 flex-wrap px-4 py-2 bg-slate-100/60 dark:bg-zinc-900/60 rounded-2xl border border-slate-200 dark:border-zinc-800/80">
+          <div className="flex items-center justify-center gap-1.5 flex-wrap px-4 py-2 bg-neutral-100/60 dark:bg-zinc-900/60 rounded-full border border-neutral-200 dark:border-zinc-800/80">
             {filteredCards.map((c, idx) => (
               <button
                 key={c.id}
                 type="button"
                 onClick={() => setFocusIndex(idx)}
-                className={`w-7 h-7 rounded-lg text-xs font-bold transition-all duration-200 ${
+                className={`w-7 h-7 rounded-full text-xs font-bold transition-all duration-200 ${
                   idx === focusIndex
-                    ? "bg-amber-500 text-slate-950 shadow-sm scale-110"
+                    ? "bg-neutral-900 text-white dark:bg-white dark:text-neutral-950 shadow-sm scale-110"
                     : bookmarkedIds.includes(c.id)
-                    ? "bg-amber-500/20 text-amber-600 dark:text-amber-400 border border-amber-500/30 hover:bg-amber-500/30"
-                    : "bg-white dark:bg-zinc-800 text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-zinc-700"
+                    ? "bg-[#c5a059]/20 text-[#c5a059] border border-[#c5a059]/40 hover:bg-[#c5a059]/30"
+                    : "bg-white dark:bg-zinc-800 text-neutral-600 dark:text-zinc-400 hover:text-neutral-900 dark:hover:text-white border border-neutral-200 dark:border-zinc-700"
                 }`}
                 title={`Question ${c.questionNumber}`}
               >

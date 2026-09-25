@@ -4,25 +4,25 @@
 
 @layer base {
   :root {
-    --bg-primary: #f8fafc;
+    --bg-primary: #f6f6f6;
     --bg-secondary: #ffffff;
-    --text-primary: #0f172a;
-    --text-muted: #64748b;
-    --accent-gold: #d97706;
-    --card-border: rgba(226, 232, 240, 0.8);
+    --text-primary: #111111;
+    --text-muted: #666666;
+    --accent-gold: #9e7d32;
+    --card-border: rgba(0, 0, 0, 0.08);
   }
 
   .dark {
-    --bg-primary: #0b1329;
-    --bg-secondary: #132247;
-    --text-primary: #f8fafc;
-    --text-muted: #94a3b8;
-    --accent-gold: #f59e0b;
+    --bg-primary: #131313;
+    --bg-secondary: #1a1a1a;
+    --text-primary: #ffffff;
+    --text-muted: #a3a3a3;
+    --accent-gold: #c5a059;
     --card-border: rgba(255, 255, 255, 0.1);
   }
 
   body {
-    @apply antialiased bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 min-h-screen selection:bg-amber-500 selection:text-slate-950 transition-colors duration-200;
+    @apply antialiased bg-[#f6f6f6] text-[#111111] dark:bg-[#131313] dark:text-[#f3f3f3] min-h-screen selection:bg-neutral-900 selection:text-white dark:selection:bg-white dark:selection:text-black transition-colors duration-200;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
 }
@@ -114,46 +114,46 @@
   100% { opacity: 0; visibility: hidden; }
 }
 
-/* Glassmorphism helpers */
+/* Glassmorphism helpers tuned to Hillsong mineral palette */
 .glass-panel {
-  background: rgba(255, 255, 255, 0.92);
+  background: rgba(255, 255, 255, 0.94);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(226, 232, 240, 0.9);
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.04), 0 8px 10px -6px rgba(0, 0, 0, 0.02);
+  border: 1px solid rgba(0, 0, 0, 0.07);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.05);
 }
 
 .dark .glass-panel {
-  background: rgba(15, 23, 42, 0.75);
+  background: rgba(26, 26, 26, 0.85);
   border: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
 }
 
 .glass-card {
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.98);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(226, 232, 240, 0.85);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.04);
 }
 
 .dark .glass-card {
-  background: rgba(18, 30, 60, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(30, 30, 30, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: none;
 }
 
 .glass-nav {
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(226, 232, 240, 0.9);
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.03);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.02);
 }
 
 .dark .glass-nav {
-  background: rgba(11, 19, 41, 0.85);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(19, 19, 19, 0.88);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: none;
 }
 
@@ -163,12 +163,12 @@
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: rgba(15, 23, 42, 0.6);
+  background: rgba(19, 19, 19, 0.6);
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(148, 163, 184, 0.3);
+  background: rgba(163, 163, 163, 0.3);
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(148, 163, 184, 0.5);
+  background: rgba(163, 163, 163, 0.5);
 }

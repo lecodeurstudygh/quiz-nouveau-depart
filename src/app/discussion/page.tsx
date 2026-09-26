@@ -17,6 +17,7 @@ import {
   Grid,
   BookmarkCheck,
   BookOpen,
+  X,
 } from "lucide-react";
 
 export default function DiscussionPage() {
@@ -215,7 +216,9 @@ export default function DiscussionPage() {
             {language === "fr" ? "Questions répertoriées :" : "Questions listed:"}
           </span>
           <span className="text-xs font-mono font-bold text-[#9e7d32] dark:text-[#c5a059]">
-            {filteredCards.length} / {baseCards.length}
+            {filteredCards.length === baseCards.length
+              ? baseCards.length
+              : `${filteredCards.length} / ${baseCards.length}`}
           </span>
         </div>
       </div>
@@ -291,8 +294,22 @@ export default function DiscussionPage() {
                 setSearchQuery(e.target.value);
                 setFocusIndex(0);
               }}
-              className="w-full pl-8 pr-3 py-1.5 text-xs bg-neutral-100 dark:bg-zinc-800 border border-neutral-200 dark:border-zinc-700 rounded-full text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-zinc-500 focus:outline-none focus:border-[#c5a059] transition-colors"
+              className="w-full pl-8 pr-7 py-1.5 text-xs bg-neutral-100 dark:bg-zinc-800 border border-neutral-200 dark:border-zinc-700 rounded-full text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-zinc-500 focus:outline-none focus:border-[#c5a059] transition-colors"
             />
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={() => {
+                  setSearchQuery("");
+                  setFocusIndex(0);
+                }}
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full flex items-center justify-center text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-200 dark:hover:bg-zinc-700 transition-colors"
+                title={language === "fr" ? "Effacer la recherche" : "Clear search"}
+                aria-label="Clear search"
+              >
+                <X className="w-3 h-3" />
+              </button>
+            )}
           </div>
 
           {/* Shuffle Button */}

@@ -33,8 +33,8 @@ const FloatingTooltip: React.FC<FloatingTooltipProps> = ({ verse, pos, language 
     >
       <div className="flex items-center justify-between pb-1.5 mb-1.5 border-b border-white/10">
         <div className="flex items-center gap-1.5 min-w-0">
-          <BookOpen className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-          <span className="text-xs font-bold text-amber-300 truncate">
+          <BookOpen className="w-3.5 h-3.5 text-[#c5a059] shrink-0" />
+          <span className="text-xs font-bold text-[#d6b26d] truncate">
             {verse.reference}
           </span>
           <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-white/10 text-zinc-300 shrink-0">
@@ -50,7 +50,7 @@ const FloatingTooltip: React.FC<FloatingTooltipProps> = ({ verse, pos, language 
         « {verse.text} »
       </p>
 
-      <div className="mt-2 pt-1 border-t border-white/10 text-[10px] text-amber-400/80 text-right font-sans font-medium flex items-center justify-end gap-1">
+      <div className="mt-2 pt-1 border-t border-white/10 text-[10px] text-[#c5a059]/90 text-right font-sans font-medium flex items-center justify-end gap-1">
         <span>{language === "fr" ? "Cliquer pour voir en entier" : "Click to read full verse"}</span>
       </div>
 
@@ -160,16 +160,16 @@ export const VersePill: React.FC<VersePillProps> = ({ reference }) => {
         onClick={handleClick}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1 rounded-full bg-amber-500/15 hover:bg-amber-500/30 text-amber-300 border border-amber-500/30 hover:border-amber-400 transition-all duration-150 active:scale-95 shadow-sm group/pill cursor-pointer"
+        className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1 rounded-full bg-[#c5a059]/15 hover:bg-[#c5a059]/25 text-[#d6b26d] border border-[#c5a059]/35 hover:border-[#c5a059]/60 transition-all duration-150 active:scale-95 shadow-sm group/pill cursor-pointer"
         title={
           language === "fr"
             ? `Cliquer pour lire ${reference}`
             : `Click to read ${reference}`
         }
       >
-        <BookOpen className="w-3.5 h-3.5 text-amber-400 group-hover/pill:scale-110 transition-transform" />
+        <BookOpen className="w-3.5 h-3.5 text-[#c5a059] group-hover/pill:scale-110 transition-transform" />
         <span>{reference}</span>
-        <Eye className="w-2.5 h-2.5 text-amber-400/60 group-hover/pill:text-amber-300 transition-colors" />
+        <Eye className="w-2.5 h-2.5 text-[#c5a059]/70 group-hover/pill:text-[#d6b26d] transition-colors" />
       </button>
 
       {/* Floating Unclipped Tooltip in Portal */}
@@ -233,14 +233,14 @@ export const InlineVerseLink: React.FC<InlineVerseLinkProps> = ({ reference }) =
         onClick={handleClick}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        className="inline-flex items-center gap-1 text-amber-400 hover:text-amber-300 font-semibold underline decoration-amber-500/50 hover:decoration-amber-300 underline-offset-2 transition-colors cursor-pointer px-1 py-0.5 rounded hover:bg-amber-500/10 active:scale-95"
+        className="inline-flex items-center gap-1 text-[#d6b26d] hover:text-[#f3dfb3] font-semibold underline decoration-[#c5a059]/60 hover:decoration-[#d6b26d] underline-offset-2 transition-colors cursor-pointer px-1 py-0.5 rounded hover:bg-[#c5a059]/15 active:scale-95"
         title={
           language === "fr"
             ? `Cliquer pour lire ${reference}`
             : `Click to read ${reference}`
         }
       >
-        <BookOpen className="w-3 h-3 text-amber-400 shrink-0 inline" />
+        <BookOpen className="w-3 h-3 text-[#c5a059] shrink-0 inline" />
         <span>{reference}</span>
       </button>
 

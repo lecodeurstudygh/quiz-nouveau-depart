@@ -16,6 +16,7 @@ import {
   Layers,
   Check,
   Shuffle,
+  Target,
 } from "lucide-react";
 import { triggerConfetti } from "@/lib/confetti";
 import Link from "next/link";
@@ -28,7 +29,8 @@ interface QuestionUserAnswer {
 }
 
 export default function QuizPage() {
-  const { language, t, selectedWeekId } = useLanguage();
+  const { language, t, selectedWeekId, settings } = useLanguage();
+  const passThreshold = settings.quizPassThreshold ?? 70;
   const [selectedQuizWeek, setSelectedQuizWeek] = useState<string>(
     selectedWeekId || "week-01"
   );
@@ -52,21 +54,7 @@ export default function QuizPage() {
     if (sessionKey === 0) return rawQuestions;
 
     return rawQuestions.map((q) => {
-      // Don't shuffle True/False questions (keep standard Vrai/True first, Faux/False second)
-      if (q.type === "true_false" || !q.options || q.options.length <= 2) {
-        return q;
-      }
-
-      // Perform a random Fisher-Yates shuffle on options copy
-      const shuffledOptions = [...q.options];
-      for (let i = shuffledOptions.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        const temp = shuffledOptions[i];
-        shuffledOptions[i] = shuffledOptions[j];
-        shuffledOptions[j] = temp;
-      }
-
-      // Also shuffle word bank if fill_in_the_blank
+      // 1. Shuffle word bank if fill_in_the_blank
       if (q.type === "fill_in_the_blank" && q.fillInData) {
         const frWords = [...q.fillInData.wordBank.fr];
         const enWords = [...q.fillInData.wordBank.en];
@@ -80,7 +68,6 @@ export default function QuizPage() {
         }
         return {
           ...q,
-          options: shuffledOptions,
           fillInData: {
             ...q.fillInData,
             wordBank: {
@@ -89,6 +76,20 @@ export default function QuizPage() {
             },
           },
         };
+      }
+
+      // 2. Don't shuffle True/False questions (keep standard Vrai/True first, Faux/False second)
+      if (q.type === "true_false" || !q.options || q.options.length <= 2) {
+        return q;
+      }
+
+      // 3. Perform a random Fisher-Yates shuffle on MCQ options
+      const shuffledOptions = [...q.options];
+      for (let i = shuffledOptions.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        const temp = shuffledOptions[i];
+        shuffledOptions[i] = shuffledOptions[j];
+        shuffledOptions[j] = temp;
       }
 
       return {
@@ -247,18 +248,22 @@ export default function QuizPage() {
     }
   };
 
+  const handleFinishQuiz = () => {
+    setQuizFinished(true);
+    if (scorePercentage >= passThreshold) {
+      triggerConfetti({
+        particleCount: 90,
+        spread: 90,
+        origin: { y: 0.5 },
+      });
+    }
+  };
+
   const handleNextQuestion = () => {
     if (currentIndex + 1 < questions.length) {
       setCurrentIndex((prev) => prev + 1);
     } else {
-      setQuizFinished(true);
-      if (score >= questions.length * 0.7) {
-        triggerConfetti({
-          particleCount: 80,
-          spread: 90,
-          origin: { y: 0.5 },
-        });
-      }
+      handleFinishQuiz();
     }
   };
 
@@ -300,7 +305,7 @@ export default function QuizPage() {
             return (
               <span
                 key={idx}
-                className="inline-block mx-1 px-3 py-1 font-sans font-bold text-amber-700 dark:text-[#d6b26d] bg-amber-500/20 border-b-2 border-amber-500 rounded-md"
+                className="inline-block mx-1 px-3 py-1 font-sans font-bold text-[#9e7d32] dark:text-[#d6b26d] bg-[#c5a059]/15 border-b-2 border-[#c5a059] rounded-md"
               >
                 {currentAns.clozeAnswers.blank1 || "_______"}
               </span>
@@ -310,7 +315,7 @@ export default function QuizPage() {
             return (
               <span
                 key={idx}
-                className="inline-block mx-1 px-3 py-1 font-sans font-bold text-amber-700 dark:text-[#d6b26d] bg-amber-500/20 border-b-2 border-amber-500 rounded-md"
+                className="inline-block mx-1 px-3 py-1 font-sans font-bold text-[#9e7d32] dark:text-[#d6b26d] bg-[#c5a059]/15 border-b-2 border-[#c5a059] rounded-md"
               >
                 {currentAns.clozeAnswers.blank2 || "_______"}
               </span>
@@ -320,7 +325,7 @@ export default function QuizPage() {
             return (
               <span
                 key={idx}
-                className="inline-block mx-1 px-3 py-1 font-sans font-bold text-amber-700 dark:text-[#d6b26d] bg-amber-500/20 border-b-2 border-amber-500 rounded-md"
+                className="inline-block mx-1 px-3 py-1 font-sans font-bold text-[#9e7d32] dark:text-[#d6b26d] bg-[#c5a059]/15 border-b-2 border-[#c5a059] rounded-md"
               >
                 {currentAns.clozeAnswers.blank3 || "_______"}
               </span>
@@ -346,7 +351,7 @@ export default function QuizPage() {
   return (
     <div className="max-w-4xl mx-auto space-y-6 animate-fade-in">
       {/* Session / Week Selector Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-2 rounded-2xl glass-card border border-neutral-200 dark:border-zinc-800/80">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-2 rounded-2xl glass-card border border-neutral-200/80 dark:border-white/10">
         <div className="flex items-center gap-2 pl-2">
           <span className="text-xs font-bold text-neutral-500 dark:text-zinc-400">
             {t("quizWeekSelector")}
@@ -361,8 +366,8 @@ export default function QuizPage() {
               onClick={() => handleSelectQuizWeek(c.id as any)}
               className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all ${
                 selectedQuizWeek === c.id
-                  ? "bg-neutral-900 text-white dark:bg-white dark:text-zinc-950 shadow-sm"
-                  : "text-neutral-600 dark:text-zinc-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-zinc-800/60"
+                  ? "bg-neutral-900 text-white dark:bg-[#c5a059] dark:text-zinc-950 shadow-sm"
+                  : "text-neutral-600 dark:text-zinc-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-white/5"
               }`}
             >
               {language === "fr"
@@ -375,8 +380,8 @@ export default function QuizPage() {
             onClick={() => handleSelectQuizWeek("all")}
             className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all ${
               selectedQuizWeek === "all"
-                ? "bg-neutral-900 text-white dark:bg-white dark:text-zinc-950 shadow-sm"
-                : "text-neutral-600 dark:text-zinc-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-zinc-800/60"
+                ? "bg-neutral-900 text-white dark:bg-[#c5a059] dark:text-zinc-950 shadow-sm"
+                : "text-neutral-600 dark:text-zinc-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-white/5"
             }`}
           >
             {language === "fr" ? `Toutes (${getAllQuestions().length} Q)` : `All (${getAllQuestions().length} Q)`}
@@ -384,8 +389,8 @@ export default function QuizPage() {
         </div>
       </div>
 
-      {/* Top Header Bar (matches user mock) */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-neutral-200 dark:border-zinc-800/80">
+      {/* Top Header Bar */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-neutral-200/80 dark:border-white/10">
         <div className="flex items-center gap-2">
           <span className="text-sm sm:text-base font-bold text-neutral-900 dark:text-zinc-100">
             Question {currentIndex + 1} / {questions.length}
@@ -401,10 +406,10 @@ export default function QuizPage() {
           <button
             type="button"
             onClick={handleShuffleOptions}
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold text-neutral-700 dark:text-zinc-300 hover:text-neutral-900 dark:hover:text-white bg-white dark:bg-zinc-900/90 hover:bg-neutral-100 dark:hover:bg-zinc-800 border border-neutral-200 dark:border-zinc-800 transition-all shadow-sm active:scale-95"
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold text-neutral-700 dark:text-zinc-300 hover:text-neutral-900 dark:hover:text-white bg-white dark:bg-[#15151c] hover:bg-neutral-100 dark:hover:bg-zinc-800 border border-neutral-200 dark:border-white/10 hover:border-[#c5a059]/40 transition-all shadow-sm active:scale-95"
             title={language === "fr" ? "Mélanger l'ordre des choix" : "Shuffle choices order"}
           >
-            <Shuffle className="w-3.5 h-3.5 text-amber-500 dark:text-[#c5a059]" />
+            <Shuffle className="w-3.5 h-3.5 text-[#9e7d32] dark:text-[#c5a059]" />
             <span>{t("shuffleOptions")}</span>
           </button>
 
@@ -412,43 +417,46 @@ export default function QuizPage() {
           <button
             type="button"
             onClick={handleRestartQuiz}
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold text-neutral-700 dark:text-zinc-300 hover:text-neutral-900 dark:hover:text-white bg-white dark:bg-zinc-900/90 hover:bg-neutral-100 dark:hover:bg-zinc-800 border border-neutral-200 dark:border-zinc-800 transition-all shadow-sm active:scale-95"
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold text-neutral-700 dark:text-zinc-300 hover:text-neutral-900 dark:hover:text-white bg-white dark:bg-[#15151c] hover:bg-neutral-100 dark:hover:bg-zinc-800 border border-neutral-200 dark:border-white/10 hover:border-[#c5a059]/40 transition-all shadow-sm active:scale-95"
           >
             <RotateCcw className="w-3.5 h-3.5 text-neutral-500 dark:text-zinc-400" />
             <span>{t("navRestart")}</span>
           </button>
 
           {/* Live Score Pill */}
-          <div className="px-3.5 py-1.5 rounded-full text-xs font-bold font-mono bg-neutral-100 dark:bg-zinc-900/90 text-neutral-800 dark:text-zinc-200 border border-neutral-200 dark:border-zinc-800 shadow-sm">
-            {t("quizScore")} : <span className="text-amber-600 dark:text-[#c5a059]">{score}</span> / {questions.length} ({scorePercentage}%)
+          <div className="px-3.5 py-1.5 rounded-full text-xs font-bold font-mono bg-neutral-100 dark:bg-[#15151c] text-neutral-800 dark:text-zinc-200 border border-neutral-200 dark:border-white/10 shadow-sm">
+            {t("quizScore")} : <span className="text-[#9e7d32] dark:text-[#c5a059] font-bold">{score}</span> / {questions.length} ({scorePercentage}%)
           </div>
         </div>
       </div>
 
-
       {!quizFinished ? (
         <div className="space-y-6">
-          {/* Main Question Card */}
-          <div className="glass-panel rounded-3xl p-6 sm:p-8 border border-neutral-200/80 dark:border-zinc-800/80 shadow-xl space-y-6 animate-slide-up">
+          {/* Main Question Card with subtle ambient depth */}
+          <div className="relative overflow-hidden glass-panel rounded-3xl p-6 sm:p-8 border border-neutral-200/80 dark:border-white/10 dark:border-t-white/20 shadow-2xl space-y-6 animate-slide-up before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent [isolation:isolate]">
+            {/* Subtle background ambient halos */}
+            <div className="absolute -top-16 -right-16 w-64 h-64 bg-[#c5a059]/10 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute -bottom-16 -left-16 w-64 h-64 bg-white/5 rounded-full blur-3xl pointer-events-none" />
+
             {/* Question Top Header: Number, Title, and Badges */}
-            <div className="flex items-start justify-between gap-4">
+            <div className="relative z-10 flex items-start justify-between gap-4">
               <div className="space-y-2 flex-1">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <span className="text-xs font-bold uppercase tracking-wider text-amber-700 dark:text-[#d6b26d] bg-amber-500/10 px-3 py-1 rounded-full border border-amber-500/20 flex items-center gap-1">
-                    <Sparkles className="w-3 h-3" />
+                  <span className="text-xs font-bold uppercase tracking-wider text-[#9e7d32] dark:text-[#d6b26d] bg-[#c5a059]/10 px-3 py-1 rounded-full border border-[#c5a059]/25 flex items-center gap-1">
+                    <Sparkles className="w-3 h-3 text-[#c5a059]" />
                     {currentQ.category[language]}
                   </span>
 
                   {currentQ.associatedVerseRef && (
-                    <span className="text-xs font-mono text-neutral-500 dark:text-zinc-400 flex items-center gap-1 bg-neutral-100 dark:bg-zinc-900/70 px-2.5 py-1 rounded-full border border-neutral-200 dark:border-zinc-800/60">
-                      <BookOpen className="w-3.5 h-3.5 text-amber-500 dark:text-[#c5a059]" />
+                    <span className="text-xs font-mono text-neutral-600 dark:text-zinc-300 flex items-center gap-1 bg-neutral-100 dark:bg-white/5 px-2.5 py-1 rounded-full border border-neutral-200 dark:border-white/10">
+                      <BookOpen className="w-3.5 h-3.5 text-[#9e7d32] dark:text-[#c5a059]" />
                       {currentQ.associatedVerseRef}
                     </span>
                   )}
                 </div>
 
                 <h2 className="text-lg sm:text-2xl font-bold text-neutral-900 dark:text-zinc-100 leading-snug pt-1">
-                  <span className="text-amber-600 dark:text-[#c5a059] mr-2">
+                  <span className="text-[#9e7d32] dark:text-[#c5a059] mr-2">
                     {currentIndex + 1}.
                   </span>
                   {currentQ.question[language]}
@@ -480,7 +488,7 @@ export default function QuizPage() {
                         <button
                           type="button"
                           onClick={handleClearCloze}
-                          className="text-amber-600 dark:text-amber-400 font-semibold hover:underline"
+                          className="text-[#9e7d32] dark:text-[#d6b26d] font-semibold hover:underline"
                         >
                           {t("resetAnswer")}
                         </button>
@@ -493,7 +501,7 @@ export default function QuizPage() {
                           key={word}
                           type="button"
                           onClick={() => handleWordBankClick(word)}
-                          className="px-4 py-2 rounded-full bg-white dark:bg-zinc-900 hover:bg-neutral-100 dark:hover:bg-zinc-800 text-neutral-800 dark:text-zinc-200 hover:text-neutral-900 dark:hover:text-white text-sm font-semibold border border-neutral-200 dark:border-zinc-800 transition-all active:scale-95 shadow-sm"
+                          className="px-4 py-2 rounded-full bg-white dark:bg-[#15151c] hover:bg-neutral-100 dark:hover:bg-zinc-800 text-neutral-800 dark:text-zinc-200 hover:text-neutral-900 dark:hover:text-white text-sm font-semibold border border-neutral-200 dark:border-white/10 hover:border-[#c5a059]/40 transition-all active:scale-95 shadow-sm"
                         >
                           {word}
                         </button>
@@ -541,13 +549,13 @@ export default function QuizPage() {
 
                   // Dynamic card styling based on state
                   let containerStyle =
-                    "bg-white dark:bg-[#15151b] border-neutral-200 dark:border-zinc-800/80 text-neutral-800 dark:text-zinc-200 hover:border-neutral-300 dark:hover:border-zinc-700 hover:bg-neutral-50/50 dark:hover:bg-[#1b1b23] shadow-sm";
+                    "bg-white dark:bg-[#131319] border-neutral-200 dark:border-white/10 text-neutral-800 dark:text-zinc-200 hover:border-[#c5a059]/40 dark:hover:border-[#c5a059]/40 hover:bg-neutral-50/50 dark:hover:bg-[#181822] shadow-sm";
                   let letterBadgeStyle =
-                    "bg-neutral-100 dark:bg-zinc-800 text-neutral-700 dark:text-zinc-300";
+                    "bg-neutral-100 dark:bg-white/10 text-neutral-700 dark:text-zinc-300";
 
                   if (isSelected && !isSubmitted) {
                     containerStyle =
-                      "bg-neutral-900 text-white dark:bg-[#1c1c24] dark:text-white border-neutral-900 dark:border-[#c5a059] shadow-md ring-1 ring-neutral-900 dark:ring-[#c5a059]/40";
+                      "bg-neutral-900 text-white dark:bg-[#181822] dark:text-white border-neutral-900 dark:border-[#c5a059] shadow-md ring-1 ring-neutral-900 dark:ring-[#c5a059]/40";
                     letterBadgeStyle =
                       "bg-white text-neutral-950 dark:bg-[#c5a059] dark:text-zinc-950 font-bold";
                   }
@@ -625,14 +633,14 @@ export default function QuizPage() {
               </div>
             )}
 
-            {/* Bottom Actions Bar (Matches User Screenshot: Précédente / X sur N / Suivante) */}
-            <div className="flex items-center justify-between pt-6 border-t border-neutral-200 dark:border-zinc-800/80">
+            {/* Bottom Actions Bar (Précédente / X sur N / Suivante) */}
+            <div className="flex items-center justify-between pt-6 border-t border-neutral-200/80 dark:border-white/10">
               {/* Previous Button */}
               <button
                 type="button"
                 disabled={currentIndex === 0}
                 onClick={handlePreviousQuestion}
-                className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full font-bold text-xs sm:text-sm bg-white dark:bg-zinc-900 text-neutral-700 dark:text-zinc-300 border border-neutral-200 dark:border-zinc-800 hover:bg-neutral-100 dark:hover:bg-zinc-800 disabled:opacity-30 disabled:cursor-not-allowed transition-all shadow-sm active:scale-95"
+                className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full font-bold text-xs sm:text-sm bg-white dark:bg-[#15151c] text-neutral-700 dark:text-zinc-300 border border-neutral-200 dark:border-white/10 hover:bg-neutral-100 dark:hover:bg-zinc-800 disabled:opacity-30 disabled:cursor-not-allowed transition-all shadow-sm active:scale-95"
               >
                 <ArrowLeft className="w-4 h-4" />
                 <span>{t("navPrevious")}</span>
@@ -653,7 +661,7 @@ export default function QuizPage() {
                       : !currentAns.selectedOptionId
                   }
                   onClick={handleSubmitAnswer}
-                  className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full font-bold text-xs sm:text-sm bg-neutral-900 hover:bg-black text-white dark:bg-white dark:hover:bg-neutral-100 dark:text-zinc-950 shadow-md disabled:opacity-35 disabled:cursor-not-allowed transition-all active:scale-95"
+                  className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full font-bold text-xs sm:text-sm bg-neutral-900 hover:bg-black text-white dark:bg-[#c5a059] dark:hover:bg-[#d6b26d] dark:text-zinc-950 shadow-md disabled:opacity-35 disabled:cursor-not-allowed transition-all active:scale-95"
                 >
                   <span>{t("validateAnswer")}</span>
                 </button>
@@ -669,7 +677,7 @@ export default function QuizPage() {
               ) : (
                 <button
                   type="button"
-                  onClick={() => setQuizFinished(true)}
+                  onClick={handleFinishQuiz}
                   className="inline-flex items-center gap-1.5 px-6 py-2.5 rounded-full font-bold text-xs sm:text-sm bg-emerald-600 hover:bg-emerald-700 text-white shadow-md shadow-emerald-600/20 transition-all active:scale-95"
                 >
                   <Award className="w-4 h-4" />
@@ -679,7 +687,7 @@ export default function QuizPage() {
             </div>
           </div>
 
-          {/* Numbered Navigation Grid (Matches User Screenshot: "NAVIGATION DANS CE CHAPITRE :") */}
+          {/* Numbered Navigation Grid */}
           <div className="space-y-3 pt-2">
             <div className="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-neutral-500 dark:text-zinc-400 px-1">
               <span>{t("questionNavTitle")}</span>
@@ -697,11 +705,11 @@ export default function QuizPage() {
                 const isIncorrect = isAnswered && !ans.isCorrect;
 
                 let btnStyle =
-                  "bg-white dark:bg-zinc-900/90 text-neutral-700 dark:text-zinc-300 border-neutral-200 dark:border-zinc-800 hover:bg-neutral-100 dark:hover:bg-zinc-800 shadow-sm";
+                  "bg-white dark:bg-[#15151c] text-neutral-700 dark:text-zinc-300 border-neutral-200 dark:border-white/10 hover:bg-neutral-100 dark:hover:bg-zinc-800 shadow-sm";
 
                 if (isCurrent) {
                   btnStyle =
-                    "bg-neutral-900 text-white dark:bg-white dark:text-zinc-950 font-black ring-2 ring-neutral-900 dark:ring-white ring-offset-2 ring-offset-white dark:ring-offset-zinc-950 shadow-md scale-105";
+                    "bg-neutral-900 text-white dark:bg-[#c5a059] dark:text-zinc-950 font-black ring-2 ring-neutral-900 dark:ring-[#c5a059] ring-offset-2 ring-offset-white dark:ring-offset-[#0b0b0e] shadow-md scale-105";
                 } else if (isCorrect) {
                   btnStyle =
                     "bg-emerald-500 text-white border-emerald-600 font-bold shadow-sm";
@@ -726,40 +734,95 @@ export default function QuizPage() {
           </div>
         </div>
       ) : (
-        /* Final Score & Celebration Screen */
-        <div className="glass-panel rounded-3xl p-8 sm:p-12 border border-neutral-200/80 dark:border-zinc-800/80 shadow-2xl text-center space-y-6 animate-slide-up">
-          <div className="w-20 h-20 rounded-full bg-amber-500/10 text-amber-600 dark:text-[#d6b26d] mx-auto flex items-center justify-center border border-amber-500/20 shadow-lg">
-            <Award className="w-10 h-10" />
+        /* Final Score & Celebration / Encouragement Screen */
+        <div className="glass-panel rounded-3xl p-8 sm:p-12 border border-neutral-200/80 dark:border-white/10 shadow-2xl text-center space-y-6 animate-slide-up relative overflow-hidden [isolation:isolate]">
+          <div className="absolute -top-16 -right-16 w-64 h-64 bg-[#c5a059]/10 rounded-full blur-3xl pointer-events-none" />
+
+          {/* Dynamic Award or Target Encouragement Icon */}
+          <div
+            className={`w-20 h-20 rounded-full mx-auto flex items-center justify-center border shadow-lg ${
+              scorePercentage >= passThreshold
+                ? "bg-[#c5a059]/15 text-[#9e7d32] dark:text-[#d6b26d] border-[#c5a059]/30"
+                : "bg-neutral-100 dark:bg-white/5 text-neutral-600 dark:text-zinc-300 border-neutral-200 dark:border-white/10"
+            }`}
+          >
+            {scorePercentage >= passThreshold ? (
+              <Award className="w-10 h-10" />
+            ) : (
+              <Target className="w-10 h-10 text-[#9e7d32] dark:text-[#c5a059]" />
+            )}
           </div>
 
           <div className="space-y-2">
             <h2 className="text-3xl font-black text-neutral-900 dark:text-zinc-100">
-              {t("congratulations")}
+              {scorePercentage >= passThreshold
+                ? t("quizPassCongratulations")
+                : t("quizEncouragementTitle")}
             </h2>
-            <p className="text-sm text-neutral-600 dark:text-zinc-400 max-w-md mx-auto">
-              {selectedQuizWeek === "all"
+            <p className="text-sm text-neutral-600 dark:text-zinc-400 max-w-lg mx-auto leading-relaxed">
+              {scorePercentage >= passThreshold
+                ? selectedQuizWeek === "all"
+                  ? language === "fr"
+                    ? `Impressionnant ! Tu as brillamment validé le Grand Quiz combiné avec ${scorePercentage}% de réussite !`
+                    : `Impressive! You successfully completed the Combined Grand Quiz with a ${scorePercentage}% score!`
+                  : (() => {
+                      const c = allCourses.find((course) => course.id === selectedQuizWeek);
+                      return language === "fr"
+                        ? `Tu as validé les acquis de la Semaine ${c?.weekNumber || 1} (${c?.title.fr}) avec ${scorePercentage}% de réussite !`
+                        : `You have completed the milestones of Week ${c?.weekNumber || 1} (${c?.title.en}) with a ${scorePercentage}% score!`;
+                    })()
+                : selectedQuizWeek === "all"
                 ? language === "fr"
-                  ? "Impressionnant ! Tu as complété le Grand Quiz combiné de toutes les semaines !"
-                  : "Impressive! You completed the Combined Grand Quiz across all weeks!"
+                  ? `Tu as obtenu ${scorePercentage}% de réussite. Le seuil de validation est fixé à ${passThreshold}%. Révise les chapitres clés et retente le quiz pour valider tes acquis !`
+                  : `You scored ${scorePercentage}%. The passing threshold is ${passThreshold}%. Review key chapters and try the quiz again to validate your knowledge!`
                 : (() => {
                     const c = allCourses.find((course) => course.id === selectedQuizWeek);
                     return language === "fr"
-                      ? `Tu as validé les acquis de la Semaine ${c?.weekNumber || 1} (${c?.title.fr}) !`
-                      : `You have completed the milestones of Week ${c?.weekNumber || 1} (${c?.title.en})!`;
+                      ? `Tu as obtenu ${scorePercentage}% de réussite. Le seuil de validation est fixé à ${passThreshold}%. Révise les leçons et les versets de la Semaine ${c?.weekNumber || 1} (${c?.title.fr}), puis réessaie !`
+                      : `You scored ${scorePercentage}%. The passing threshold is ${passThreshold}%. Review the lessons and verses of Week ${c?.weekNumber || 1} (${c?.title.en}), then try again!`;
                   })()}
             </p>
           </div>
 
-          <div className="bg-white/90 dark:bg-zinc-900/90 rounded-2xl p-6 border border-neutral-200 dark:border-zinc-800 max-w-xs mx-auto shadow-md">
+          <div className="bg-white/90 dark:bg-[#15151c] rounded-2xl p-6 border border-neutral-200 dark:border-white/10 max-w-xs mx-auto shadow-md space-y-2">
             <span className="text-xs text-neutral-500 dark:text-zinc-400 block uppercase font-bold tracking-widest">
               {t("quizScore")}
             </span>
             <span className="text-4xl font-black text-neutral-900 dark:text-[#c5a059] font-mono">
               {score} / {questions.length}
             </span>
-            <span className="text-xs text-neutral-500 dark:text-zinc-400 block mt-1">
+            <span className="text-xs text-neutral-500 dark:text-zinc-400 block">
               ({scorePercentage}% de réussite)
             </span>
+            <div className="pt-2 border-t border-neutral-200/80 dark:border-white/10">
+              <span
+                className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold ${
+                  scorePercentage >= passThreshold
+                    ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30"
+                    : "bg-neutral-100 dark:bg-white/5 text-neutral-600 dark:text-zinc-300 border border-neutral-200 dark:border-white/10"
+                }`}
+              >
+                {scorePercentage >= passThreshold ? (
+                  <>
+                    <Check className="w-3 h-3 text-emerald-500 shrink-0" />
+                    <span>
+                      {language === "fr"
+                        ? `Validé (seuil : ${passThreshold}%)`
+                        : `Passed (threshold: ${passThreshold}%)`}
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    <Target className="w-3 h-3 text-[#9e7d32] dark:text-[#c5a059] shrink-0" />
+                    <span>
+                      {language === "fr"
+                        ? `Seuil requis : ${passThreshold}%`
+                        : `Required threshold: ${passThreshold}%`}
+                    </span>
+                  </>
+                )}
+              </span>
+            </div>
           </div>
 
           {/* Review Grid on Final Screen */}
@@ -807,9 +870,9 @@ export default function QuizPage() {
 
             <Link
               href="/cards"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white dark:bg-zinc-900 text-neutral-800 dark:text-zinc-200 hover:text-neutral-950 dark:hover:text-white font-bold text-sm border border-neutral-200 dark:border-zinc-700 hover:bg-neutral-100 dark:hover:bg-zinc-800 transition-all shadow-sm"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white dark:bg-[#15151c] text-neutral-800 dark:text-zinc-200 hover:text-neutral-950 dark:hover:text-white font-bold text-sm border border-neutral-200 dark:border-white/10 hover:border-[#c5a059]/40 hover:bg-neutral-100 dark:hover:bg-zinc-800 transition-all shadow-sm"
             >
-              <Layers className="w-4 h-4 text-amber-500 dark:text-[#c5a059]" />
+              <Layers className="w-4 h-4 text-[#9e7d32] dark:text-[#c5a059]" />
               <span>{t("navCards")}</span>
             </Link>
           </div>

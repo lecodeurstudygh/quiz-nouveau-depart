@@ -7,7 +7,9 @@ export interface SettingsState {
   theme: "dark" | "light";
   soundEnabled: boolean;
   soundVolume: number;
-  soundTrack: "amazing-grace" | "hillsong" | "jesu-joy";
+  soundTrack: string;
+  soundShuffle: boolean;
+  quizPassThreshold: number;
 }
 
 interface LanguageContextType {
@@ -64,6 +66,10 @@ const UI_TRANSLATIONS: Record<string, { fr: string; en: string }> = {
   soundMuted: { fr: "Silencieux", en: "Muted" },
   soundPlaying: { fr: "Actif", en: "Active" },
   soundVolumeLabel: { fr: "Volume sonore", en: "Volume" },
+  soundShuffleLabel: { fr: "Lecture aléatoire continue", en: "Continuous Shuffle Play" },
+  soundShuffleDesc: { fr: "Enchaîne automatiquement tous les hymnes à l'écoute", en: "Automatically chains all hymns seamlessly" },
+  soundShuffleActive: { fr: "Aléatoire Actif", en: "Shuffle On" },
+  soundShuffleInactive: { fr: "Piste Unique", en: "Single Track" },
   closeBtn: { fr: "Fermer", en: "Close" },
   quizScore: { fr: "Score", en: "Score" },
   quizQuestion: { fr: "Question", en: "Question" },
@@ -130,6 +136,12 @@ const UI_TRANSLATIONS: Record<string, { fr: string; en: string }> = {
   practicalTakeawayLabel: { fr: "À retenir :", en: "Key Takeaway:" },
   scriptureReferencesLabel: { fr: "Références bibliques :", en: "Scripture References:" },
   allDiscussionQuestions: { fr: "Toutes les questions", en: "All Questions" },
+  quizThresholdLabel: { fr: "Seuil de réussite du Quiz", en: "Quiz Passing Threshold" },
+  quizThresholdDesc: { fr: "Score minimum (%) pour valider les acquis d'une semaine", en: "Minimum score (%) to validate a week's milestones" },
+  quizEncouragementTitle: { fr: "Encore un effort !", en: "Keep Practicing!" },
+  quizEncouragementSubtitle: { fr: "Tu y es presque, continue tes révisions !", en: "You're getting closer, keep revising!" },
+  quizPassCongratulations: { fr: "Félicitations !", en: "Congratulations!" },
+  quizPassValidated: { fr: "Tu as validé les acquis avec succès !", en: "You have successfully validated the milestones!" },
 };
 
 
@@ -144,6 +156,8 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     soundEnabled: false,
     soundVolume: 0.3,
     soundTrack: "amazing-grace",
+    soundShuffle: true,
+    quizPassThreshold: 70,
   });
 
   // Load persisted language, week and settings on mount
@@ -170,9 +184,15 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
                 ? Math.min(Math.max(parsed.soundVolume, 0), 1)
                 : 0.3,
             soundTrack:
-              parsed.soundTrack === "hillsong" || parsed.soundTrack === "jesu-joy"
+              typeof parsed.soundTrack === "string" && parsed.soundTrack !== "hillsong"
                 ? parsed.soundTrack
                 : "amazing-grace",
+            soundShuffle:
+              parsed.soundShuffle !== undefined ? Boolean(parsed.soundShuffle) : true,
+            quizPassThreshold:
+              typeof parsed.quizPassThreshold === "number" && !isNaN(parsed.quizPassThreshold)
+                ? Math.min(Math.max(parsed.quizPassThreshold, 10), 100)
+                : 70,
           }));
         }
       }

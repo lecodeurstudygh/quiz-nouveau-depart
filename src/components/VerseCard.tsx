@@ -11,6 +11,7 @@ import {
   Check,
   Sparkles,
   BookOpen,
+  Clock,
 } from "lucide-react";
 import { triggerConfetti } from "@/lib/confetti";
 
@@ -81,16 +82,16 @@ export const VerseCard: React.FC<VerseCardProps> = ({
       >
         {/* ================= RECTO (FRONT) ================= */}
         <div
-          className={`card-face card-face-front rounded-3xl p-6 flex flex-col justify-between shadow-2xl border border-white/10 border-t-white/20 bg-neutral-950 bg-gradient-to-br ${gradientTheme} hover:border-[#c5a059]/40 transition-all duration-300 overflow-hidden`}
+          className={`card-face card-face-front rounded-3xl p-6 flex flex-col justify-between shadow-2xl border border-white/10 border-t-white/25 bg-neutral-950 bg-gradient-to-br ${gradientTheme} hover:border-[#c5a059]/40 transition-all duration-300 overflow-hidden before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-white/30 before:to-transparent`}
         >
           {/* Subtle B&W Film Negative / Acoustic Photography Texture Layer */}
-          <div className="absolute inset-0 rounded-3xl overflow-hidden pointer-events-none opacity-20 dark:opacity-25 mix-blend-luminosity">
+          <div className="absolute inset-0 rounded-3xl overflow-hidden pointer-events-none opacity-20 dark:opacity-25 mix-blend-luminosity [isolation:isolate]">
             <img
               src={bgIndex % 2 === 0 ? "/images/cards/piano_strings.jpg" : "/images/cards/cello_wood.jpg"}
               alt=""
-              className="w-full h-full object-cover grayscale contrast-150 brightness-75 scale-105"
+              className="w-full h-full object-cover grayscale contrast-150 brightness-75 rounded-3xl pointer-events-none"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
+            <div className="absolute inset-0 rounded-3xl bg-gradient-to-t from-black via-black/50 to-transparent" />
           </div>
 
           {/* Ambient overlay & subtle acoustic glow */}
@@ -100,8 +101,8 @@ export const VerseCard: React.FC<VerseCardProps> = ({
 
           {/* Top Bar on Card Front */}
           <div className="relative z-10 flex items-center justify-between">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-neutral-900/90 text-[#c5a059] border border-white/10 shadow-sm">
-              {verse.isKeyVerse && <Sparkles className="w-3.5 h-3.5 fill-[#c5a059] text-[#c5a059]" />}
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold tracking-wide bg-black/75 text-[#d6b26d] border border-white/20 backdrop-blur-md shadow-sm">
+              {verse.isKeyVerse && <Sparkles className="w-3 h-3 fill-[#c5a059] text-[#c5a059]" />}
               {verse.isKeyVerse
                 ? language === "fr"
                   ? "Verset Clé"
@@ -129,22 +130,22 @@ export const VerseCard: React.FC<VerseCardProps> = ({
           </div>
 
           {/* Center: Prominent Scripture Reference & Theme */}
-          <div className="relative z-10 my-auto text-center space-y-2.5 px-3 max-w-full overflow-hidden">
-            <span className="inline-block text-[11px] font-semibold text-[#c5a059] tracking-[0.16em] uppercase">
+          <div className="relative z-10 my-auto text-center space-y-2 px-3 max-w-full overflow-hidden">
+            <span className="inline-block text-[10px] sm:text-[11px] font-semibold text-[#c5a059] tracking-[0.14em] uppercase">
               {verse.theme[language]}
             </span>
             <h3
-              className={`font-sans font-extrabold tracking-tight text-white drop-shadow-md break-words hyphens-auto leading-tight max-w-full ${
+              className={`font-sans font-bold tracking-tight text-white drop-shadow-md break-words hyphens-auto leading-tight max-w-full ${
                 verse.reference[language].length > 18
-                  ? "text-xl sm:text-2xl"
+                  ? "text-base sm:text-lg"
                   : verse.reference[language].length > 13
-                  ? "text-2xl sm:text-3xl"
-                  : "text-3xl sm:text-4xl"
+                  ? "text-lg sm:text-xl"
+                  : "text-xl sm:text-2xl"
               }`}
             >
               {verse.reference[language]}
             </h3>
-            <p className="text-xs text-neutral-300/80 font-mono tracking-wider">
+            <p className="text-[11px] text-neutral-300/80 font-mono tracking-wider">
               {language === "fr" ? "Version Segond 21" : "NIV Translation"}
             </p>
           </div>
@@ -170,11 +171,11 @@ export const VerseCard: React.FC<VerseCardProps> = ({
           <div className="absolute inset-0 bg-[#0c0c0e]/95 pointer-events-none rounded-3xl" />
 
           {/* Subtle B&W Film Texture on Verso */}
-          <div className="absolute inset-0 rounded-3xl overflow-hidden pointer-events-none opacity-10 mix-blend-luminosity">
+          <div className="absolute inset-0 rounded-3xl overflow-hidden pointer-events-none opacity-10 mix-blend-luminosity [isolation:isolate]">
             <img
               src="/images/cards/cello_wood.jpg"
               alt=""
-              className="w-full h-full object-cover grayscale contrast-150 brightness-75 scale-105"
+              className="w-full h-full object-cover grayscale contrast-150 brightness-75 rounded-3xl pointer-events-none"
             />
           </div>
 
@@ -238,20 +239,28 @@ export const VerseCard: React.FC<VerseCardProps> = ({
 
           {/* Verso Footer Actions */}
           <div className="relative z-10 pt-3 border-t border-white/10 flex items-center justify-between text-xs">
-            <span
-              className={`text-[11px] font-semibold flex items-center gap-1 ${
-                isMemorized ? "text-emerald-400" : "text-neutral-400"
+            <button
+              type="button"
+              onClick={handleToggleMemorized}
+              className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold transition-all active:scale-95 ${
+                isMemorized
+                  ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-500/30"
+                  : "bg-white/10 text-neutral-300 border border-white/20 hover:border-[#c5a059] hover:text-[#d6b26d] hover:bg-white/15"
               }`}
+              title={isMemorized ? t("unmemorizeBtn") : t("memorizeBtn")}
             >
               {isMemorized ? (
                 <>
-                  <Check className="w-3 h-3" />
+                  <Check className="w-3.5 h-3.5 text-emerald-400" />
                   <span>{t("memorized")}</span>
                 </>
               ) : (
-                <span>{t("toReview")}</span>
+                <>
+                  <Clock className="w-3.5 h-3.5 text-neutral-400" />
+                  <span>{t("toReview")}</span>
+                </>
               )}
-            </span>
+            </button>
 
             <span className="flex items-center gap-1 text-[11px] text-neutral-400 group-hover:text-[#c5a059] transition-colors">
               <Rotate3d className="w-3.5 h-3.5" />

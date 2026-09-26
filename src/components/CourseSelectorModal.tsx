@@ -68,12 +68,12 @@ export const CourseSelectorModal: React.FC<CourseSelectorModalProps> = ({
         {/* Modal Header */}
         <div className="p-5 sm:p-6 border-b border-neutral-200 dark:border-zinc-800/80 flex items-center justify-between bg-neutral-50/90 dark:bg-[#17171f]/80 backdrop-blur-xl">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-700 dark:text-[#d6b26d]">
+            <div className="w-10 h-10 rounded-full bg-[#c5a059]/15 border border-[#c5a059]/30 flex items-center justify-center text-[#9e7d32] dark:text-[#d6b26d]">
               <Compass className="w-5 h-5" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-[10px] font-bold tracking-widest uppercase text-amber-700 dark:text-[#d6b26d]">
+                <span className="text-[10px] font-bold tracking-widest uppercase text-[#9e7d32] dark:text-[#d6b26d]">
                   HILLSONG FRANCE
                 </span>
                 <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-neutral-200/80 dark:bg-zinc-800 text-neutral-600 dark:text-zinc-300 font-medium">
@@ -110,7 +110,7 @@ export const CourseSelectorModal: React.FC<CourseSelectorModalProps> = ({
                   isSelected
                     ? "bg-neutral-900 text-white dark:bg-zinc-900 dark:text-white border-neutral-900 dark:border-[#c5a059] shadow-md ring-1 ring-neutral-900 dark:ring-[#c5a059]/40"
                     : isActive
-                    ? "bg-neutral-50 hover:bg-neutral-100/90 dark:bg-zinc-900/50 dark:hover:bg-zinc-900 border-neutral-200 dark:border-zinc-800/80 hover:border-neutral-300 dark:hover:border-zinc-700 cursor-pointer"
+                    ? "bg-neutral-50 hover:bg-neutral-100/90 dark:bg-zinc-900/50 dark:hover:bg-zinc-900 border-neutral-200 dark:border-zinc-800/80 hover:border-[#c5a059]/40 dark:hover:border-[#c5a059]/50 cursor-pointer"
                     : "bg-neutral-50/50 dark:bg-zinc-900/20 border-neutral-200/50 dark:border-zinc-800/40 opacity-60 cursor-not-allowed"
                 }`}
               >
@@ -122,7 +122,7 @@ export const CourseSelectorModal: React.FC<CourseSelectorModalProps> = ({
                         isSelected
                           ? "bg-white text-neutral-950 dark:bg-[#c5a059] dark:text-zinc-950 font-black shadow-md"
                           : isActive
-                          ? "bg-neutral-200/80 dark:bg-zinc-800 text-neutral-800 dark:text-zinc-200 border border-neutral-300/80 dark:border-zinc-700"
+                          ? "bg-neutral-200/80 dark:bg-zinc-800 text-neutral-800 dark:text-zinc-200 border border-neutral-300/80 dark:border-zinc-700 group-hover:border-[#c5a059]/50 group-hover:text-[#9e7d32] dark:group-hover:text-[#d6b26d]"
                           : "bg-neutral-100 dark:bg-zinc-900 text-neutral-400 dark:text-zinc-600 border border-neutral-200 dark:border-zinc-800"
                       }`}
                     >
@@ -132,11 +132,11 @@ export const CourseSelectorModal: React.FC<CourseSelectorModalProps> = ({
                     <div className="space-y-1 flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
                         <h3
-                          className={`text-sm sm:text-base font-bold tracking-tight truncate ${
+                          className={`text-sm sm:text-base font-bold tracking-tight truncate transition-colors ${
                             isSelected
                               ? "text-white dark:text-[#d6b26d]"
                               : isActive
-                              ? "text-neutral-900 dark:text-white group-hover:text-amber-700 dark:group-hover:text-amber-200"
+                              ? "text-neutral-900 dark:text-white group-hover:text-[#9e7d32] dark:group-hover:text-[#d6b26d]"
                               : "text-neutral-500 dark:text-zinc-400"
                           }`}
                         >
@@ -166,12 +166,12 @@ export const CourseSelectorModal: React.FC<CourseSelectorModalProps> = ({
                       {isActive && (
                         <div className={`flex items-center gap-3 pt-1 text-[11px] ${isSelected ? "text-neutral-300 dark:text-zinc-400" : "text-neutral-500 dark:text-zinc-400"}`}>
                           <span className="flex items-center gap-1 font-medium">
-                            <BookOpen className="w-3 h-3 text-amber-500 dark:text-[#c5a059]" />
+                            <BookOpen className="w-3 h-3 text-[#9e7d32] dark:text-[#c5a059]" />
                             {course.versesCount} {t("versesCountLabel")}
                           </span>
                           <span>•</span>
                           <span className="flex items-center gap-1 font-medium">
-                            <HelpCircle className="w-3 h-3 text-sky-500" />
+                            <HelpCircle className="w-3 h-3 text-[#9e7d32] dark:text-[#c5a059]" />
                             {course.questionsCount} {t("questionsCountLabel")}
                           </span>
                         </div>
@@ -206,7 +206,7 @@ export const CourseSelectorModal: React.FC<CourseSelectorModalProps> = ({
         {/* Modal Footer */}
         <div className="p-4 border-t border-neutral-200 dark:border-zinc-800/80 bg-neutral-50/90 dark:bg-[#17171f]/80 backdrop-blur-md flex items-center justify-between text-xs text-neutral-500 dark:text-zinc-400">
           <span className="flex items-center gap-1.5">
-            <Sparkles className="w-3.5 h-3.5 text-amber-500 dark:text-[#c5a059]" />
+            <Sparkles className="w-3.5 h-3.5 text-[#9e7d32] dark:text-[#c5a059]" />
             <span>Nouveau Départ • Hillsong France</span>
           </span>
           <button

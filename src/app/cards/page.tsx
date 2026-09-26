@@ -16,6 +16,7 @@ import {
   ChevronDown,
   Maximize2,
   Grid,
+  X,
 } from "lucide-react";
 
 // Semantic synonym clusters for natural exploration in FR & EN
@@ -375,7 +376,7 @@ export default function CardsPage() {
         <div className="flex items-center gap-2 flex-wrap">
           {/* Search Input */}
           <div className="relative w-36 sm:w-48">
-            <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" />
+            <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none" />
             <input
               type="text"
               placeholder={language === "fr" ? "Recherche..." : "Search..."}
@@ -384,8 +385,22 @@ export default function CardsPage() {
                 setSearchQuery(e.target.value);
                 setFocusIndex(0);
               }}
-              className="w-full pl-8 pr-3 py-1.5 text-xs bg-neutral-100 dark:bg-zinc-800 border border-neutral-200 dark:border-zinc-700 rounded-full text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-zinc-500 focus:outline-none focus:border-[#c5a059] transition-colors"
+              className="w-full pl-8 pr-7 py-1.5 text-xs bg-neutral-100 dark:bg-zinc-800 border border-neutral-200 dark:border-zinc-700 rounded-full text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-zinc-500 focus:outline-none focus:border-[#c5a059] transition-colors"
             />
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={() => {
+                  setSearchQuery("");
+                  setFocusIndex(0);
+                }}
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full flex items-center justify-center text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-200 dark:hover:bg-zinc-700 transition-colors"
+                title={language === "fr" ? "Effacer la recherche" : "Clear search"}
+                aria-label="Clear search"
+              >
+                <X className="w-3 h-3" />
+              </button>
+            )}
           </div>
 
           {/* Shuffle Button */}

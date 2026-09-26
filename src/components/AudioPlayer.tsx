@@ -3,18 +3,12 @@
 import React, { useEffect, useRef } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 
-declare global {
-  interface Window {
-    YT?: any;
-    onYouTubeIframeAPIReady?: () => void;
-  }
-}
-
 export interface AudioTrackConfig {
-  id: "amazing-grace" | "hillsong" | "jesu-joy";
+  id: string;
   title: string;
   artist: string;
-  sourceType: "local" | "youtube";
+  genre: string;
+  sourceType: "local";
   src: string;
 }
 
@@ -23,30 +17,47 @@ export const AUDIO_TRACKS: AudioTrackConfig[] = [
     id: "amazing-grace",
     title: "Amazing Grace (Orchestre à cordes doux)",
     artist: "USAFB Strolling Strings • Libre & Domaine Public",
+    genre: "Hymne classique",
     sourceType: "local",
     src: "/audio/amazing-grace.mp3",
   },
   {
-    id: "hillsong",
-    title: "I Surrender (Guitar Instrumental)",
-    artist: "Hillsong Instrumentals • Album Depths",
-    sourceType: "youtube",
-    src: "CAbZ1zfa_6w",
+    id: "it-is-well",
+    title: "It Is Well With My Soul / Quel repos céleste",
+    artist: "Horatio Spafford & Philip Bliss • Domaine Public",
+    genre: "Hymne méditatif",
+    sourceType: "local",
+    src: "/audio/it-is-well-with-my-soul.mp3",
+  },
+  {
+    id: "canon-in-d",
+    title: "Canon en Ré majeur (Cordes & Piano)",
+    artist: "Johann Pachelbel • Kevin MacLeod (CC-BY 3.0)",
+    genre: "Classique sacré",
+    sourceType: "local",
+    src: "/audio/canon-in-d.mp3",
   },
   {
     id: "jesu-joy",
     title: "Jésus, que ma joie demeure (Piano & Cordes)",
-    artist: "J.S. Bach • Kevin MacLeod (CC-BY)",
+    artist: "J.S. Bach • Kevin MacLeod (CC-BY 3.0)",
+    genre: "Classique sacré",
     sourceType: "local",
     src: "/audio/jesu-joy-of-mans-desiring.mp3",
+  },
+  {
+    id: "nearer-my-god",
+    title: "Mon Dieu, plus près de Toi / Nearer My God to Thee",
+    artist: "Lowell Mason • Joel Rosenberger (CC-BY)",
+    genre: "Hymne classique",
+    sourceType: "local",
+    src: "/audio/nearer-my-god-to-thee.mp3",
   },
 ];
 
 export const AudioPlayer: React.FC = () => {
-  const { settings } = useLanguage();
-  const audioTagRef = useRef<HTMLAudioElement | null>(null);
-  const ytPlayerRef = useRef<any>(null);
-  const isYtReadyRef = useRef<boolean>(false);
+  const { settings, updateSettings } = useLanguage();
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const currentTrack =
     AUDIO_TRACKS.find((t) => t.id === settings.soundTrack) || AUDIO_TRACKS[0];
@@ -55,172 +66,73 @@ export const AudioPlayer: React.FC = () => {
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    if (!audioTagRef.current) {
+    if (!audioRef.current) {
       const audio = new Audio();
-      audio.loop = true;
       audio.preload = "auto";
-      audioTagRef.current = audio;
+      audioRef.current = audio;
     }
 
     return () => {
-      if (audioTagRef.current) {
-        audioTagRef.current.pause();
+      if (audioRef.current) {
+        audioRef.current.pause();
       }
     };
   }, []);
 
-  // 2. Initialize YouTube Player once
+  // 2. Handle track ended -> Auto-chain / Shuffle to next track seamlessly
   useEffect(() => {
-    if (typeof window === "undefined") return;
+    const audio = audioRef.current;
+    if (!audio) return;
 
-    if (!window.YT) {
-      const existingScript = document.querySelector('script[src*="youtube.com/iframe_api"]');
-      if (!existingScript) {
-        const tag = document.createElement("script");
-        tag.src = "https://www.youtube.com/iframe_api";
-        const firstScriptTag = document.getElementsByTagName("script")[0];
-        if (firstScriptTag && firstScriptTag.parentNode) {
-          firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-        } else {
-          document.body.appendChild(tag);
-        }
-      }
-    }
-
-    const initYt = () => {
-      if (ytPlayerRef.current || !window.YT || !window.YT.Player) return;
-      const container = document.getElementById("yt-ambient-player");
-      if (!container) return;
-
-      try {
-        ytPlayerRef.current = new window.YT.Player("yt-ambient-player", {
-          height: "1",
-          width: "1",
-          videoId: "CAbZ1zfa_6w",
-          playerVars: {
-            autoplay: 0,
-            controls: 0,
-            disablekb: 1,
-            fs: 0,
-            iv_load_policy: 3,
-            loop: 1,
-            playlist: "CAbZ1zfa_6w",
-            modestbranding: 1,
-            rel: 0,
-            showinfo: 0,
-          },
-          events: {
-            onReady: (event: any) => {
-              isYtReadyRef.current = true;
-              event.target.setVolume(Math.round(settings.soundVolume * 100));
-              if (settings.soundEnabled && currentTrack.sourceType === "youtube") {
-                event.target.playVideo();
-              }
-            },
-            onStateChange: (event: any) => {
-              if (event.data === window.YT.PlayerState.ENDED) {
-                event.target.playVideo();
-              }
-            },
-          },
-        });
-      } catch (err) {
-        console.error("YouTube init error", err);
+    const handleEnded = () => {
+      if (settings.soundShuffle) {
+        // Pick another track without repeating the current one
+        const candidates = AUDIO_TRACKS.filter((t) => t.id !== settings.soundTrack);
+        const nextTrack =
+          candidates[Math.floor(Math.random() * candidates.length)] || AUDIO_TRACKS[0];
+        updateSettings({ soundTrack: nextTrack.id });
+      } else {
+        // Single track loop
+        audio.currentTime = 0;
+        audio.play().catch(() => {});
       }
     };
 
-    if (window.YT && window.YT.Player) {
-      initYt();
-    } else {
-      const prevCallback = window.onYouTubeIframeAPIReady;
-      window.onYouTubeIframeAPIReady = () => {
-        if (prevCallback) prevCallback();
-        initYt();
-      };
-    }
-  }, []);
+    audio.addEventListener("ended", handleEnded);
+    return () => {
+      audio.removeEventListener("ended", handleEnded);
+    };
+  }, [settings.soundShuffle, settings.soundTrack, updateSettings]);
 
-  // 3. Coordinate Playback between Local MP3 and YouTube Stream
+  // 3. Synchronize track source, play/pause state and loop mode
   useEffect(() => {
-    const audio = audioTagRef.current;
-    const isLocal = currentTrack.sourceType === "local";
+    const audio = audioRef.current;
+    if (!audio) return;
 
-    if (isLocal) {
-      // Pause YouTube if running
-      if (ytPlayerRef.current && isYtReadyRef.current) {
-        try {
-          ytPlayerRef.current.pauseVideo();
-        } catch {
-          // Ignore
-        }
-      }
+    // Loop property: if shuffle is disabled, HTML5 audio naturally loops the current track
+    audio.loop = !settings.soundShuffle;
 
-      if (audio) {
-        // Change src if needed
-        if (!audio.src.endsWith(currentTrack.src)) {
-          audio.src = currentTrack.src;
-          audio.load();
-        }
-        audio.volume = settings.soundVolume;
+    if (!audio.src.endsWith(currentTrack.src)) {
+      audio.src = currentTrack.src;
+      audio.load();
+    }
+    audio.volume = settings.soundVolume;
 
-        if (settings.soundEnabled) {
-          audio.play().catch(() => {
-            // Browser autoplay restrictions until user clicks
-          });
-        } else {
-          audio.pause();
-        }
-      }
+    if (settings.soundEnabled) {
+      audio.play().catch(() => {
+        // Autoplay may be restricted until first user interaction
+      });
     } else {
-      // Current track is YouTube
-      if (audio) {
-        audio.pause();
-      }
-
-      if (ytPlayerRef.current && isYtReadyRef.current) {
-        try {
-          ytPlayerRef.current.setVolume(Math.round(settings.soundVolume * 100));
-          if (settings.soundEnabled) {
-            ytPlayerRef.current.playVideo();
-          } else {
-            ytPlayerRef.current.pauseVideo();
-          }
-        } catch {
-          // Ignore
-        }
-      }
+      audio.pause();
     }
-  }, [currentTrack, settings.soundEnabled, settings.soundVolume]);
+  }, [currentTrack, settings.soundEnabled, settings.soundShuffle]);
 
-  // 4. Dynamic Volume updates
+  // 4. Dynamic volume updates
   useEffect(() => {
-    if (audioTagRef.current) {
-      audioTagRef.current.volume = settings.soundVolume;
-    }
-    if (ytPlayerRef.current && isYtReadyRef.current) {
-      try {
-        ytPlayerRef.current.setVolume(Math.round(settings.soundVolume * 100));
-      } catch {
-        // Ignore
-      }
+    if (audioRef.current) {
+      audioRef.current.volume = settings.soundVolume;
     }
   }, [settings.soundVolume]);
 
-  return (
-    <div
-      style={{
-        position: "fixed",
-        top: -9999,
-        left: -9999,
-        width: 1,
-        height: 1,
-        opacity: 0.01,
-        pointerEvents: "none",
-        zIndex: -9999,
-      }}
-      aria-hidden="true"
-    >
-      <div id="yt-ambient-player" />
-    </div>
-  );
+  return null;
 };

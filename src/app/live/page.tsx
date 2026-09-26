@@ -22,23 +22,23 @@ const AVATARS = ["✨", "🦁", "🕊️", "🌿", "🌟", "🔥", "⚡", "🎯"
 
 const OPTION_STYLES = [
   {
-    bg: "bg-rose-500 hover:bg-rose-600 active:bg-rose-700 text-white border-rose-600",
-    badge: "bg-white/20 text-white",
+    card: "bg-white hover:bg-stone-50 dark:bg-[#16161f] dark:hover:bg-[#1f1f2a] border border-stone-200/90 dark:border-white/10 border-b-4 border-b-[#8a2230] text-neutral-900 dark:text-zinc-100 shadow-md",
+    badge: "bg-[#8a2230] text-white shadow-sm",
     symbol: "▲",
   },
   {
-    bg: "bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white border-blue-600",
-    badge: "bg-white/20 text-white",
+    card: "bg-white hover:bg-stone-50 dark:bg-[#16161f] dark:hover:bg-[#1f1f2a] border border-stone-200/90 dark:border-white/10 border-b-4 border-b-[#244c74] text-neutral-900 dark:text-zinc-100 shadow-md",
+    badge: "bg-[#244c74] text-white shadow-sm",
     symbol: "◆",
   },
   {
-    bg: "bg-amber-500 hover:bg-amber-600 active:bg-amber-700 text-stone-950 border-amber-600",
-    badge: "bg-black/20 text-stone-950",
+    card: "bg-white hover:bg-stone-50 dark:bg-[#16161f] dark:hover:bg-[#1f1f2a] border border-stone-200/90 dark:border-white/10 border-b-4 border-b-[#c5a059] text-neutral-900 dark:text-zinc-100 shadow-md",
+    badge: "bg-[#c5a059] text-zinc-950 font-bold shadow-sm",
     symbol: "●",
   },
   {
-    bg: "bg-emerald-500 hover:bg-emerald-600 active:bg-emerald-700 text-white border-emerald-600",
-    badge: "bg-white/20 text-white",
+    card: "bg-white hover:bg-stone-50 dark:bg-[#16161f] dark:hover:bg-[#1f1f2a] border border-stone-200/90 dark:border-white/10 border-b-4 border-b-[#1d5c41] text-neutral-900 dark:text-zinc-100 shadow-md",
+    badge: "bg-[#1d5c41] text-white shadow-sm",
     symbol: "■",
   },
 ];
@@ -154,17 +154,21 @@ function LivePlayerContent() {
   // 1. JOIN SCREEN
   if (!activePin || !state) {
     return (
-      <div className="min-h-screen bg-stone-950 text-white flex flex-col items-center justify-center p-4 sm:p-6 select-none">
-        <div className="w-full max-w-md bg-stone-900 border border-stone-800 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6">
+      <div className="min-h-[75vh] text-neutral-900 dark:text-white flex flex-col items-center justify-center p-2 sm:p-6 select-none relative overflow-hidden [isolation:isolate]">
+        {/* Subtle ambient halos */}
+        <div className="absolute top-0 right-0 w-96 h-96 bg-[#c5a059]/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-80 h-80 bg-neutral-200/50 dark:bg-white/5 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="relative z-10 w-full max-w-md bg-white/95 dark:bg-[#121217] border border-stone-200/90 dark:border-white/10 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6 before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-stone-300 dark:before:via-white/20 before:to-transparent">
           <div className="text-center space-y-2">
-            <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-amber-400 px-3 py-1 bg-amber-950/60 border border-amber-500/30 rounded-full">
-              <Sparkles className="w-3.5 h-3.5" />
+            <div className="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-widest text-[#9e7d32] dark:text-[#d6b26d] px-3.5 py-1 bg-[#c5a059]/15 border border-[#c5a059]/30 rounded-full shadow-sm">
+              <Sparkles className="w-3.5 h-3.5 text-[#c5a059]" />
               <span>{language === "fr" ? "Quiz Live • Nouveau Départ" : "Live Quiz • New Beginnings"}</span>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
-              {language === "fr" ? "Rejoindre la Partie" : "Join the Game"}
+            <h1 className="text-2xl sm:text-3xl font-light tracking-tight text-neutral-900 dark:text-white">
+              <span className="font-semibold">{language === "fr" ? "Rejoindre" : "Join"}</span> {language === "fr" ? "la Partie" : "the Game"}
             </h1>
-            <p className="text-stone-400 text-xs sm:text-sm">
+            <p className="text-neutral-500 dark:text-neutral-400 text-xs sm:text-sm">
               {language === "fr"
                 ? "Entrez le code PIN affiché par l'enseignant sur Zoom ou à l'écran."
                 : "Enter the PIN code displayed by the teacher on Zoom or on screen."}
@@ -174,7 +178,7 @@ function LivePlayerContent() {
           <form onSubmit={handleJoin} className="space-y-4">
             {/* PIN Input */}
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-stone-400 mb-1.5">
+              <label className="block text-xs font-bold uppercase tracking-wider text-neutral-600 dark:text-neutral-400 mb-1.5">
                 {language === "fr" ? "Code PIN du Jeu" : "Game PIN Code"}
               </label>
               <input
@@ -184,13 +188,13 @@ function LivePlayerContent() {
                 value={pinInput}
                 onChange={(e) => setPinInput(e.target.value)}
                 placeholder="Ex: 742819"
-                className="w-full bg-stone-950 border border-stone-700 focus:border-amber-400 rounded-2xl px-4 py-3.5 text-center text-2xl font-mono font-bold tracking-widest text-amber-400 outline-none"
+                className="w-full bg-stone-50 dark:bg-black/60 border border-stone-200 dark:border-white/15 focus:border-[#c5a059] focus:ring-1 focus:ring-[#c5a059] rounded-2xl px-4 py-3.5 text-center text-2xl font-mono font-bold tracking-widest text-neutral-900 dark:text-[#d6b26d] outline-none shadow-inner transition-colors"
               />
             </div>
 
             {/* Name Input */}
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-stone-400 mb-1.5">
+              <label className="block text-xs font-bold uppercase tracking-wider text-neutral-600 dark:text-neutral-400 mb-1.5">
                 {language === "fr" ? "Votre Prénom ou Pseudo" : "Your Name or Nickname"}
               </label>
               <input
@@ -199,13 +203,13 @@ function LivePlayerContent() {
                 value={nameInput}
                 onChange={(e) => setNameInput(e.target.value)}
                 placeholder={language === "fr" ? "Ex: David, Sarah..." : "e.g. David, Sarah..."}
-                className="w-full bg-stone-950 border border-stone-700 focus:border-amber-400 rounded-2xl px-4 py-3 text-base font-semibold text-white outline-none"
+                className="w-full bg-stone-50 dark:bg-black/60 border border-stone-200 dark:border-white/15 focus:border-[#c5a059] focus:ring-1 focus:ring-[#c5a059] rounded-2xl px-4 py-3 text-base font-semibold text-neutral-900 dark:text-white placeholder:text-neutral-400 outline-none shadow-inner transition-colors"
               />
             </div>
 
             {/* Avatar Selector */}
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-stone-400 mb-2">
+              <label className="block text-xs font-bold uppercase tracking-wider text-neutral-600 dark:text-neutral-400 mb-2">
                 {language === "fr" ? "Choisissez votre Avatar" : "Choose your Avatar"}
               </label>
               <div className="grid grid-cols-4 gap-2">
@@ -214,10 +218,10 @@ function LivePlayerContent() {
                     key={av}
                     type="button"
                     onClick={() => setAvatar(av)}
-                    className={`py-2 text-2xl rounded-xl border transition-all ${
+                    className={`py-2 text-2xl rounded-2xl border transition-all ${
                       avatar === av
-                        ? "bg-amber-500/20 border-amber-400 scale-105"
-                        : "bg-stone-950 border-stone-800 hover:border-stone-700"
+                        ? "bg-[#c5a059]/20 border-[#c5a059] scale-105 shadow-md shadow-[#c5a059]/15"
+                        : "bg-stone-100 dark:bg-black/40 border-stone-200 dark:border-white/10 hover:border-stone-300 dark:hover:border-white/25"
                     }`}
                   >
                     {av}
@@ -228,7 +232,7 @@ function LivePlayerContent() {
 
             {/* Error Message */}
             {joinError && (
-              <div className="p-3 rounded-xl bg-rose-950/80 border border-rose-500/50 text-rose-300 text-xs font-semibold text-center">
+              <div className="p-3 rounded-2xl bg-rose-50 dark:bg-rose-950/80 border border-rose-200 dark:border-rose-500/50 text-rose-700 dark:text-rose-300 text-xs font-semibold text-center">
                 {joinError}
               </div>
             )}
@@ -237,7 +241,7 @@ function LivePlayerContent() {
             <button
               type="submit"
               disabled={isJoining}
-              className="w-full py-4 rounded-2xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-stone-950 font-black text-base shadow-xl flex items-center justify-center gap-2 transition-transform active:scale-95"
+              className="w-full py-4 rounded-full bg-[#c5a059] hover:bg-[#d6b26d] text-zinc-950 font-bold text-base shadow-xl flex items-center justify-center gap-2 transition-transform active:scale-95 disabled:opacity-50"
             >
               <span>
                 {isJoining
@@ -253,10 +257,10 @@ function LivePlayerContent() {
           </form>
 
           {/* Link to Host Mode for Teachers */}
-          <div className="pt-2 text-center border-t border-stone-800/80">
+          <div className="pt-2 text-center border-t border-stone-200/80 dark:border-white/10">
             <Link
               href="/live/host"
-              className="text-xs text-stone-500 hover:text-amber-400 transition-colors inline-flex items-center gap-1.5"
+              className="text-xs text-stone-500 dark:text-neutral-400 hover:text-[#9e7d32] dark:hover:text-[#d6b26d] transition-colors inline-flex items-center gap-1.5"
             >
               <span>{language === "fr" ? "Vous animez la session ?" : "Hosting the session?"}</span>
               <span className="font-bold underline underline-offset-2">
@@ -272,23 +276,26 @@ function LivePlayerContent() {
   // 2. PLAYER LOBBY (WAITING ROOM)
   if (state.status === "lobby") {
     return (
-      <div className="min-h-screen bg-stone-950 text-white flex flex-col items-center justify-center p-6 text-center select-none">
-        <div className="w-full max-w-sm bg-stone-900 border border-stone-800 rounded-3xl p-8 shadow-2xl space-y-6">
-          <div className="w-24 h-24 rounded-full bg-amber-500/20 border-2 border-amber-400 flex items-center justify-center text-5xl mx-auto shadow-xl shadow-amber-500/10">
+      <div className="min-h-[75vh] text-neutral-900 dark:text-white flex flex-col items-center justify-center p-4 sm:p-6 text-center select-none relative overflow-hidden [isolation:isolate]">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-[#c5a059]/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-80 h-80 bg-neutral-200/50 dark:bg-white/5 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="relative z-10 w-full max-w-sm bg-white/95 dark:bg-[#121217] border border-stone-200/90 dark:border-white/10 rounded-3xl p-8 shadow-2xl space-y-6 before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-stone-300 dark:before:via-white/20 before:to-transparent">
+          <div className="w-24 h-24 rounded-full bg-[#c5a059]/15 border-2 border-[#c5a059]/40 flex items-center justify-center text-5xl mx-auto shadow-xl shadow-[#c5a059]/10">
             {myPlayer?.avatar || avatar}
           </div>
 
           <div className="space-y-1">
-            <h2 className="text-2xl font-black text-white">
+            <h2 className="text-2xl font-black text-neutral-900 dark:text-white">
               {myPlayer?.name || nameInput}
             </h2>
-            <div className="inline-flex items-center gap-2 text-xs text-emerald-400 font-bold">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping" />
+            <div className="inline-flex items-center gap-2 text-xs text-emerald-600 dark:text-emerald-400 font-bold">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping" />
               <span>{language === "fr" ? "Connecté à la partie" : "Connected to the game"}</span>
             </div>
           </div>
 
-          <div className="p-4 bg-stone-950 rounded-2xl border border-stone-800 text-xs text-stone-400 leading-relaxed">
+          <div className="p-4 bg-stone-100 dark:bg-black/50 rounded-2xl border border-stone-200 dark:border-white/10 text-xs text-stone-600 dark:text-neutral-400 leading-relaxed">
             {language === "fr"
               ? "Regardez l'écran de l'enseignant sur Zoom ou dans la salle. Le quiz va bientôt commencer !"
               : "Watch the teacher's screen on Zoom or in the room. The quiz will start soon!"}
@@ -305,15 +312,15 @@ function LivePlayerContent() {
 
     if (hasAnswered) {
       return (
-        <div className="min-h-screen bg-stone-950 text-white flex flex-col items-center justify-center p-6 text-center select-none">
-          <div className="w-full max-w-sm bg-stone-900 border border-stone-800 rounded-3xl p-8 shadow-2xl space-y-4 animate-in zoom-in-95 duration-200">
-            <div className="w-20 h-20 rounded-full bg-amber-500/20 border border-amber-400 flex items-center justify-center text-amber-400 mx-auto">
+        <div className="min-h-[75vh] text-neutral-900 dark:text-white flex flex-col items-center justify-center p-4 sm:p-6 text-center select-none relative overflow-hidden [isolation:isolate]">
+          <div className="relative z-10 w-full max-w-sm bg-white/95 dark:bg-[#121217] border border-stone-200/90 dark:border-white/10 rounded-3xl p-8 shadow-2xl space-y-4 animate-scale-in before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-stone-300 dark:before:via-white/20 before:to-transparent">
+            <div className="w-20 h-20 rounded-full bg-[#c5a059]/15 border border-[#c5a059]/40 flex items-center justify-center text-[#9e7d32] dark:text-[#d6b26d] mx-auto shadow-lg shadow-[#c5a059]/15">
               <Check className="w-10 h-10 stroke-[3]" />
             </div>
-            <h2 className="text-xl font-black text-white">
+            <h2 className="text-xl font-black text-neutral-900 dark:text-white">
               {language === "fr" ? "Réponse enregistrée !" : "Answer recorded!"}
             </h2>
-            <p className="text-xs text-stone-400">
+            <p className="text-xs text-stone-500 dark:text-neutral-400">
               {language === "fr"
                 ? "En attente des autres participants... Les résultats arrivent sur l'écran principal."
                 : "Waiting for other players... Results will appear on the main screen."}
@@ -324,45 +331,47 @@ function LivePlayerContent() {
     }
 
     return (
-      <div className="w-full max-w-md mx-auto flex-1 flex flex-col justify-between py-2 sm:py-4 select-none">
-        {/* Top Header */}
-        <div className="flex items-center justify-between border-b border-stone-800/80 pb-2">
-          <div className="text-xs font-bold uppercase tracking-wider text-amber-400">
-            Q{state.currentQuestionIndex + 1} / {state.totalQuestions}
+      <div className="min-h-[75vh] text-neutral-900 dark:text-white flex flex-col justify-between p-2 sm:p-6 select-none relative overflow-hidden [isolation:isolate]">
+        <div className="w-full max-w-md mx-auto flex-1 flex flex-col justify-between py-2 sm:py-4">
+          {/* Top Header */}
+          <div className="flex items-center justify-between border-b border-stone-200/80 dark:border-white/10 pb-3">
+            <div className="text-xs font-bold uppercase tracking-wider text-[#9e7d32] dark:text-[#d6b26d]">
+              Q{state.currentQuestionIndex + 1} / {state.totalQuestions}
+            </div>
+            <div className="text-xs font-mono font-semibold text-stone-600 dark:text-neutral-400">
+              {myPlayer?.name} • <span className="text-[#9e7d32] dark:text-[#d6b26d] font-bold">{myPlayer?.score} pts</span>
+            </div>
           </div>
-          <div className="text-xs font-bold text-stone-400">
-            {myPlayer?.name} • {myPlayer?.score} pts
+
+          {/* Question Title */}
+          <div className="my-auto py-3 text-center">
+            <h2 className="text-lg sm:text-xl font-bold leading-snug text-neutral-900 dark:text-white drop-shadow-sm">
+              {q.text[language] || q.text.fr}
+            </h2>
           </div>
-        </div>
 
-        {/* Question Title */}
-        <div className="my-auto py-2 text-center">
-          <h2 className="text-lg sm:text-xl font-black leading-snug">
-            {q.text[language] || q.text.fr}
-          </h2>
-        </div>
-
-        {/* 4 Ergonomic Big Touch Buttons */}
-        <div className="grid grid-cols-2 gap-3 max-w-md mx-auto w-full mb-2">
-          {q.options?.map((opt, idx) => {
-            const style = OPTION_STYLES[idx % OPTION_STYLES.length];
-            return (
-              <button
-                key={opt.id}
-                onClick={() => handleSelectOption(opt.id)}
-                className={`h-28 sm:h-36 p-3 rounded-2xl border-b-4 flex flex-col items-center justify-center gap-1.5 text-center transition-transform active:scale-95 shadow-xl ${style.bg}`}
-              >
-                <div
-                  className={`w-9 h-9 rounded-xl flex items-center justify-center font-black text-lg shadow-md ${style.badge}`}
+          {/* 4 Ergonomic Big Touch Buttons */}
+          <div className="grid grid-cols-2 gap-3.5 max-w-md mx-auto w-full mb-2">
+            {q.options?.map((opt, idx) => {
+              const style = OPTION_STYLES[idx % OPTION_STYLES.length];
+              return (
+                <button
+                  key={opt.id}
+                  onClick={() => handleSelectOption(opt.id)}
+                  className={`h-28 sm:h-36 p-3.5 rounded-2xl flex flex-col items-center justify-center gap-2 text-center transition-all active:scale-95 ${style.card}`}
                 >
-                  {style.symbol}
-                </div>
-                <span className="text-xs sm:text-sm font-bold line-clamp-2 leading-tight">
-                  {opt.text[language] || opt.text.fr}
-                </span>
-              </button>
-            );
-          })}
+                  <div
+                    className={`w-9 h-9 rounded-xl flex items-center justify-center font-black text-lg ${style.badge}`}
+                  >
+                    {style.symbol}
+                  </div>
+                  <span className="text-xs sm:text-sm font-semibold line-clamp-2 leading-snug">
+                    {opt.text[language] || opt.text.fr}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
         </div>
       </div>
     );
@@ -374,12 +383,12 @@ function LivePlayerContent() {
     const points = myPlayer?.lastPointsEarned || 0;
 
     return (
-      <div className="min-h-screen bg-stone-950 text-white flex flex-col items-center justify-center p-6 text-center select-none">
+      <div className="min-h-[75vh] text-neutral-900 dark:text-white flex flex-col items-center justify-center p-4 sm:p-6 text-center select-none relative overflow-hidden [isolation:isolate]">
         <div
-          className={`w-full max-w-sm rounded-3xl p-8 border-2 shadow-2xl space-y-4 animate-in zoom-in-95 duration-200 ${
+          className={`w-full max-w-sm rounded-3xl p-8 border shadow-2xl space-y-4 animate-scale-in before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-stone-300 dark:before:via-white/20 before:to-transparent relative overflow-hidden ${
             isCorrect
-              ? "bg-emerald-950/70 border-emerald-400 text-emerald-100"
-              : "bg-rose-950/70 border-rose-500 text-rose-100"
+              ? "bg-emerald-50 dark:bg-[#112419] border-emerald-300 dark:border-emerald-500/50 text-emerald-950 dark:text-emerald-100 shadow-emerald-500/10 dark:shadow-emerald-950/40"
+              : "bg-rose-50 dark:bg-[#251216] border-rose-300 dark:border-rose-500/50 text-rose-950 dark:text-rose-100 shadow-rose-500/10 dark:shadow-rose-950/40"
           }`}
         >
           <div className="text-5xl">
@@ -397,19 +406,19 @@ function LivePlayerContent() {
                 : "Not Quite..."}
             </h2>
             {isCorrect ? (
-              <div className="text-3xl font-black text-emerald-400 font-mono">
+              <div className="text-3xl font-black text-emerald-600 dark:text-emerald-400 font-mono">
                 +{points} pts
               </div>
             ) : (
-              <div className="text-sm font-semibold text-rose-300">
+              <div className="text-sm font-semibold text-rose-600 dark:text-rose-300">
                 {language === "fr" ? "+0 pt pour cette question" : "+0 pts for this question"}
               </div>
             )}
           </div>
 
           {isCorrect && myPlayer && myPlayer.streak > 1 && (
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-orange-950/80 border border-orange-500/50 rounded-full text-xs font-bold text-orange-400">
-              <Flame className="w-3.5 h-3.5 fill-current" />
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#c5a059]/15 dark:bg-[#c5a059]/20 border border-[#c5a059]/30 rounded-full text-xs font-bold text-[#9e7d32] dark:text-[#d6b26d]">
+              <Flame className="w-3.5 h-3.5 fill-current text-[#c5a059]" />
               <span>
                 {language === "fr"
                   ? `Série de ${myPlayer.streak} d'affilée !`
@@ -418,9 +427,9 @@ function LivePlayerContent() {
             </div>
           )}
 
-          <div className="pt-2 text-xs text-stone-300 border-t border-white/10">
+          <div className="pt-2 text-xs text-stone-500 dark:text-neutral-400 border-t border-stone-200/80 dark:border-white/10">
             {language === "fr" ? "Score total :" : "Total score:"}{" "}
-            <span className="font-bold">{myPlayer?.score} pts</span>
+            <span className="font-bold text-[#9e7d32] dark:text-[#d6b26d] font-mono text-sm">{myPlayer?.score} pts</span>
           </div>
         </div>
       </div>
@@ -432,25 +441,25 @@ function LivePlayerContent() {
     const myRank = state.leaderboard.find((p) => p.id === playerId)?.rank || "-";
 
     return (
-      <div className="min-h-screen bg-stone-950 text-white flex flex-col items-center justify-center p-6 text-center select-none">
-        <div className="w-full max-w-sm bg-stone-900 border border-stone-800 rounded-3xl p-8 shadow-2xl space-y-6">
-          <div className="w-20 h-20 rounded-full bg-amber-500/20 border border-amber-400 flex items-center justify-center text-amber-400 mx-auto">
+      <div className="min-h-[75vh] text-neutral-900 dark:text-white flex flex-col items-center justify-center p-4 sm:p-6 text-center select-none relative overflow-hidden [isolation:isolate]">
+        <div className="w-full max-w-sm bg-white/95 dark:bg-[#121217] border border-stone-200/90 dark:border-white/10 rounded-3xl p-8 shadow-2xl space-y-6 before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-stone-300 dark:before:via-white/20 before:to-transparent relative overflow-hidden">
+          <div className="w-20 h-20 rounded-full bg-[#c5a059]/15 border border-[#c5a059]/30 flex items-center justify-center text-[#9e7d32] dark:text-[#d6b26d] mx-auto shadow-lg shadow-[#c5a059]/10">
             <Trophy className="w-10 h-10" />
           </div>
 
           <div className="space-y-1">
-            <span className="text-xs uppercase tracking-widest text-stone-400 font-bold">
+            <span className="text-xs uppercase tracking-widest text-stone-500 dark:text-neutral-400 font-bold">
               {language === "fr" ? "Votre Position" : "Your Rank"}
             </span>
-            <div className="text-4xl font-black text-amber-400 font-mono">
+            <div className="text-4xl font-black text-[#9e7d32] dark:text-[#d6b26d] font-mono">
               #{myRank}
             </div>
-            <div className="text-sm font-bold text-stone-200">
+            <div className="text-sm font-semibold text-stone-600 dark:text-neutral-300 font-mono">
               {myPlayer?.score} {language === "fr" ? "points" : "points"}
             </div>
           </div>
 
-          <p className="text-xs text-stone-400">
+          <p className="text-xs text-stone-500 dark:text-neutral-400">
             {language === "fr"
               ? "Regardez l'écran de l'enseignant pour voir le Top 5 en direct !"
               : "Watch the teacher's screen to see the live Top 5!"}
@@ -465,26 +474,26 @@ function LivePlayerContent() {
     const myRank = state.leaderboard.find((p) => p.id === playerId)?.rank || "-";
 
     return (
-      <div className="min-h-screen bg-stone-950 text-white flex flex-col items-center justify-center p-6 text-center select-none">
-        <div className="w-full max-w-sm bg-stone-900 border border-amber-500/40 rounded-3xl p-8 shadow-2xl space-y-6">
+      <div className="min-h-[75vh] text-neutral-900 dark:text-white flex flex-col items-center justify-center p-4 sm:p-6 text-center select-none relative overflow-hidden [isolation:isolate]">
+        <div className="w-full max-w-sm bg-white/95 dark:bg-[#121217] border border-stone-200/90 dark:border-[#c5a059]/30 rounded-3xl p-8 shadow-2xl space-y-6 before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-stone-300 dark:before:via-white/20 before:to-transparent relative overflow-hidden">
           <div className="text-5xl">👑</div>
 
           <div className="space-y-1">
-            <h2 className="text-2xl font-black text-white">
+            <h2 className="text-2xl font-black text-neutral-900 dark:text-white">
               {language === "fr" ? "Partie Terminée !" : "Game Over!"}
             </h2>
-            <div className="text-4xl font-black text-amber-400 font-mono">
+            <div className="text-4xl font-black text-[#9e7d32] dark:text-[#d6b26d] font-mono">
               #{myRank}
             </div>
-            <p className="text-sm font-bold text-stone-300">
+            <p className="text-sm font-bold text-stone-600 dark:text-neutral-300 font-mono">
               {language === "fr" ? `Score final : ${myPlayer?.score} pts` : `Final score: ${myPlayer?.score} pts`}
             </p>
           </div>
 
-          <div className="pt-4 border-t border-stone-800 space-y-3">
+          <div className="pt-4 border-t border-stone-200/80 dark:border-white/10 space-y-3">
             <Link
               href="/"
-              className="block w-full py-3 rounded-xl bg-amber-400 hover:bg-amber-300 text-stone-950 font-bold text-sm transition-colors"
+              className="block w-full py-3.5 rounded-full bg-[#c5a059] hover:bg-[#d6b26d] text-zinc-950 font-bold text-sm transition-colors shadow-lg active:scale-95"
             >
               {language === "fr" ? "Retour à l'accueil" : "Back to Home"}
             </Link>
@@ -502,7 +511,7 @@ export default function LivePlayerPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-stone-950 flex items-center justify-center text-amber-400 font-mono text-sm">
+        <div className="min-h-screen bg-[#fcfbfa] dark:bg-[#0b0b0e] flex items-center justify-center text-[#9e7d32] dark:text-[#c5a059] font-mono text-sm">
           {language === "fr" ? "Chargement du mode Live..." : "Loading Live Mode..."}
         </div>
       }

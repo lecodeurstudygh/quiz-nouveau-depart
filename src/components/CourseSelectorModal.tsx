@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { useLanguage } from "@/context/LanguageContext";
 import { ALL_COURSES, CourseModuleSummary } from "@/data/curriculum";
 import {
@@ -24,6 +25,11 @@ export const CourseSelectorModal: React.FC<CourseSelectorModalProps> = ({
   onClose,
 }) => {
   const { language, selectedWeekId, setSelectedWeekId, t } = useLanguage();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Close on Escape key
   useEffect(() => {
@@ -40,7 +46,7 @@ export const CourseSelectorModal: React.FC<CourseSelectorModalProps> = ({
     };
   }, [isOpen, onClose]);
 
-  if (!isOpen) return null;
+  if (!isOpen || !mounted) return null;
 
   const handleSelectCourse = (course: CourseModuleSummary) => {
     if (course.status === "active") {
@@ -49,8 +55,8 @@ export const CourseSelectorModal: React.FC<CourseSelectorModalProps> = ({
     }
   };
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 animate-fade-in">
+  return createPortal(
+    <div className="fixed inset-0 z-[9999] flex items-end sm:items-center justify-center p-0 sm:p-4 animate-fade-in">
       {/* Backdrop */}
       <div
         onClick={onClose}
@@ -204,10 +210,10 @@ export const CourseSelectorModal: React.FC<CourseSelectorModalProps> = ({
         </div>
 
         {/* Modal Footer */}
-        <div className="p-4 border-t border-neutral-200 dark:border-zinc-800/80 bg-neutral-50/90 dark:bg-[#17171f]/80 backdrop-blur-md flex items-center justify-between text-xs text-neutral-500 dark:text-zinc-400">
+        <div className="p-4 pb-[max(1rem,calc(env(safe-area-inset-bottom,0px)+8px))] border-t border-neutral-200 dark:border-zinc-800/80 bg-neutral-50/90 dark:bg-[#17171f]/80 backdrop-blur-md flex items-center justify-between text-xs text-neutral-500 dark:text-zinc-400">
           <span className="flex items-center gap-1.5">
             <Sparkles className="w-3.5 h-3.5 text-[#9e7d32] dark:text-[#c5a059]" />
-            <span>Nouveau Départ • Hillsong France</span>
+            <span>{language === "fr" ? "Nouveau Départ" : "New Beginnings"} • Hillsong France</span>
           </span>
           <button
             type="button"
@@ -218,6 +224,7 @@ export const CourseSelectorModal: React.FC<CourseSelectorModalProps> = ({
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };

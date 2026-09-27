@@ -126,5 +126,25 @@ test.describe('Verify Mobile and Desktop updates', () => {
     // Popover portaled to body with z-[99999] should be visible
     const popover = page.locator('div.fixed.z-\\[99999\\]').first();
     await expect(popover).toBeVisible();
+
+    // 3. Verify CourseSelectorModal in English has "New Beginnings • Hillsong France"
+    await page.goto('http://localhost:3000');
+    await page.waitForLoadState('networkidle');
+
+    // Switch to EN if currently in FR
+    const langBtn = page.locator('button:has-text("FR")').first();
+    if (await langBtn.isVisible()) {
+      await langBtn.click();
+      await page.waitForTimeout(300);
+    }
+
+    // Open modal
+    const openModalBtn = page.locator('button').filter({ hasText: /10 Weeks|10 Semaines/ }).first();
+    await openModalBtn.click();
+    await page.waitForTimeout(400);
+
+    // Verify footer says "New Beginnings • Hillsong France"
+    const footerBrand = page.locator('text=New Beginnings • Hillsong France');
+    await expect(footerBrand).toBeVisible();
   });
 });

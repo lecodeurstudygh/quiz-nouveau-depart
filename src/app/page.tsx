@@ -273,7 +273,7 @@ export default function CourseOverviewPage() {
       </div>
 
       {/* Hero Header with Hillsong B&W Cinematic Film Photography */}
-      <div className="relative overflow-hidden rounded-3xl glass-panel p-7 sm:p-12 md:p-14 border border-neutral-200/80 dark:border-white/10 shadow-2xl min-h-[380px] sm:min-h-[420px] flex flex-col justify-end [isolation:isolate]">
+      <div className="relative overflow-hidden rounded-3xl glass-panel p-5 sm:p-12 md:p-14 border border-neutral-200/80 dark:border-white/10 shadow-2xl min-h-[380px] sm:min-h-[420px] flex flex-col justify-end [isolation:isolate]">
         {/* Background B&W Film Photography for Dark Mode */}
         <div className="absolute inset-0 hidden dark:block pointer-events-none select-none">
           <img
@@ -307,13 +307,13 @@ export default function CourseOverviewPage() {
             {currentWeek.summary[language]}
           </p>
 
-          {/* Call to actions on a single row on both mobile and desktop */}
-          <div className="pt-4 flex flex-row items-center justify-between gap-1.5 sm:gap-3 w-full">
+          {/* Call to actions on a single row on both mobile and desktop with comfortable margins */}
+          <div className="pt-3.5 flex flex-row items-center justify-between gap-1 sm:gap-3 w-full">
             <Link
               href="/cards"
-              className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1 sm:gap-2 px-2 sm:px-6 py-2.5 sm:py-3 rounded-full bg-neutral-900 text-white dark:bg-transparent dark:border dark:border-white dark:text-white dark:hover:bg-white dark:hover:text-black font-semibold text-[10px] sm:text-xs uppercase tracking-wider shadow-sm transition-all active:scale-95 backdrop-blur-md text-center whitespace-nowrap"
+              className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1 sm:gap-2 px-1 py-2 sm:px-6 sm:py-3 rounded-full bg-neutral-900 text-white dark:bg-transparent dark:border dark:border-white dark:text-white dark:hover:bg-white dark:hover:text-black font-semibold text-[9px] xs:text-[10px] sm:text-xs uppercase tracking-wider shadow-sm transition-all active:scale-95 backdrop-blur-md text-center whitespace-nowrap"
             >
-              <Layers className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0 text-[#c5a059]" />
+              <Layers className="w-3 h-3 sm:w-4 sm:h-4 shrink-0 text-[#c5a059]" />
               <span className="sm:hidden">
                 {language === "fr"
                   ? `Versets (${currentWeek.verses.length})`
@@ -329,9 +329,9 @@ export default function CourseOverviewPage() {
 
             <Link
               href="/quiz"
-              className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1 sm:gap-2 px-2 sm:px-5 py-2.5 sm:py-3 rounded-full bg-white dark:bg-black/50 text-neutral-800 dark:text-zinc-200 hover:text-neutral-950 dark:hover:text-white font-semibold text-[10px] sm:text-xs uppercase tracking-wider border border-neutral-200 dark:border-white/15 hover:bg-neutral-50 dark:hover:bg-white/10 transition-all active:scale-95 shadow-sm backdrop-blur-md text-center whitespace-nowrap"
+              className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1 sm:gap-2 px-1 py-2 sm:px-5 sm:py-3 rounded-full bg-white dark:bg-black/50 text-neutral-800 dark:text-zinc-200 hover:text-neutral-950 dark:hover:text-white font-semibold text-[9px] xs:text-[10px] sm:text-xs uppercase tracking-wider border border-neutral-200 dark:border-white/15 hover:bg-neutral-50 dark:hover:bg-white/10 transition-all active:scale-95 shadow-sm backdrop-blur-md text-center whitespace-nowrap"
             >
-              <HelpCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#c5a059] shrink-0" />
+              <HelpCircle className="w-3 h-3 sm:w-4 sm:h-4 text-[#c5a059] shrink-0" />
               <span className="sm:hidden">
                 {language === "fr"
                   ? `Quiz (${currentWeek.questions.length})`
@@ -346,9 +346,9 @@ export default function CourseOverviewPage() {
 
             <Link
               href="/discussion"
-              className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1 sm:gap-2 px-2 sm:px-5 py-2.5 sm:py-3 rounded-full bg-neutral-100 dark:bg-black/50 text-neutral-800 dark:text-zinc-200 hover:text-neutral-950 dark:hover:text-white font-semibold text-[10px] sm:text-xs uppercase tracking-wider border border-neutral-200 dark:border-white/15 hover:bg-neutral-200/80 dark:hover:bg-white/10 transition-all active:scale-95 shadow-sm backdrop-blur-md text-center whitespace-nowrap"
+              className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1 sm:gap-2 px-1 py-2 sm:px-5 sm:py-3 rounded-full bg-neutral-100 dark:bg-black/50 text-neutral-800 dark:text-zinc-200 hover:text-neutral-950 dark:hover:text-white font-semibold text-[9px] xs:text-[10px] sm:text-xs uppercase tracking-wider border border-neutral-200 dark:border-white/15 hover:bg-neutral-200/80 dark:hover:bg-white/10 transition-all active:scale-95 shadow-sm backdrop-blur-md text-center whitespace-nowrap"
             >
-              <MessageSquareText className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#c5a059] shrink-0" />
+              <MessageSquareText className="w-3 h-3 sm:w-4 sm:h-4 text-[#c5a059] shrink-0" />
               <span className="sm:hidden">
                 {language === "fr"
                   ? `Discussion (${currentWeek.discussionCards?.length || 0})`
@@ -454,35 +454,8 @@ export default function CourseOverviewPage() {
             })}
           </div>
 
-          {/* Mobile Single Card with 1, 2, 3 Tabs */}
+          {/* Mobile Single Card with pastilles 1, 2, 3 directly inside the card */}
           <div className="md:hidden">
-            {/* Segmented Tabs Bar */}
-            <div className="flex items-center gap-1.5 p-1 rounded-2xl bg-neutral-200/80 dark:bg-black/60 border border-neutral-300/80 dark:border-white/10 mb-3 shadow-inner">
-              {currentWeek.pillars.map((pillar, idx) => {
-                const isActive = activePillarTab === idx;
-                return (
-                  <button
-                    key={pillar.badgeNumber}
-                    type="button"
-                    onClick={() => setActivePillarTab(idx)}
-                    className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-1 rounded-xl text-xs font-bold transition-all ${
-                      isActive
-                        ? "bg-[#c5a059] text-zinc-950 shadow-md shadow-[#c5a059]/25 scale-[1.02]"
-                        : "text-neutral-600 dark:text-zinc-400 hover:text-neutral-900 dark:hover:text-white"
-                    }`}
-                  >
-                    <span className="w-5 h-5 rounded-lg bg-black/15 flex items-center justify-center text-[11px] font-black shrink-0">
-                      {pillar.badgeNumber}
-                    </span>
-                    <span className="truncate max-w-[85px]">
-                      {pillar.title[language]}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-
-            {/* Selected Pillar Card Content */}
             {(() => {
               const safePillarIdx = Math.min(activePillarTab, currentWeek.pillars.length - 1);
               const activePillar = currentWeek.pillars[safePillarIdx];
@@ -502,15 +475,40 @@ export default function CourseOverviewPage() {
                     <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
                   </div>
 
-                  <div className="relative z-10 space-y-3">
-                    <div className="flex items-center justify-between">
+                  {/* Header: Left is active pillar badge, right is selectable 1, 2, 3 pastilles */}
+                  <div className="relative z-10 flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-2">
                       <div className={`w-9 h-9 rounded-2xl ${style.badge} flex items-center justify-center font-bold text-sm tracking-tight backdrop-blur-md`}>
                         {activePillar.badgeNumber}
                       </div>
-                      <div className="text-[11px] font-mono text-[#9e7d32] dark:text-[#c5a059] font-bold">
+                      <span className="text-xs font-mono font-bold text-[#9e7d32] dark:text-[#c5a059]">
                         {language === "fr" ? `Pilier ${activePillar.badgeNumber} sur 3` : `Pillar ${activePillar.badgeNumber} of 3`}
-                      </div>
+                      </span>
                     </div>
+
+                    {/* Simple selectable 1, 2, 3 pastilles directly inside the card */}
+                    <div className="flex items-center gap-1.5 p-1 rounded-full bg-neutral-200/80 dark:bg-black/60 border border-neutral-300/80 dark:border-white/10 shadow-inner">
+                      {currentWeek.pillars.map((pillar, idx) => {
+                        const isSelected = activePillarTab === idx;
+                        return (
+                          <button
+                            key={pillar.badgeNumber}
+                            type="button"
+                            onClick={() => setActivePillarTab(idx)}
+                            className={`w-7 h-7 rounded-full text-xs font-bold flex items-center justify-center transition-all ${
+                              isSelected
+                                ? "bg-[#c5a059] text-zinc-950 font-black shadow-md shadow-[#c5a059]/25 scale-105"
+                                : "text-neutral-600 dark:text-zinc-400 hover:text-neutral-900 dark:hover:text-white"
+                            }`}
+                          >
+                            {pillar.badgeNumber}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  <div className="relative z-10 space-y-2">
                     <h3 className="text-lg font-bold text-neutral-900 dark:text-white tracking-tight leading-snug">
                       {activePillar.title[language]}
                     </h3>
@@ -519,28 +517,8 @@ export default function CourseOverviewPage() {
                     </p>
                   </div>
 
-                  <div className="relative z-10 pt-2 text-xs font-mono text-[#9e7d32] dark:text-[#c5a059] font-semibold border-t border-neutral-200/60 dark:border-white/5 flex items-center justify-between">
-                    <span>{activePillar.verses}</span>
-                    <div className="flex items-center gap-1.5">
-                      {safePillarIdx > 0 && (
-                        <button
-                          type="button"
-                          onClick={() => setActivePillarTab(safePillarIdx - 1)}
-                          className="px-2.5 py-1 rounded-lg bg-neutral-100 dark:bg-white/5 text-[10px] font-bold text-neutral-700 dark:text-zinc-300 active:scale-95"
-                        >
-                          ← {language === "fr" ? "Précédent" : "Prev"}
-                        </button>
-                      )}
-                      {safePillarIdx < currentWeek.pillars.length - 1 && (
-                        <button
-                          type="button"
-                          onClick={() => setActivePillarTab(safePillarIdx + 1)}
-                          className="px-2.5 py-1 rounded-lg bg-neutral-900 text-white dark:bg-white/10 dark:text-zinc-200 text-[10px] font-bold active:scale-95"
-                        >
-                          {language === "fr" ? "Suivant" : "Next"} →
-                        </button>
-                      )}
-                    </div>
+                  <div className="relative z-10 pt-2 text-xs font-mono text-[#9e7d32] dark:text-[#c5a059] font-semibold border-t border-neutral-200/60 dark:border-white/5">
+                    {activePillar.verses}
                   </div>
                 </div>
               );

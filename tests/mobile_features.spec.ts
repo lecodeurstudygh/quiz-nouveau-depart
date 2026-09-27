@@ -64,7 +64,7 @@ test.describe('Verify Mobile and Desktop updates', () => {
     // Verify trigger now shows Week 2 / Semaine 2
     const updatedTriggerText = await weekTrigger.innerText();
     console.log('Updated trigger text after mobile click:', updatedTriggerText);
-    expect(updatedTriggerText).toMatch(/Semaine 2|Week 2/);
+    expect(updatedTriggerText).toMatch(/S2|W2|Semaine 2|Week 2/);
 
     // Switch to focus mode to see focus hint
     const discFocus = page.locator('button:has-text("Focus")').first();

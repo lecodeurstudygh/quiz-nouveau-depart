@@ -7,6 +7,7 @@ import { ChevronDown, Check, X } from "lucide-react";
 export interface DropdownOption {
   value: string;
   label: string;
+  shortLabel?: string;
   count?: number;
   badge?: string;
 }
@@ -126,11 +127,24 @@ export const CustomDropdown: React.FC<CustomDropdownProps> = ({
         }}
         className={
           triggerClassName ||
-          `flex items-center justify-between gap-2 pl-3.5 pr-2.5 py-1.5 text-xs font-semibold rounded-full bg-neutral-100 hover:bg-neutral-200/80 dark:bg-zinc-800/90 dark:hover:bg-zinc-800 border border-neutral-200 dark:border-zinc-700 text-neutral-800 dark:text-zinc-200 hover:border-[#c5a059]/60 dark:hover:border-[#c5a059]/60 transition-all active:scale-[0.98] shadow-sm select-none ${maxTriggerWidth}`
+          `flex items-center justify-between gap-1.5 pl-2.5 sm:pl-3.5 pr-2 sm:pr-2.5 py-1.5 text-xs font-semibold rounded-full bg-neutral-100 hover:bg-neutral-200/80 dark:bg-zinc-800/90 dark:hover:bg-zinc-800 border border-neutral-200 dark:border-zinc-700 text-neutral-800 dark:text-zinc-200 hover:border-[#c5a059]/60 dark:hover:border-[#c5a059]/60 transition-all active:scale-[0.98] shadow-sm select-none ${maxTriggerWidth}`
         }
       >
         <span className="truncate text-left">
-          {selectedOption ? selectedOption.label : placeholder || ""}
+          {selectedOption ? (
+            <>
+              {selectedOption.shortLabel ? (
+                <>
+                  <span className="sm:hidden">{selectedOption.shortLabel}</span>
+                  <span className="hidden sm:inline">{selectedOption.label}</span>
+                </>
+              ) : (
+                selectedOption.label
+              )}
+            </>
+          ) : (
+            placeholder || ""
+          )}
         </span>
         <ChevronDown
           className={`w-3.5 h-3.5 text-neutral-400 shrink-0 transition-transform duration-200 ${

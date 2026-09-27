@@ -289,12 +289,14 @@ export default function CardsPage() {
 
   // Dropdown options for custom mobile & desktop menus
   const weekOptions: DropdownOption[] = useMemo(() => {
+    const weekPrefix = language === "fr" ? "S" : "W";
     const list: DropdownOption[] = allCourses.map((c) => ({
       value: c.id,
       label:
         language === "fr"
           ? `Semaine ${c.weekNumber} : ${c.title.fr} (${c.verses.length})`
           : `Week ${c.weekNumber}: ${c.title.en} (${c.verses.length})`,
+      shortLabel: `${weekPrefix}${c.weekNumber}`,
     }));
     list.push({
       value: "all",
@@ -302,6 +304,7 @@ export default function CardsPage() {
         language === "fr"
           ? `Toutes les semaines (${getAllVerses().length})`
           : `All Weeks (${getAllVerses().length})`,
+      shortLabel: language === "fr" ? `Tout (${getAllVerses().length})` : `All (${getAllVerses().length})`,
     });
     return list;
   }, [language]);
@@ -311,10 +314,12 @@ export default function CardsPage() {
       {
         value: "",
         label: language === "fr" ? "Tous les thèmes" : "All Themes",
+        shortLabel: language === "fr" ? "Thèmes" : "Themes",
       },
       ...SEMANTIC_CLUSTERS.map((cluster) => ({
         value: cluster.name[language],
         label: cluster.name[language],
+        shortLabel: cluster.name[language],
       })),
     ];
   }, [language]);
@@ -327,6 +332,10 @@ export default function CardsPage() {
           language === "fr"
             ? `Tous les versets (${baseVerses.length})`
             : `All Verses (${baseVerses.length})`,
+        shortLabel:
+          language === "fr"
+            ? `Versets (${baseVerses.length})`
+            : `Verses (${baseVerses.length})`,
       },
       {
         value: "key",
@@ -334,10 +343,18 @@ export default function CardsPage() {
           language === "fr"
             ? `Versets Clés (${keyCount})`
             : `Key Verses (${keyCount})`,
+        shortLabel:
+          language === "fr"
+            ? `Clés (${keyCount})`
+            : `Keys (${keyCount})`,
       },
       {
         value: "memorized",
         label:
+          language === "fr"
+            ? `Mémorisés (${currentMemorizedCount})`
+            : `Memorized (${currentMemorizedCount})`,
+        shortLabel:
           language === "fr"
             ? `Mémorisés (${currentMemorizedCount})`
             : `Memorized (${currentMemorizedCount})`,
@@ -348,6 +365,10 @@ export default function CardsPage() {
           language === "fr"
             ? `À réviser (${baseVerses.length - currentMemorizedCount})`
             : `To Review (${baseVerses.length - currentMemorizedCount})`,
+        shortLabel:
+          language === "fr"
+            ? `À réviser`
+            : `Review`,
       },
     ];
   }, [baseVerses.length, keyCount, currentMemorizedCount, language]);
@@ -374,10 +395,10 @@ export default function CardsPage() {
         </div>
       </div>
 
-      {/* Unified Single-Line Toolbar: Dropdown Filters, Search, Actions & Mode Switcher */}
-      <div className="relative z-30 flex flex-wrap items-center justify-between gap-2.5 p-2.5 sm:p-3 rounded-3xl bg-white/90 dark:bg-zinc-900/80 border border-neutral-200 dark:border-zinc-800 shadow-sm backdrop-blur-md">
-        {/* Dropdowns Group */}
-        <div className="flex flex-wrap items-center gap-2">
+      {/* Unified 2-Line Toolbar on Mobile / 1-Line on Desktop */}
+      <div className="relative z-30 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-2.5 p-2 sm:p-3 rounded-3xl bg-white/90 dark:bg-zinc-900/80 border border-neutral-200 dark:border-zinc-800 shadow-sm backdrop-blur-md">
+        {/* Line 1 on Mobile: 3 Filters strictly on 1 row */}
+        <div className="flex items-center gap-1.5 sm:gap-2 w-full sm:w-auto">
           {/* Week Select Custom Dropdown */}
           <CustomDropdown
             title={language === "fr" ? "Chapitre / Semaine" : "Chapter / Week"}
@@ -389,7 +410,8 @@ export default function CardsPage() {
               setShuffledOrder(null);
               setFocusIndex(0);
             }}
-            maxTriggerWidth="max-w-[200px] sm:max-w-xs"
+            className="flex-1 sm:flex-initial min-w-0"
+            maxTriggerWidth="w-full sm:max-w-xs"
           />
 
           {/* Theme Select Custom Dropdown */}
@@ -401,7 +423,8 @@ export default function CardsPage() {
               setSelectedSemanticTheme(val ? val : null);
               setFocusIndex(0);
             }}
-            maxTriggerWidth="max-w-[140px] sm:max-w-[180px]"
+            className="flex-1 sm:flex-initial min-w-0"
+            maxTriggerWidth="w-full sm:max-w-[180px]"
           />
 
           {/* Verses Status Select Custom Dropdown */}
@@ -413,15 +436,16 @@ export default function CardsPage() {
               setFilterMode(val as "all" | "key" | "memorized" | "toReview");
               setFocusIndex(0);
             }}
-            maxTriggerWidth="max-w-[140px] sm:max-w-[180px]"
+            className="flex-1 sm:flex-initial min-w-0"
+            maxTriggerWidth="w-full sm:max-w-[180px]"
           />
         </div>
 
-        {/* Right Search, Actions & Mode Switcher */}
-        <div className="flex items-center gap-2 flex-wrap">
+        {/* Line 2 on Mobile: Search input + Actions & Mode Switcher */}
+        <div className="flex items-center gap-1.5 sm:gap-2 w-full sm:w-auto justify-between sm:justify-end">
           {/* Search Input */}
-          <div className="relative w-36 sm:w-48">
-            <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none" />
+          <div className="relative flex-1 sm:w-44 min-w-0">
+            <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none" />
             <input
               type="text"
               placeholder={language === "fr" ? "Recherche..." : "Search..."}
@@ -430,7 +454,7 @@ export default function CardsPage() {
                 setSearchQuery(e.target.value);
                 setFocusIndex(0);
               }}
-              className="w-full pl-8 pr-7 py-1.5 text-xs bg-neutral-100 dark:bg-zinc-800 border border-neutral-200 dark:border-zinc-700 rounded-full text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-zinc-500 focus:outline-none focus:border-[#c5a059] transition-colors"
+              className="w-full pl-7 pr-6 py-1.5 text-xs bg-neutral-100 dark:bg-zinc-800 border border-neutral-200 dark:border-zinc-700 rounded-full text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-zinc-500 focus:outline-none focus:border-[#c5a059] transition-colors"
             />
             {searchQuery && (
               <button
@@ -439,7 +463,7 @@ export default function CardsPage() {
                   setSearchQuery("");
                   setFocusIndex(0);
                 }}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full flex items-center justify-center text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-200 dark:hover:bg-zinc-700 transition-colors"
+                className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full flex items-center justify-center text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-200 dark:hover:bg-zinc-700 transition-colors"
                 title={language === "fr" ? "Effacer la recherche" : "Clear search"}
                 aria-label="Clear search"
               >
@@ -452,7 +476,7 @@ export default function CardsPage() {
           <button
             type="button"
             onClick={handleShuffle}
-            className="p-2 rounded-full bg-neutral-100 dark:bg-zinc-800 text-neutral-600 dark:text-zinc-300 hover:text-neutral-900 dark:hover:text-white border border-neutral-200 dark:border-zinc-700 transition-colors shadow-sm"
+            className="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center rounded-full bg-neutral-100 dark:bg-zinc-800 text-neutral-600 dark:text-zinc-300 hover:text-neutral-900 dark:hover:text-white border border-neutral-200 dark:border-zinc-700 transition-colors shadow-sm shrink-0 active:scale-95"
             title={t("shuffleBtn")}
           >
             <Shuffle className="w-3.5 h-3.5" />
@@ -462,18 +486,18 @@ export default function CardsPage() {
           <button
             type="button"
             onClick={handleResetOrder}
-            className="p-2 rounded-full bg-neutral-100 dark:bg-zinc-800 text-neutral-600 dark:text-zinc-300 hover:text-neutral-900 dark:hover:text-white border border-neutral-200 dark:border-zinc-700 transition-colors shadow-sm"
+            className="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center rounded-full bg-neutral-100 dark:bg-zinc-800 text-neutral-600 dark:text-zinc-300 hover:text-neutral-900 dark:hover:text-white border border-neutral-200 dark:border-zinc-700 transition-colors shadow-sm shrink-0 active:scale-95"
             title={t("resetDeckBtn")}
           >
             <RotateCcw className="w-3.5 h-3.5" />
           </button>
 
           {/* View Mode Toggle: Focus (1 par 1) vs Grille */}
-          <div className="flex items-center p-0.5 rounded-full bg-neutral-200/80 dark:bg-zinc-800 border border-neutral-300/80 dark:border-zinc-700 shadow-inner">
+          <div className="flex items-center p-0.5 rounded-full bg-neutral-200/80 dark:bg-zinc-800 border border-neutral-300/80 dark:border-zinc-700 shadow-inner shrink-0">
             <button
               type="button"
               onClick={() => handleSetViewMode("focus")}
-              className={`flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold transition-all ${
+              className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold transition-all ${
                 viewMode === "focus"
                   ? "bg-neutral-900 text-white dark:bg-white dark:text-neutral-950 shadow-sm"
                   : "text-neutral-600 dark:text-zinc-400 hover:text-neutral-900 dark:hover:text-white"
@@ -486,7 +510,7 @@ export default function CardsPage() {
             <button
               type="button"
               onClick={() => handleSetViewMode("grid")}
-              className={`flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold transition-all ${
+              className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold transition-all ${
                 viewMode === "grid"
                   ? "bg-neutral-900 text-white dark:bg-white dark:text-neutral-950 shadow-sm"
                   : "text-neutral-600 dark:text-zinc-400 hover:text-neutral-900 dark:hover:text-white"

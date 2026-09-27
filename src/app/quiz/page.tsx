@@ -349,114 +349,130 @@ export default function QuizPage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6 animate-fade-in">
-      {/* Session / Week Selector Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 p-2 rounded-2xl glass-card border border-neutral-200/80 dark:border-white/10">
-        <div className="flex items-center gap-2 pl-2">
-          <span className="text-xs font-bold text-neutral-500 dark:text-zinc-400 shrink-0">
-            {t("quizWeekSelector")} :
-          </span>
-        </div>
+    <div className="max-w-4xl mx-auto space-y-2 sm:space-y-6 animate-fade-in -mt-2 sm:mt-0">
+      {/* Session / Week Selector Bar: strictly 1 row on mobile and desktop */}
+      <div className="flex items-center gap-1.5 sm:gap-2 p-1.5 sm:p-2 rounded-2xl glass-card border border-neutral-200/80 dark:border-white/10 overflow-x-auto no-scrollbar">
+        <span className="text-xs font-bold text-neutral-500 dark:text-zinc-400 shrink-0 pl-1 sm:pl-2">
+          {t("quizWeekSelector")}
+        </span>
 
-        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5 px-1 max-w-full">
-          {allCourses.map((c) => (
-            <button
-              key={c.id}
-              type="button"
-              onClick={() => handleSelectQuizWeek(c.id as any)}
-              className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all shrink-0 whitespace-nowrap ${
-                selectedQuizWeek === c.id
-                  ? "bg-neutral-900 text-white dark:bg-[#c5a059] dark:text-zinc-950 shadow-sm"
-                  : "text-neutral-600 dark:text-zinc-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-white/5"
-              }`}
-            >
-              {language === "fr"
-                ? `Sem. ${c.weekNumber} (${c.questions.length})`
-                : `Wk. ${c.weekNumber} (${c.questions.length})`}
-            </button>
-          ))}
+        <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
+          {allCourses.map((c) => {
+            const weekPrefix = language === "fr" ? "S" : "W";
+            return (
+              <button
+                key={c.id}
+                type="button"
+                onClick={() => handleSelectQuizWeek(c.id as any)}
+                className={`px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-xs font-bold transition-all shrink-0 whitespace-nowrap ${
+                  selectedQuizWeek === c.id
+                    ? "bg-neutral-900 text-white dark:bg-[#c5a059] dark:text-zinc-950 shadow-sm"
+                    : "text-neutral-600 dark:text-zinc-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-white/5"
+                }`}
+              >
+                <span className="sm:hidden">{weekPrefix}{c.weekNumber} ({c.questions.length})</span>
+                <span className="hidden sm:inline">
+                  {language === "fr"
+                    ? `Semaine ${c.weekNumber} (${c.questions.length})`
+                    : `Week ${c.weekNumber} (${c.questions.length})`}
+                </span>
+              </button>
+            );
+          })}
           <button
             type="button"
             onClick={() => handleSelectQuizWeek("all")}
-            className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all shrink-0 whitespace-nowrap ${
+            className={`px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-xs font-bold transition-all shrink-0 whitespace-nowrap ${
               selectedQuizWeek === "all"
                 ? "bg-neutral-900 text-white dark:bg-[#c5a059] dark:text-zinc-950 shadow-sm"
                 : "text-neutral-600 dark:text-zinc-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-white/5"
             }`}
           >
-            {language === "fr" ? `Toutes (${getAllQuestions().length} Q)` : `All (${getAllQuestions().length} Q)`}
+            <span className="sm:hidden">
+              {language === "fr" ? `Tout (${getAllQuestions().length})` : `All (${getAllQuestions().length})`}
+            </span>
+            <span className="hidden sm:inline">
+              {language === "fr" ? `Toutes (${getAllQuestions().length} Q)` : `All (${getAllQuestions().length} Q)`}
+            </span>
           </button>
         </div>
       </div>
 
-      {/* Top Header Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-neutral-200/80 dark:border-white/10">
-        <div className="flex items-center gap-2">
-          <span className="text-sm sm:text-base font-bold text-neutral-900 dark:text-zinc-100 whitespace-nowrap">
-            Question {currentIndex + 1} / {questions.length}
+      {/* Top Question Status Bar: Strictly 1 single row on mobile and desktop */}
+      <div className="flex items-center justify-between gap-1.5 py-1 sm:py-1.5 border-b border-neutral-200/80 dark:border-white/10">
+        <div className="flex items-center gap-1.5 shrink-0">
+          <span className="text-xs sm:text-base font-bold text-neutral-900 dark:text-zinc-100 whitespace-nowrap">
+            <span className="sm:hidden">Q. {currentIndex + 1}/{questions.length}</span>
+            <span className="hidden sm:inline">Question {currentIndex + 1} / {questions.length}</span>
           </span>
-          <span className="text-xs text-neutral-400 dark:text-zinc-600">•</span>
-          <span className="text-xs sm:text-sm font-medium text-neutral-500 dark:text-zinc-400 whitespace-nowrap">
+          <span className="hidden sm:inline text-xs text-neutral-400 dark:text-zinc-600">•</span>
+          <span className="hidden sm:inline text-xs sm:text-sm font-medium text-neutral-500 dark:text-zinc-400 whitespace-nowrap">
             {answeredCount} {t("answeredCount")}
           </span>
         </div>
 
-        <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
-          {/* Shuffle Options button */}
+        <div className="flex items-center gap-1 sm:gap-2 shrink-0">
+          {/* Shuffle Options button (icon on mobile, icon+text on desktop) */}
           <button
             type="button"
             onClick={handleShuffleOptions}
-            className="inline-flex items-center gap-1 px-2.5 sm:px-3.5 py-1.5 rounded-full text-xs font-semibold text-neutral-700 dark:text-zinc-300 hover:text-neutral-900 dark:hover:text-white bg-white dark:bg-[#15151c] hover:bg-neutral-100 dark:hover:bg-zinc-800 border border-neutral-200 dark:border-white/10 hover:border-[#c5a059]/40 transition-all shadow-sm active:scale-95 shrink-0"
+            className="w-7 h-7 sm:w-auto sm:px-3 sm:py-1.5 rounded-full flex items-center justify-center gap-1 text-xs font-semibold text-neutral-700 dark:text-zinc-300 hover:text-neutral-900 dark:hover:text-white bg-white dark:bg-[#15151c] hover:bg-neutral-100 dark:hover:bg-zinc-800 border border-neutral-200 dark:border-white/10 hover:border-[#c5a059]/40 transition-all shadow-sm active:scale-95 shrink-0"
             title={language === "fr" ? "Mélanger l'ordre des choix" : "Shuffle choices order"}
           >
             <Shuffle className="w-3.5 h-3.5 text-[#9e7d32] dark:text-[#c5a059]" />
-            <span>{t("shuffleOptions")}</span>
+            <span className="hidden sm:inline">{t("shuffleOptions")}</span>
           </button>
 
-          {/* Recommencer button */}
+          {/* Recommencer button (icon on mobile, icon+text on desktop) */}
           <button
             type="button"
             onClick={handleRestartQuiz}
-            className="inline-flex items-center gap-1 px-2.5 sm:px-3.5 py-1.5 rounded-full text-xs font-semibold text-neutral-700 dark:text-zinc-300 hover:text-neutral-900 dark:hover:text-white bg-white dark:bg-[#15151c] hover:bg-neutral-100 dark:hover:bg-zinc-800 border border-neutral-200 dark:border-white/10 hover:border-[#c5a059]/40 transition-all shadow-sm active:scale-95 shrink-0"
+            className="w-7 h-7 sm:w-auto sm:px-3 sm:py-1.5 rounded-full flex items-center justify-center gap-1 text-xs font-semibold text-neutral-700 dark:text-zinc-300 hover:text-neutral-900 dark:hover:text-white bg-white dark:bg-[#15151c] hover:bg-neutral-100 dark:hover:bg-zinc-800 border border-neutral-200 dark:border-white/10 hover:border-[#c5a059]/40 transition-all shadow-sm active:scale-95 shrink-0"
+            title={t("navRestart")}
           >
             <RotateCcw className="w-3.5 h-3.5 text-neutral-500 dark:text-zinc-400" />
-            <span>{t("navRestart")}</span>
+            <span className="hidden sm:inline">{t("navRestart")}</span>
           </button>
 
           {/* Live Score Pill */}
-          <div className="px-2.5 sm:px-3.5 py-1.5 rounded-full text-xs font-bold font-mono bg-neutral-100 dark:bg-[#15151c] text-neutral-800 dark:text-zinc-200 border border-neutral-200 dark:border-white/10 shadow-sm shrink-0 whitespace-nowrap">
-            {t("quizScore")} : <span className="text-[#9e7d32] dark:text-[#c5a059] font-bold">{score}</span> / {questions.length} ({scorePercentage}%)
+          <div className="px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-xs font-bold font-mono bg-neutral-100 dark:bg-[#15151c] text-neutral-800 dark:text-zinc-200 border border-neutral-200 dark:border-white/10 shadow-sm shrink-0 whitespace-nowrap">
+            <span className="sm:hidden">
+              Score : <span className="text-[#9e7d32] dark:text-[#c5a059] font-bold">{score}</span>/{questions.length}
+            </span>
+            <span className="hidden sm:inline">
+              {t("quizScore")} : <span className="text-[#9e7d32] dark:text-[#c5a059] font-bold">{score}</span> / {questions.length} ({scorePercentage}%)
+            </span>
           </div>
         </div>
       </div>
 
       {!quizFinished ? (
-        <div className="space-y-6">
-          {/* Main Question Card with subtle ambient depth */}
-          <div className="relative overflow-hidden glass-panel rounded-3xl p-4 sm:p-8 border border-neutral-200/80 dark:border-white/10 dark:border-t-white/20 shadow-2xl space-y-5 sm:space-y-6 animate-slide-up before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent [isolation:isolate]">
+        <div className="space-y-4 sm:space-y-6">
+          {/* Main Question Card: compact on mobile so everything fits in screen */}
+          <div className="relative overflow-hidden glass-panel rounded-2xl sm:rounded-3xl p-3 sm:p-8 border border-neutral-200/80 dark:border-white/10 dark:border-t-white/20 shadow-xl sm:shadow-2xl space-y-2.5 sm:space-y-6 animate-slide-up before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent [isolation:isolate]">
             {/* Subtle background ambient halos */}
             <div className="absolute -top-16 -right-16 w-64 h-64 bg-[#c5a059]/10 rounded-full blur-3xl pointer-events-none" />
             <div className="absolute -bottom-16 -left-16 w-64 h-64 bg-white/5 rounded-full blur-3xl pointer-events-none" />
 
             {/* Question Top Header: Number, Title, and Badges */}
-            <div className="relative z-10 flex items-start justify-between gap-4">
-              <div className="space-y-2 flex-1">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <span className="text-xs font-bold uppercase tracking-wider text-[#9e7d32] dark:text-[#d6b26d] bg-[#c5a059]/10 px-3 py-1 rounded-full border border-[#c5a059]/25 flex items-center gap-1">
-                    <Sparkles className="w-3 h-3 text-[#c5a059]" />
+            <div className="relative z-10 flex items-start justify-between gap-3">
+              <div className="space-y-1.5 flex-1">
+                <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
+                  <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#9e7d32] dark:text-[#d6b26d] bg-[#c5a059]/10 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full border border-[#c5a059]/25 flex items-center gap-1">
+                    <Sparkles className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-[#c5a059]" />
                     {currentQ.category[language]}
                   </span>
 
                   {currentQ.associatedVerseRef && (
-                    <span className="text-xs font-mono text-neutral-600 dark:text-zinc-300 flex items-center gap-1 bg-neutral-100 dark:bg-white/5 px-2.5 py-1 rounded-full border border-neutral-200 dark:border-white/10">
-                      <BookOpen className="w-3.5 h-3.5 text-[#9e7d32] dark:text-[#c5a059]" />
+                    <span className="text-[10px] sm:text-xs font-mono text-neutral-600 dark:text-zinc-300 flex items-center gap-1 bg-neutral-100 dark:bg-white/5 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full border border-neutral-200 dark:border-white/10">
+                      <BookOpen className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 text-[#9e7d32] dark:text-[#c5a059]" />
                       {currentQ.associatedVerseRef}
                     </span>
                   )}
                 </div>
 
-                <h2 className="text-lg sm:text-2xl font-bold text-neutral-900 dark:text-zinc-100 leading-snug pt-1">
-                  <span className="text-[#9e7d32] dark:text-[#c5a059] mr-2">
+                <h2 className="text-xs sm:text-xl font-bold text-neutral-900 dark:text-zinc-100 leading-snug pt-0.5">
+                  <span className="text-[#9e7d32] dark:text-[#c5a059] mr-1.5">
                     {currentIndex + 1}.
                   </span>
                   {currentQ.question[language]}
@@ -465,8 +481,8 @@ export default function QuizPage() {
 
               {/* Status Badge: Validated Pill */}
               {currentAns.isSubmitted && (
-                <div className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800 shadow-sm flex-shrink-0">
-                  <Check className="w-3.5 h-3.5 stroke-[3]" />
+                <div className="inline-flex items-center gap-1 px-2.5 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-bold bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800 shadow-sm flex-shrink-0">
+                  <Check className="w-3 h-3 stroke-[3]" />
                   <span>{t("quizValidated")}</span>
                 </div>
               )}
@@ -474,12 +490,12 @@ export default function QuizPage() {
 
             {/* ================= CLOZE / FILL IN THE BLANK ================= */}
             {currentQ.type === "fill_in_the_blank" && currentQ.fillInData && (
-              <div className="space-y-5">
+              <div className="space-y-3 sm:space-y-5">
                 {renderClozeTemplate()}
 
                 {/* Word Bank */}
                 {!currentAns.isSubmitted && (
-                  <div className="space-y-3 pt-2">
+                  <div className="space-y-2 pt-1 sm:pt-2">
                     <div className="flex items-center justify-between text-xs text-neutral-500 dark:text-zinc-400">
                       <span>{t("wordBankTitle")}</span>
                       {(currentAns.clozeAnswers.blank1 ||
@@ -495,13 +511,13 @@ export default function QuizPage() {
                       )}
                     </div>
 
-                    <div className="flex flex-wrap gap-2">
+                    <div className="flex flex-wrap gap-1.5 sm:gap-2">
                       {currentQ.fillInData.wordBank[language].map((word) => (
                         <button
                           key={word}
                           type="button"
                           onClick={() => handleWordBankClick(word)}
-                          className="px-4 py-2 rounded-full bg-white dark:bg-[#15151c] hover:bg-neutral-100 dark:hover:bg-zinc-800 text-neutral-800 dark:text-zinc-200 hover:text-neutral-900 dark:hover:text-white text-sm font-semibold border border-neutral-200 dark:border-white/10 hover:border-[#c5a059]/40 transition-all active:scale-95 shadow-sm"
+                          className="px-3 sm:px-4 py-1 sm:py-2 rounded-full bg-white dark:bg-[#15151c] hover:bg-neutral-100 dark:hover:bg-zinc-800 text-neutral-800 dark:text-zinc-200 hover:text-neutral-900 dark:hover:text-white text-xs sm:text-sm font-semibold border border-neutral-200 dark:border-white/10 hover:border-[#c5a059]/40 transition-all active:scale-95 shadow-sm"
                         >
                           {word}
                         </button>
@@ -513,24 +529,24 @@ export default function QuizPage() {
                 {/* Cloze Feedback */}
                 {currentAns.isSubmitted && (
                   <div
-                    className={`p-4 rounded-2xl flex items-start gap-3 border ${
+                    className={`p-3 sm:p-4 rounded-xl sm:rounded-2xl flex items-start gap-2.5 sm:gap-3 border ${
                       currentAns.isCorrect
                         ? "bg-emerald-50 dark:bg-emerald-950/40 border-emerald-500 text-emerald-900 dark:text-emerald-200"
                         : "bg-rose-50 dark:bg-rose-950/40 border-rose-500 text-rose-900 dark:text-rose-200"
                     }`}
                   >
                     {currentAns.isCorrect ? (
-                      <CheckCircle2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400 flex-shrink-0 mt-0.5" />
+                      <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600 dark:text-emerald-400 flex-shrink-0 mt-0.5" />
                     ) : (
-                      <XCircle className="w-5 h-5 text-rose-600 dark:text-rose-400 flex-shrink-0 mt-0.5" />
+                      <XCircle className="w-4 h-4 sm:w-5 sm:h-5 text-rose-600 dark:text-rose-400 flex-shrink-0 mt-0.5" />
                     )}
-                    <div className="space-y-1">
-                      <p className="font-bold text-sm">
+                    <div className="space-y-0.5 sm:space-y-1">
+                      <p className="font-bold text-xs sm:text-sm">
                         {currentAns.isCorrect
                           ? t("goodAnswerBadge")
                           : `${t("wrongAnswerBadge")} : ${currentQ.correctAnswerSummary[language]}`}
                       </p>
-                      <p className="text-xs opacity-90 leading-relaxed">
+                      <p className="text-[11px] sm:text-xs opacity-90 leading-relaxed">
                         {currentQ.explanation[language]}
                       </p>
                     </div>
@@ -541,7 +557,7 @@ export default function QuizPage() {
 
             {/* ================= OPTIONS (MCQ, TRUE/FALSE, ETYMOLOGY) ================= */}
             {currentQ.options && (
-              <div className="space-y-3 pt-1">
+              <div className="space-y-1.5 sm:space-y-3 pt-0.5">
                 {currentQ.options.map((option, optIdx) => {
                   const letter = String.fromCharCode(65 + optIdx); // A, B, C, D
                   const isSelected = currentAns.selectedOptionId === option.id;
@@ -584,31 +600,31 @@ export default function QuizPage() {
                       type="button"
                       disabled={isSubmitted}
                       onClick={() => handleSelectOption(option.id)}
-                      className={`w-full text-left p-4 sm:p-5 rounded-2xl border transition-all duration-200 flex flex-col gap-2 ${containerStyle}`}
+                      className={`w-full text-left p-2.5 sm:p-4 rounded-xl sm:rounded-2xl border transition-all duration-200 flex flex-col gap-1 sm:gap-2 ${containerStyle}`}
                     >
-                      <div className="flex items-center justify-between gap-3 w-full">
-                        <div className="flex items-center gap-3">
+                      <div className="flex items-center justify-between gap-2.5 w-full">
+                        <div className="flex items-center gap-2.5 min-w-0">
                           {/* Letter Badge: A, B, C, D */}
                           <span
-                            className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-colors flex-shrink-0 ${letterBadgeStyle}`}
+                            className={`w-5 h-5 sm:w-7 sm:h-7 rounded-full flex items-center justify-center text-[10px] sm:text-xs font-bold transition-colors flex-shrink-0 ${letterBadgeStyle}`}
                           >
                             {letter}
                           </span>
-                          <span className="text-sm sm:text-base font-semibold leading-relaxed">
+                          <span className="text-xs sm:text-base font-semibold leading-snug truncate sm:whitespace-normal">
                             {option.text[language]}
                           </span>
                         </div>
 
                         {/* Top-Right Status Tag */}
                         {isSubmitted && option.isCorrect && (
-                          <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-600 dark:text-emerald-400 flex-shrink-0">
-                            <CheckCircle2 className="w-4 h-4" />
+                          <span className="inline-flex items-center gap-1 text-[11px] sm:text-xs font-bold text-emerald-600 dark:text-emerald-400 flex-shrink-0">
+                            <CheckCircle2 className="w-3.5 h-3.5" />
                             <span>{t("goodAnswerBadge")}</span>
                           </span>
                         )}
                         {isSubmitted && isSelected && !option.isCorrect && (
-                          <span className="inline-flex items-center gap-1 text-xs font-bold text-rose-600 dark:text-rose-400 flex-shrink-0">
-                            <XCircle className="w-4 h-4" />
+                          <span className="inline-flex items-center gap-1 text-[11px] sm:text-xs font-bold text-rose-600 dark:text-rose-400 flex-shrink-0">
+                            <XCircle className="w-3.5 h-3.5" />
                             <span>{t("wrongAnswerBadge")}</span>
                           </span>
                         )}
@@ -616,12 +632,12 @@ export default function QuizPage() {
 
                       {/* Explanation displayed inside the correct option or selected wrong option */}
                       {isSubmitted && option.isCorrect && (
-                        <p className="text-xs text-emerald-800 dark:text-emerald-200/90 leading-relaxed pt-1.5 border-t border-emerald-200 dark:border-emerald-800/60 ml-11">
+                        <p className="text-[11px] sm:text-xs text-emerald-800 dark:text-emerald-200/90 leading-relaxed pt-1 border-t border-emerald-200 dark:border-emerald-800/60 ml-7 sm:ml-9">
                           {currentQ.explanation[language]}
                         </p>
                       )}
                       {isSubmitted && isSelected && !option.isCorrect && (
-                        <p className="text-xs text-rose-800 dark:text-rose-200/90 leading-relaxed pt-1.5 border-t border-rose-200 dark:border-rose-800/60 ml-11">
+                        <p className="text-[11px] sm:text-xs text-rose-800 dark:text-rose-200/90 leading-relaxed pt-1 border-t border-rose-200 dark:border-rose-800/60 ml-7 sm:ml-9">
                           {language === "fr"
                             ? `La bonne réponse était : ${currentQ.correctAnswerSummary.fr}`
                             : `The correct answer was: ${currentQ.correctAnswerSummary.en}`}
@@ -634,15 +650,15 @@ export default function QuizPage() {
             )}
 
             {/* Bottom Actions Bar (Précédente / X sur N / Suivante) */}
-            <div className="flex items-center justify-between gap-2 pt-5 border-t border-neutral-200/80 dark:border-white/10">
+            <div className="flex items-center justify-between gap-2 pt-2 sm:pt-4 border-t border-neutral-200/80 dark:border-white/10">
               {/* Previous Button */}
               <button
                 type="button"
                 disabled={currentIndex === 0}
                 onClick={handlePreviousQuestion}
-                className="inline-flex items-center gap-1.5 px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full font-bold text-xs sm:text-sm bg-white dark:bg-[#15151c] text-neutral-700 dark:text-zinc-300 border border-neutral-200 dark:border-white/10 hover:bg-neutral-100 dark:hover:bg-zinc-800 disabled:opacity-30 disabled:cursor-not-allowed transition-all shadow-sm active:scale-95 shrink-0 whitespace-nowrap"
+                className="inline-flex items-center gap-1 px-3 sm:px-5 py-1.5 sm:py-2.5 rounded-full font-bold text-xs sm:text-sm bg-white dark:bg-[#15151c] text-neutral-700 dark:text-zinc-300 border border-neutral-200 dark:border-white/10 hover:bg-neutral-100 dark:hover:bg-zinc-800 disabled:opacity-30 disabled:cursor-not-allowed transition-all shadow-sm active:scale-95 shrink-0 whitespace-nowrap"
               >
-                <ArrowLeft className="w-4 h-4 shrink-0" />
+                <ArrowLeft className="w-3.5 h-3.5 shrink-0" />
                 <span>{t("navPrevious")}</span>
               </button>
 
@@ -661,7 +677,7 @@ export default function QuizPage() {
                       : !currentAns.selectedOptionId
                   }
                   onClick={handleSubmitAnswer}
-                  className="inline-flex items-center gap-1.5 px-4 sm:px-6 py-2 sm:py-2.5 rounded-full font-bold text-xs sm:text-sm bg-neutral-900 hover:bg-black text-white dark:bg-[#c5a059] dark:hover:bg-[#d6b26d] dark:text-zinc-950 shadow-md disabled:opacity-35 disabled:cursor-not-allowed transition-all active:scale-95 shrink-0 whitespace-nowrap"
+                  className="inline-flex items-center gap-1.5 px-3.5 sm:px-6 py-1.5 sm:py-2.5 rounded-full font-bold text-xs sm:text-sm bg-neutral-900 hover:bg-black text-white dark:bg-[#c5a059] dark:hover:bg-[#d6b26d] dark:text-zinc-950 shadow-md disabled:opacity-35 disabled:cursor-not-allowed transition-all active:scale-95 shrink-0 whitespace-nowrap"
                 >
                   <span>{t("validateAnswer")}</span>
                 </button>
@@ -669,18 +685,18 @@ export default function QuizPage() {
                 <button
                   type="button"
                   onClick={handleNextQuestion}
-                  className="inline-flex items-center gap-1.5 px-4 sm:px-6 py-2 sm:py-2.5 rounded-full font-bold text-xs sm:text-sm bg-neutral-900 hover:bg-black text-white dark:bg-white dark:hover:bg-neutral-100 dark:text-zinc-950 shadow-md transition-all active:scale-95 shrink-0 whitespace-nowrap"
+                  className="inline-flex items-center gap-1.5 px-3.5 sm:px-6 py-1.5 sm:py-2.5 rounded-full font-bold text-xs sm:text-sm bg-neutral-900 hover:bg-black text-white dark:bg-white dark:hover:bg-neutral-100 dark:text-zinc-950 shadow-md transition-all active:scale-95 shrink-0 whitespace-nowrap"
                 >
                   <span>{t("navNextShort")}</span>
-                  <ArrowRight className="w-4 h-4 shrink-0" />
+                  <ArrowRight className="w-3.5 h-3.5 shrink-0" />
                 </button>
               ) : (
                 <button
                   type="button"
                   onClick={handleFinishQuiz}
-                  className="inline-flex items-center gap-1.5 px-4 sm:px-6 py-2 sm:py-2.5 rounded-full font-bold text-xs sm:text-sm bg-emerald-600 hover:bg-emerald-700 text-white shadow-md shadow-emerald-600/20 transition-all active:scale-95 shrink-0 whitespace-nowrap"
+                  className="inline-flex items-center gap-1.5 px-3.5 sm:px-6 py-1.5 sm:py-2.5 rounded-full font-bold text-xs sm:text-sm bg-emerald-600 hover:bg-emerald-700 text-white shadow-md shadow-emerald-600/20 transition-all active:scale-95 shrink-0 whitespace-nowrap"
                 >
-                  <Award className="w-4 h-4 shrink-0" />
+                  <Award className="w-3.5 h-3.5 shrink-0" />
                   <span>{t("seeFinalResults")}</span>
                 </button>
               )}

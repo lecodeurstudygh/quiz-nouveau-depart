@@ -4,16 +4,27 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useLanguage } from "@/context/LanguageContext";
-import { BookOpen, Layers, HelpCircle, Settings, Sparkles, ChevronDown, Compass, Sun, Moon, MessageSquareText, Radio } from "lucide-react";
+import { BookOpen, Layers, HelpCircle, Settings, Sparkles, ChevronDown, Compass, Sun, Moon, MessageSquareText, Radio, Music } from "lucide-react";
 import { CourseSelectorModal } from "@/components/CourseSelectorModal";
 import { ALL_COURSES } from "@/data/curriculum";
 
 export const Navbar: React.FC = () => {
   const pathname = usePathname();
-  const { language, setLanguage, t, setIsSettingsOpen, selectedWeekId, settings, toggleTheme } = useLanguage();
+  const { language, setLanguage, t, setIsSettingsOpen, selectedWeekId, settings, updateSettings, toggleTheme } = useLanguage();
   const [isCourseMenuOpen, setIsCourseMenuOpen] = useState(false);
 
   const currentCourse = ALL_COURSES.find((c) => c.id === selectedWeekId) || ALL_COURSES[0];
+
+  const toggleMusic = () => {
+    if (settings.soundEnabled) {
+      updateSettings({ soundEnabled: false });
+    } else {
+      updateSettings({
+        soundEnabled: true,
+        soundShuffle: true,
+      });
+    }
+  };
 
   const navLinks = [
     { href: "/", label: t("navCourses"), icon: BookOpen },
@@ -114,6 +125,28 @@ export const Navbar: React.FC = () => {
                 <span className="font-black text-[11px] sm:text-xs text-neutral-800 dark:text-zinc-200">
                   {language === "fr" ? "FR" : "EN"}
                 </span>
+              </button>
+
+              {/* Ambient Music Quick Play/Pause Button (Aléatoire par défaut) */}
+              <button
+                type="button"
+                onClick={toggleMusic}
+                className={`relative w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center transition-all duration-200 active:scale-95 shadow-sm shrink-0 border ${
+                  settings.soundEnabled
+                    ? "bg-[#c5a059]/20 border-[#c5a059] text-[#9e7d32] dark:text-[#c5a059] ring-2 ring-[#c5a059]/30"
+                    : "bg-neutral-100 dark:bg-zinc-900 hover:bg-neutral-200/70 dark:hover:bg-zinc-800 border-neutral-200 dark:border-zinc-800 text-neutral-500 dark:text-zinc-400"
+                }`}
+                title={
+                  settings.soundEnabled
+                    ? (language === "fr" ? "Arrêter la musique d'ambiance" : "Pause ambient music")
+                    : (language === "fr" ? "Écouter la musique d'ambiance (aléatoire par défaut)" : "Play ambient music (shuffle by default)")
+                }
+                aria-label="Toggle ambient music"
+              >
+                <Music className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${settings.soundEnabled ? "animate-pulse text-[#c5a059]" : ""}`} />
+                {settings.soundEnabled && (
+                  <span className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-[#c5a059] animate-ping" />
+                )}
               </button>
 
               {/* Discrete & Elegant Light / Dark Mode Toggle Icon */}

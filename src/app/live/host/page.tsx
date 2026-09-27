@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import { useLiveSession } from "@/lib/useLiveSession";
 import { QRCodeDisplay } from "@/components/QRCodeDisplay";
@@ -27,6 +27,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { allCourses } from "@/data/courses";
+import { CustomDropdown, DropdownOption } from "@/components/CustomDropdown";
 
 const OPTION_STYLES = [
   {
@@ -70,6 +71,25 @@ export default function LiveHostPage() {
   const [pin, setPin] = useState<string | null>(null);
   const [copiedLink, setCopiedLink] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(true);
+
+  // Host Chapter / Topic custom dropdown options
+  const hostWeekOptions: DropdownOption[] = useMemo(() => {
+    const list: DropdownOption[] = allCourses.map((c) => ({
+      value: c.id,
+      label:
+        language === "fr"
+          ? `Semaine ${c.weekNumber} : ${c.title.fr}`
+          : `Week ${c.weekNumber}: ${c.title.en}`,
+    }));
+    list.push({
+      value: "all",
+      label:
+        language === "fr"
+          ? "Toutes les semaines combinées"
+          : "All weeks combined",
+    });
+    return list;
+  }, [language]);
 
   // Time remaining state for host screen
   const [secondsLeft, setSecondsLeft] = useState<number>(timerSeconds);
@@ -228,97 +248,95 @@ export default function LiveHostPage() {
         <div className="absolute top-0 right-0 w-96 h-96 bg-[#c5a059]/10 rounded-full blur-3xl pointer-events-none" />
 
         <div className="relative z-10 w-full max-w-xl bg-white dark:bg-[#121217] border border-stone-200/90 dark:border-white/10 rounded-3xl p-6 sm:p-8 shadow-2xl before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-stone-300 dark:before:via-white/20 before:to-transparent">
-          {/* Top Close Button to exit setup and return to home */}
-          <Link
-            href="/"
-            className="absolute top-5 right-5 w-8 h-8 rounded-full bg-stone-100 hover:bg-stone-200 dark:bg-white/10 dark:hover:bg-white/20 text-stone-500 dark:text-zinc-400 hover:text-neutral-900 dark:hover:text-white flex items-center justify-center transition-all active:scale-95 z-20 shadow-sm"
-            title={language === "fr" ? "Fermer et retourner aux cours" : "Close and return to courses"}
-            aria-label="Fermer"
-          >
-            <X className="w-4 h-4" />
-          </Link>
-
-          <div className="flex items-center gap-3 mb-6">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#c5a059] animate-ping" />
-            <span className="text-xs uppercase tracking-widest font-semibold text-[#9e7d32] dark:text-[#d6b26d]">
-              {language === "fr"
-                ? "Session Enseignant • Live Zoom & Présentiel"
-                : "Teacher Session • Live Zoom & In-Person"}
-            </span>
+          {/* Header row with badge on left and close button on right (Never overlaps!) */}
+          <div className="flex items-center justify-between gap-3 mb-6">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <span className="w-2.5 h-2.5 rounded-full bg-[#c5a059] animate-ping shrink-0" />
+              <span className="text-[11px] sm:text-xs uppercase tracking-widest font-semibold text-[#9e7d32] dark:text-[#d6b26d] truncate">
+                {language === "fr"
+                  ? "Session Enseignant • Live Zoom & Présentiel"
+                  : "Teacher Session • Live Zoom & In-Person"}
+              </span>
+            </div>
+            <Link
+              href="/"
+              className="w-8 h-8 rounded-full bg-stone-100 hover:bg-stone-200 dark:bg-white/10 dark:hover:bg-white/20 text-stone-500 dark:text-zinc-400 hover:text-neutral-900 dark:hover:text-white flex items-center justify-center transition-all active:scale-95 shrink-0 shadow-sm"
+              title={language === "fr" ? "Fermer et retourner aux cours" : "Close and return to courses"}
+              aria-label="Fermer"
+            >
+              <X className="w-4 h-4" />
+            </Link>
           </div>
 
           <h1 className="text-2xl sm:text-3xl font-light tracking-tight mb-2">
             <span className="font-semibold">{language === "fr" ? "Créer une Session" : "Create a Live"}</span> {language === "fr" ? "Live" : "Session"}
           </h1>
-          <p className="text-neutral-500 dark:text-zinc-400 text-sm mb-8">
+          <p className="text-neutral-500 dark:text-zinc-400 text-xs sm:text-sm mb-6 sm:mb-8">
             {language === "fr"
               ? "Générez un code PIN pour animer un quiz interactif synchronisé avec vos participants sur Zoom ou vidéoprojecteur."
               : "Generate a PIN code to run a synchronized interactive quiz with your participants on Zoom or projector."}
           </p>
 
-          <div className="space-y-6">
-            {/* Week selector */}
+          <div className="space-y-5 sm:space-y-6">
+            {/* Week selector using CustomDropdown */}
             <div>
               <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-600 dark:text-zinc-300 mb-2">
                 {language === "fr" ? "Chapitre / Thématique" : "Chapter / Topic"}
               </label>
-              <select
+              <CustomDropdown
+                title={language === "fr" ? "Chapitre / Thématique" : "Chapter / Topic"}
                 value={weekId}
-                onChange={(e) => setWeekId(e.target.value)}
-                className="w-full bg-neutral-100 dark:bg-white/5 border border-neutral-200 dark:border-white/10 rounded-2xl px-4 py-3 text-sm font-medium focus:border-[#c5a059] focus:ring-1 focus:ring-[#c5a059] outline-none transition-colors"
-              >
-                {allCourses.map((c) => (
-                  <option key={c.id} value={c.id} className="bg-white dark:bg-[#121217] text-neutral-900 dark:text-zinc-100">
-                    {language === "fr" ? "Semaine" : "Week"} {c.weekNumber} : {c.title[language] || c.title.fr}
-                  </option>
-                ))}
-                <option value="all" className="bg-white dark:bg-[#121217] text-neutral-900 dark:text-zinc-100">
-                  {language === "en" ? "All weeks combined" : "Toutes les semaines combinées"}
-                </option>
-              </select>
+                options={hostWeekOptions}
+                onChange={(val) => setWeekId(val)}
+                className="w-full"
+                maxTriggerWidth="w-full max-w-full"
+                triggerClassName="w-full flex items-center justify-between gap-2 px-4 py-3 text-xs sm:text-sm font-semibold rounded-2xl bg-neutral-100 hover:bg-neutral-200/80 dark:bg-white/5 dark:hover:bg-white/10 border border-neutral-200 dark:border-white/10 text-neutral-900 dark:text-zinc-100 hover:border-[#c5a059]/60 dark:hover:border-[#c5a059]/60 transition-all shadow-sm"
+              />
             </div>
 
-            {/* Timer selector */}
+            {/* Timer selector (Factorized units, no text wrapping) */}
             <div>
               <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-600 dark:text-zinc-300 mb-2">
-                {language === "fr" ? "Temps de réponse par question" : "Time limit per question"}
+                {language === "fr" ? "Durée par question (secondes)" : "Time limit per question (seconds)"}
               </label>
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-3 gap-2.5 sm:gap-3">
                 {[15, 20, 30].map((sec) => (
                   <button
                     key={sec}
                     type="button"
                     onClick={() => setTimerSeconds(sec)}
-                    className={`py-3 rounded-2xl border text-sm font-bold transition-all active:scale-95 ${
+                    className={`py-3 sm:py-3.5 rounded-2xl border text-sm sm:text-base font-bold transition-all active:scale-95 flex items-center justify-center gap-1 ${
                       timerSeconds === sec
-                        ? "bg-neutral-900 text-white dark:bg-[#c5a059] dark:text-zinc-950 border-neutral-900 dark:border-[#c5a059] shadow-md"
+                        ? "bg-neutral-900 text-white dark:bg-[#c5a059] dark:text-zinc-950 border-neutral-900 dark:border-[#c5a059] shadow-md shadow-[#c5a059]/20"
                         : "bg-neutral-100 dark:bg-white/5 border-neutral-200 dark:border-white/10 hover:border-[#c5a059]/40 text-neutral-700 dark:text-zinc-300"
                     }`}
                   >
-                    {sec} {language === "fr" ? "secondes" : "seconds"}
+                    <span>{sec}</span>
+                    <span className="text-xs font-normal opacity-75">s</span>
                   </button>
                 ))}
               </div>
             </div>
 
-            {/* Question count */}
+            {/* Question count (Factorized units, no text wrapping) */}
             <div>
               <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-600 dark:text-zinc-300 mb-2">
                 {language === "fr" ? "Nombre de questions" : "Number of questions"}
               </label>
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-3 gap-2.5 sm:gap-3">
                 {[5, 8, 10].map((count) => (
                   <button
                     key={count}
                     type="button"
                     onClick={() => setQuestionCount(count)}
-                    className={`py-3 rounded-2xl border text-sm font-bold transition-all active:scale-95 ${
+                    className={`py-3 sm:py-3.5 rounded-2xl border text-sm sm:text-base font-bold transition-all active:scale-95 flex items-center justify-center gap-1 ${
                       questionCount === count
-                        ? "bg-neutral-900 text-white dark:bg-[#c5a059] dark:text-zinc-950 border-neutral-900 dark:border-[#c5a059] shadow-md"
+                        ? "bg-neutral-900 text-white dark:bg-[#c5a059] dark:text-zinc-950 border-neutral-900 dark:border-[#c5a059] shadow-md shadow-[#c5a059]/20"
                         : "bg-neutral-100 dark:bg-white/5 border-neutral-200 dark:border-white/10 hover:border-[#c5a059]/40 text-neutral-700 dark:text-zinc-300"
                     }`}
                   >
-                    {count} questions
+                    <span>{count}</span>
+                    <span className="text-xs font-normal opacity-75">Q</span>
                   </button>
                 ))}
               </div>

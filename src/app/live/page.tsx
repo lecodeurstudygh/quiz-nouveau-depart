@@ -152,44 +152,61 @@ function LivePlayerContent() {
     });
   };
 
+  // Safe Exit with explicit confirmation for participants
+  const handleExitPlayer = () => {
+    if (
+      window.confirm(
+        language === "fr"
+          ? "Voulez-vous vraiment quitter la session en direct ? Vos points et votre progression seront perdus."
+          : "Do you really want to leave this live session? Your score and progress will be lost."
+      )
+    ) {
+      setActivePin(null);
+      setPlayerId(null);
+      window.location.href = "/";
+    }
+  };
+
   // 1. JOIN SCREEN
   if (!activePin || !state) {
     return (
-      <div className="min-h-[75vh] text-neutral-900 dark:text-white flex flex-col items-center justify-center p-2 sm:p-6 select-none relative overflow-hidden [isolation:isolate]">
+      <div className="min-h-[75vh] text-neutral-900 dark:text-white flex flex-col items-center justify-center p-2 sm:p-6 pb-20 sm:pb-8 select-none relative overflow-hidden [isolation:isolate]">
         {/* Subtle ambient halos */}
         <div className="absolute top-0 right-0 w-96 h-96 bg-[#c5a059]/10 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-80 h-80 bg-neutral-200/50 dark:bg-white/5 rounded-full blur-3xl pointer-events-none" />
 
-        <div className="relative z-10 w-full max-w-md bg-white/95 dark:bg-[#121217] border border-stone-200/90 dark:border-white/10 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6 before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-stone-300 dark:before:via-white/20 before:to-transparent">
-          {/* Top Close Button to exit to Courses at any time */}
-          <Link
-            href="/"
-            className="absolute top-4 right-4 w-8 h-8 rounded-full bg-stone-100 hover:bg-stone-200 dark:bg-white/10 dark:hover:bg-white/20 text-stone-500 dark:text-zinc-400 hover:text-neutral-900 dark:hover:text-white flex items-center justify-center transition-all active:scale-95 z-20 shadow-sm"
-            title={language === "fr" ? "Fermer et retourner aux cours" : "Close and return to courses"}
-            aria-label="Fermer"
-          >
-            <X className="w-4 h-4" />
-          </Link>
-
-          <div className="text-center space-y-2 pr-6 pl-6">
-            <div className="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-widest text-[#9e7d32] dark:text-[#d6b26d] px-3.5 py-1 bg-[#c5a059]/15 border border-[#c5a059]/30 rounded-full shadow-sm">
-              <Sparkles className="w-3.5 h-3.5 text-[#c5a059]" />
-              <span>{language === "fr" ? "Quiz Live • Nouveau Départ" : "Live Quiz • New Beginnings"}</span>
+        <div className="relative z-10 w-full max-w-md bg-white/95 dark:bg-[#121217] border border-stone-200/90 dark:border-white/10 rounded-3xl p-4 sm:p-7 shadow-2xl space-y-3.5 sm:space-y-4 before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-stone-300 dark:before:via-white/20 before:to-transparent">
+          {/* Header row with badge on left and close button on right (Never overlaps!) */}
+          <div className="flex items-center justify-between gap-3">
+            <div className="inline-flex items-center gap-1.5 text-[10px] sm:text-[11px] font-semibold uppercase tracking-widest text-[#9e7d32] dark:text-[#d6b26d] px-3 py-1 bg-[#c5a059]/15 border border-[#c5a059]/30 rounded-full shadow-sm truncate">
+              <Sparkles className="w-3 h-3 text-[#c5a059] shrink-0" />
+              <span className="truncate">{language === "fr" ? "Quiz Live • Nouveau Départ" : "Live Quiz • New Beginnings"}</span>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-light tracking-tight text-neutral-900 dark:text-white">
+            <Link
+              href="/"
+              className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-stone-100 hover:bg-stone-200 dark:bg-white/10 dark:hover:bg-white/20 text-stone-500 dark:text-zinc-400 hover:text-neutral-900 dark:hover:text-white flex items-center justify-center transition-all active:scale-95 shrink-0 shadow-sm"
+              title={language === "fr" ? "Fermer et retourner aux cours" : "Close and return to courses"}
+              aria-label="Fermer"
+            >
+              <X className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+
+          <div className="text-center space-y-1">
+            <h1 className="text-xl sm:text-2xl font-light tracking-tight text-neutral-900 dark:text-white">
               <span className="font-semibold">{language === "fr" ? "Rejoindre" : "Join"}</span> {language === "fr" ? "la Partie" : "the Game"}
             </h1>
-            <p className="text-neutral-500 dark:text-neutral-400 text-xs sm:text-sm">
+            <p className="text-neutral-500 dark:text-neutral-400 text-xs">
               {language === "fr"
                 ? "Entrez le code PIN affiché par l'enseignant sur Zoom ou à l'écran."
                 : "Enter the PIN code displayed by the teacher on Zoom or on screen."}
             </p>
           </div>
 
-          <form onSubmit={handleJoin} className="space-y-4">
+          <form onSubmit={handleJoin} className="space-y-3">
             {/* PIN Input */}
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-neutral-600 dark:text-neutral-400 mb-1.5">
+              <label className="block text-[11px] font-bold uppercase tracking-wider text-neutral-600 dark:text-neutral-400 mb-1">
                 {language === "fr" ? "Code PIN du Jeu" : "Game PIN Code"}
               </label>
               <input
@@ -199,13 +216,13 @@ function LivePlayerContent() {
                 value={pinInput}
                 onChange={(e) => setPinInput(e.target.value)}
                 placeholder="Ex: 742819"
-                className="w-full bg-stone-50 dark:bg-black/60 border border-stone-200 dark:border-white/15 focus:border-[#c5a059] focus:ring-1 focus:ring-[#c5a059] rounded-2xl px-4 py-3.5 text-center text-2xl font-mono font-bold tracking-widest text-neutral-900 dark:text-[#d6b26d] outline-none shadow-inner transition-colors"
+                className="w-full bg-stone-50 dark:bg-black/60 border border-stone-200 dark:border-white/15 focus:border-[#c5a059] focus:ring-1 focus:ring-[#c5a059] rounded-2xl px-4 py-2.5 sm:py-3 text-center text-xl sm:text-2xl font-mono font-bold tracking-widest text-neutral-900 dark:text-[#d6b26d] outline-none shadow-inner transition-colors"
               />
             </div>
 
             {/* Name Input */}
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-neutral-600 dark:text-neutral-400 mb-1.5">
+              <label className="block text-[11px] font-bold uppercase tracking-wider text-neutral-600 dark:text-neutral-400 mb-1">
                 {language === "fr" ? "Votre Prénom ou Pseudo" : "Your Name or Nickname"}
               </label>
               <input
@@ -214,13 +231,13 @@ function LivePlayerContent() {
                 value={nameInput}
                 onChange={(e) => setNameInput(e.target.value)}
                 placeholder={language === "fr" ? "Ex: David, Sarah..." : "e.g. David, Sarah..."}
-                className="w-full bg-stone-50 dark:bg-black/60 border border-stone-200 dark:border-white/15 focus:border-[#c5a059] focus:ring-1 focus:ring-[#c5a059] rounded-2xl px-4 py-3 text-base font-semibold text-neutral-900 dark:text-white placeholder:text-neutral-400 outline-none shadow-inner transition-colors"
+                className="w-full bg-stone-50 dark:bg-black/60 border border-stone-200 dark:border-white/15 focus:border-[#c5a059] focus:ring-1 focus:ring-[#c5a059] rounded-2xl px-4 py-2 sm:py-2.5 text-sm sm:text-base font-semibold text-neutral-900 dark:text-white placeholder:text-neutral-400 outline-none shadow-inner transition-colors"
               />
             </div>
 
             {/* Avatar Selector */}
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-neutral-600 dark:text-neutral-400 mb-2">
+              <label className="block text-[11px] font-bold uppercase tracking-wider text-neutral-600 dark:text-neutral-400 mb-1">
                 {language === "fr" ? "Choisissez votre Avatar" : "Choose your Avatar"}
               </label>
               <div className="grid grid-cols-4 gap-2">
@@ -229,7 +246,7 @@ function LivePlayerContent() {
                     key={av}
                     type="button"
                     onClick={() => setAvatar(av)}
-                    className={`py-2 text-2xl rounded-2xl border transition-all ${
+                    className={`py-1 sm:py-1.5 text-xl sm:text-2xl rounded-2xl border transition-all ${
                       avatar === av
                         ? "bg-[#c5a059]/20 border-[#c5a059] scale-105 shadow-md shadow-[#c5a059]/15"
                         : "bg-stone-100 dark:bg-black/40 border-stone-200 dark:border-white/10 hover:border-stone-300 dark:hover:border-white/25"
@@ -243,7 +260,7 @@ function LivePlayerContent() {
 
             {/* Error Message */}
             {joinError && (
-              <div className="p-3 rounded-2xl bg-rose-50 dark:bg-rose-950/80 border border-rose-200 dark:border-rose-500/50 text-rose-700 dark:text-rose-300 text-xs font-semibold text-center">
+              <div className="p-2.5 rounded-2xl bg-rose-50 dark:bg-rose-950/80 border border-rose-200 dark:border-rose-500/50 text-rose-700 dark:text-rose-300 text-xs font-semibold text-center">
                 {joinError}
               </div>
             )}
@@ -252,7 +269,7 @@ function LivePlayerContent() {
             <button
               type="submit"
               disabled={isJoining}
-              className="w-full py-4 rounded-full bg-[#c5a059] hover:bg-[#d6b26d] text-zinc-950 font-bold text-base shadow-xl flex items-center justify-center gap-2 transition-transform active:scale-95 disabled:opacity-50"
+              className="w-full py-3 sm:py-3.5 rounded-full bg-[#c5a059] hover:bg-[#d6b26d] text-zinc-950 font-bold text-sm sm:text-base shadow-xl flex items-center justify-center gap-2 transition-transform active:scale-95 disabled:opacity-50"
             >
               <span>
                 {isJoining
@@ -263,15 +280,15 @@ function LivePlayerContent() {
                   ? "C'est parti !"
                   : "Let's Go!"}
               </span>
-              <ArrowRight className="w-5 h-5" />
+              <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
           </form>
 
-          {/* Link to Host Mode for Teachers */}
-          <div className="pt-3 text-center border-t border-stone-200/80 dark:border-white/10">
+          {/* Link to Host Mode for Teachers - Directly visible without scrolling */}
+          <div className="pt-2 text-center border-t border-stone-200/80 dark:border-white/10">
             <Link
               href="/live/host"
-              className="text-xs text-stone-500 dark:text-neutral-400 hover:text-[#9e7d32] dark:hover:text-[#d6b26d] transition-colors flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2"
+              className="text-xs text-stone-500 dark:text-neutral-400 hover:text-[#9e7d32] dark:hover:text-[#d6b26d] transition-colors inline-flex items-center justify-center gap-1.5 py-0.5"
             >
               <span>{language === "fr" ? "Vous animez la session ?" : "Hosting the session?"}</span>
               <span className="font-bold underline underline-offset-2 text-[#9e7d32] dark:text-[#d6b26d] whitespace-nowrap">
@@ -292,15 +309,16 @@ function LivePlayerContent() {
         <div className="absolute bottom-0 left-0 w-80 h-80 bg-neutral-200/50 dark:bg-white/5 rounded-full blur-3xl pointer-events-none" />
 
         <div className="relative z-10 w-full max-w-sm bg-white/95 dark:bg-[#121217] border border-stone-200/90 dark:border-white/10 rounded-3xl p-8 shadow-2xl space-y-6 before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-stone-300 dark:before:via-white/20 before:to-transparent">
-          {/* Close button to leave lobby */}
-          <Link
-            href="/"
+          {/* Close button with confirmation so players do not accidentally exit */}
+          <button
+            type="button"
+            onClick={handleExitPlayer}
             className="absolute top-4 right-4 w-8 h-8 rounded-full bg-stone-100 hover:bg-stone-200 dark:bg-white/10 dark:hover:bg-white/20 text-stone-500 dark:text-zinc-400 hover:text-neutral-900 dark:hover:text-white flex items-center justify-center transition-all active:scale-95 z-20 shadow-sm"
             title={language === "fr" ? "Quitter la salle d'attente" : "Leave waiting room"}
             aria-label="Quitter"
           >
             <X className="w-4 h-4" />
-          </Link>
+          </button>
 
           <div className="w-24 h-24 rounded-full bg-[#c5a059]/15 border-2 border-[#c5a059]/40 flex items-center justify-center text-5xl mx-auto shadow-xl shadow-[#c5a059]/10">
             {myPlayer?.avatar || avatar}
@@ -335,16 +353,6 @@ function LivePlayerContent() {
       return (
         <div className="min-h-[75vh] text-neutral-900 dark:text-white flex flex-col items-center justify-center p-4 sm:p-6 pb-24 sm:pb-8 text-center select-none relative overflow-hidden [isolation:isolate]">
           <div className="relative z-10 w-full max-w-sm bg-white/95 dark:bg-[#121217] border border-stone-200/90 dark:border-white/10 rounded-3xl p-8 shadow-2xl space-y-4 animate-scale-in before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-stone-300 dark:before:via-white/20 before:to-transparent">
-            {/* Close button */}
-            <Link
-              href="/"
-              className="absolute top-4 right-4 w-8 h-8 rounded-full bg-stone-100 hover:bg-stone-200 dark:bg-white/10 dark:hover:bg-white/20 text-stone-500 dark:text-zinc-400 hover:text-neutral-900 dark:hover:text-white flex items-center justify-center transition-all active:scale-95 z-20 shadow-sm"
-              title={language === "fr" ? "Quitter la partie" : "Leave game"}
-              aria-label="Quitter"
-            >
-              <X className="w-4 h-4" />
-            </Link>
-
             <div className="w-20 h-20 rounded-full bg-[#c5a059]/15 border border-[#c5a059]/40 flex items-center justify-center text-[#9e7d32] dark:text-[#d6b26d] mx-auto shadow-lg shadow-[#c5a059]/15">
               <Check className="w-10 h-10 stroke-[3]" />
             </div>
@@ -373,14 +381,6 @@ function LivePlayerContent() {
               <div className="text-xs font-mono font-semibold text-stone-600 dark:text-neutral-400">
                 {myPlayer?.name} • <span className="text-[#9e7d32] dark:text-[#d6b26d] font-bold">{myPlayer?.score} pts</span>
               </div>
-              <Link
-                href="/"
-                className="w-7 h-7 rounded-full bg-stone-100 hover:bg-stone-200 dark:bg-white/10 dark:hover:bg-white/20 text-stone-500 dark:text-zinc-400 flex items-center justify-center transition-colors"
-                title={language === "fr" ? "Quitter la partie" : "Leave game"}
-                aria-label="Quitter"
-              >
-                <X className="w-3.5 h-3.5" />
-              </Link>
             </div>
           </div>
 
@@ -432,16 +432,6 @@ function LivePlayerContent() {
               : "bg-rose-50 dark:bg-[#251216] border-rose-300 dark:border-rose-500/50 text-rose-950 dark:text-rose-100 shadow-rose-500/10 dark:shadow-rose-950/40"
           }`}
         >
-          {/* Close button */}
-          <Link
-            href="/"
-            className="absolute top-4 right-4 w-8 h-8 rounded-full bg-stone-100/80 hover:bg-stone-200 dark:bg-white/10 dark:hover:bg-white/20 text-stone-600 dark:text-zinc-300 flex items-center justify-center transition-all active:scale-95 z-20 shadow-sm"
-            title={language === "fr" ? "Quitter la partie" : "Leave game"}
-            aria-label="Quitter"
-          >
-            <X className="w-4 h-4" />
-          </Link>
-
           <div className="text-5xl">
             {isCorrect ? "🎉" : "😅"}
           </div>
@@ -494,16 +484,6 @@ function LivePlayerContent() {
     return (
       <div className="min-h-[75vh] text-neutral-900 dark:text-white flex flex-col items-center justify-center p-4 sm:p-6 pb-24 sm:pb-8 text-center select-none relative overflow-hidden [isolation:isolate]">
         <div className="w-full max-w-sm bg-white/95 dark:bg-[#121217] border border-stone-200/90 dark:border-white/10 rounded-3xl p-8 shadow-2xl space-y-6 before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-stone-300 dark:before:via-white/20 before:to-transparent relative overflow-hidden">
-          {/* Close button */}
-          <Link
-            href="/"
-            className="absolute top-4 right-4 w-8 h-8 rounded-full bg-stone-100 hover:bg-stone-200 dark:bg-white/10 dark:hover:bg-white/20 text-stone-500 dark:text-zinc-400 hover:text-neutral-900 dark:hover:text-white flex items-center justify-center transition-all active:scale-95 z-20 shadow-sm"
-            title={language === "fr" ? "Quitter la partie" : "Leave game"}
-            aria-label="Quitter"
-          >
-            <X className="w-4 h-4" />
-          </Link>
-
           <div className="w-20 h-20 rounded-full bg-[#c5a059]/15 border border-[#c5a059]/30 flex items-center justify-center text-[#9e7d32] dark:text-[#d6b26d] mx-auto shadow-lg shadow-[#c5a059]/10">
             <Trophy className="w-10 h-10" />
           </div>

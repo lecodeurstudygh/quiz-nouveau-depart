@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+import React, { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { allCourses, getAllDiscussionCards } from "@/data/courses";
 import { useLanguage } from "@/context/LanguageContext";
 import { DiscussionCard } from "@/components/DiscussionCard";
@@ -227,6 +227,32 @@ export default function DiscussionPage() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [viewMode, handlePrevFocus, handleNextFocus]);
 
+  // Touch Swipe Gesture for Focus Mode on Mobile
+  const touchStartRef = useRef<{ x: number; y: number } | null>(null);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartRef.current = {
+      x: e.touches[0].clientX,
+      y: e.touches[0].clientY,
+    };
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (!touchStartRef.current) return;
+    const deltaX = e.changedTouches[0].clientX - touchStartRef.current.x;
+    const deltaY = e.changedTouches[0].clientY - touchStartRef.current.y;
+    touchStartRef.current = null;
+
+    // Horizontal swipe threshold: 40px, predominantly horizontal
+    if (Math.abs(deltaX) > 40 && Math.abs(deltaX) > Math.abs(deltaY) * 1.3) {
+      if (deltaX < 0) {
+        handleNextFocus();
+      } else {
+        handlePrevFocus();
+      }
+    }
+  };
+
   const currentFocusCard = filteredCards[focusIndex];
 
   return (
@@ -257,7 +283,7 @@ export default function DiscussionPage() {
       </div>
 
       {/* Unified Single-Line Toolbar: Dropdown Filters, Search, Actions & Mode Switcher */}
-      <div className="flex flex-wrap items-center justify-between gap-2.5 p-2.5 sm:p-3 rounded-3xl bg-white/90 dark:bg-zinc-900/80 border border-neutral-200 dark:border-zinc-800 shadow-sm backdrop-blur-md">
+      <div className="relative z-30 flex flex-wrap items-center justify-between gap-2.5 p-2.5 sm:p-3 rounded-3xl bg-white/90 dark:bg-zinc-900/80 border border-neutral-200 dark:border-zinc-800 shadow-sm backdrop-blur-md">
         {/* Dropdowns Group */}
         <div className="flex flex-wrap items-center gap-2">
           {/* Week Select Custom Dropdown */}
@@ -395,8 +421,12 @@ export default function DiscussionPage() {
       ) : viewMode === "focus" && currentFocusCard ? (
         /* ================= MODE FOCUS (1 PAR 1 ÉPURÉ & IMMERSIF) ================= */
         <div className="max-w-2xl mx-auto space-y-6 animate-scale-in py-2">
-          {/* Active Card */}
-          <div className="w-full">
+          {/* Active Card with Touch Swipe support */}
+          <div
+            className="w-full touch-pan-y"
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
+          >
             <DiscussionCard
               key={currentFocusCard.id}
               card={currentFocusCard}
@@ -472,10 +502,17 @@ export default function DiscussionPage() {
               </button>
             ))}
           </div>
+
+          {/* Swipe & Navigation Hint */}
+          <div className="text-center text-[11px] text-neutral-500 dark:text-zinc-400">
+            {language === "fr"
+              ? "Glisser le doigt ou touches ← → • Clic pour révéler"
+              : "Swipe or use ← → arrow keys • Click to reveal"}
+          </div>
         </div>
       ) : (
         /* ================= MODE GRILLE (TOUTES LES CARTES VISIBLES) ================= */
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-scale-in">
+        <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-scale-in">
           {filteredCards.map((card) => (
             <DiscussionCard
               key={card.id}

@@ -19,6 +19,7 @@ interface CustomDropdownProps {
   placeholder?: string;
   className?: string;
   maxTriggerWidth?: string;
+  triggerClassName?: string;
 }
 
 export const CustomDropdown: React.FC<CustomDropdownProps> = ({
@@ -29,6 +30,7 @@ export const CustomDropdown: React.FC<CustomDropdownProps> = ({
   placeholder,
   className = "",
   maxTriggerWidth = "max-w-[260px] sm:max-w-xs",
+  triggerClassName,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -71,12 +73,15 @@ export const CustomDropdown: React.FC<CustomDropdownProps> = ({
   };
 
   return (
-    <div className={`relative ${className}`} ref={containerRef}>
+    <div className={`relative ${isOpen ? "z-50" : "z-10"} ${className}`} ref={containerRef}>
       {/* Trigger Button */}
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className={`flex items-center justify-between gap-2 pl-3.5 pr-2.5 py-1.5 text-xs font-semibold rounded-full bg-neutral-100 hover:bg-neutral-200/80 dark:bg-zinc-800/90 dark:hover:bg-zinc-800 border border-neutral-200 dark:border-zinc-700 text-neutral-800 dark:text-zinc-200 hover:border-[#c5a059]/60 dark:hover:border-[#c5a059]/60 transition-all active:scale-[0.98] shadow-sm select-none ${maxTriggerWidth}`}
+        className={
+          triggerClassName ||
+          `flex items-center justify-between gap-2 pl-3.5 pr-2.5 py-1.5 text-xs font-semibold rounded-full bg-neutral-100 hover:bg-neutral-200/80 dark:bg-zinc-800/90 dark:hover:bg-zinc-800 border border-neutral-200 dark:border-zinc-700 text-neutral-800 dark:text-zinc-200 hover:border-[#c5a059]/60 dark:hover:border-[#c5a059]/60 transition-all active:scale-[0.98] shadow-sm select-none ${maxTriggerWidth}`
+        }
       >
         <span className="truncate text-left">
           {selectedOption ? selectedOption.label : placeholder || ""}
@@ -88,9 +93,9 @@ export const CustomDropdown: React.FC<CustomDropdownProps> = ({
         />
       </button>
 
-      {/* 1. Desktop Popover (rendered in-place below trigger) */}
+      {/* 1. Desktop Popover (rendered in-place below trigger with elevated z-index) */}
       {isOpen && (
-        <div className="hidden sm:flex absolute left-0 top-full mt-1.5 z-50 w-72 max-w-xs max-h-80 bg-white/98 dark:bg-[#121217]/98 backdrop-blur-2xl rounded-2xl border border-neutral-200 dark:border-white/10 shadow-2xl overflow-hidden flex-col animate-scale-in">
+        <div className="hidden sm:flex absolute left-0 top-full mt-1.5 z-[100] w-72 max-w-sm max-h-80 bg-white/98 dark:bg-[#121217]/98 backdrop-blur-2xl rounded-2xl border border-neutral-200 dark:border-white/10 shadow-2xl overflow-hidden flex-col animate-scale-in">
           <div className="overflow-y-auto p-1.5 space-y-1 divide-y divide-transparent custom-scrollbar max-h-72">
             {options.map((opt) => {
               const isSelected = opt.value === value;

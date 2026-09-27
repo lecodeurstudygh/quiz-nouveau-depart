@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+import React, { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { allCourses, getAllVerses } from "@/data/courses";
 import { useLanguage } from "@/context/LanguageContext";
 import { VerseCard } from "@/components/VerseCard";
@@ -255,6 +255,32 @@ export default function CardsPage() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [viewMode, handlePrevFocus, handleNextFocus]);
 
+  // Touch Swipe Gesture for Focus Mode on Mobile
+  const touchStartRef = useRef<{ x: number; y: number } | null>(null);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartRef.current = {
+      x: e.touches[0].clientX,
+      y: e.touches[0].clientY,
+    };
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (!touchStartRef.current) return;
+    const deltaX = e.changedTouches[0].clientX - touchStartRef.current.x;
+    const deltaY = e.changedTouches[0].clientY - touchStartRef.current.y;
+    touchStartRef.current = null;
+
+    // Horizontal swipe threshold: 40px, predominantly horizontal
+    if (Math.abs(deltaX) > 40 && Math.abs(deltaX) > Math.abs(deltaY) * 1.3) {
+      if (deltaX < 0) {
+        handleNextFocus();
+      } else {
+        handlePrevFocus();
+      }
+    }
+  };
+
   const currentMemorizedCount = baseVerses.filter((v) => memorizedIds.includes(v.id)).length;
   const memorizedPercentage =
     baseVerses.length > 0 ? Math.round((currentMemorizedCount / baseVerses.length) * 100) : 0;
@@ -349,7 +375,7 @@ export default function CardsPage() {
       </div>
 
       {/* Unified Single-Line Toolbar: Dropdown Filters, Search, Actions & Mode Switcher */}
-      <div className="flex flex-wrap items-center justify-between gap-2.5 p-2.5 sm:p-3 rounded-3xl bg-white/90 dark:bg-zinc-900/80 border border-neutral-200 dark:border-zinc-800 shadow-sm backdrop-blur-md">
+      <div className="relative z-30 flex flex-wrap items-center justify-between gap-2.5 p-2.5 sm:p-3 rounded-3xl bg-white/90 dark:bg-zinc-900/80 border border-neutral-200 dark:border-zinc-800 shadow-sm backdrop-blur-md">
         {/* Dropdowns Group */}
         <div className="flex flex-wrap items-center gap-2">
           {/* Week Select Custom Dropdown */}
@@ -497,8 +523,12 @@ export default function CardsPage() {
       ) : viewMode === "focus" && currentFocusVerse ? (
         /* ================= MODE FOCUS (CARTE MAJESTUEUSE & ÉPURÉE) ================= */
         <div className="max-w-2xl mx-auto space-y-6 animate-scale-in py-2">
-          {/* Active Card - Larger height & width occupying the space */}
-          <div className="w-full">
+          {/* Active Card with Touch Swipe support - Larger height & width occupying the space */}
+          <div
+            className="w-full touch-pan-y"
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
+          >
             <VerseCard
               key={currentFocusVerse.id}
               verse={currentFocusVerse}
@@ -558,8 +588,8 @@ export default function CardsPage() {
           <div className="flex items-center justify-between text-[11px] text-neutral-500 dark:text-zinc-400 px-1">
             <span>
               {language === "fr"
-                ? "Touches ← et → pour naviguer • Clic pour retourner"
-                : "Use ← and → arrow keys • Click to flip"}
+                ? "Glisser le doigt ou touches ← → • Clic pour retourner"
+                : "Swipe or use ← → arrow keys • Click to flip"}
             </span>
             <button
               type="button"
@@ -572,7 +602,7 @@ export default function CardsPage() {
         </div>
       ) : (
         /* ================= MODE GRILLE (TOUT D'UN COUP) ================= */
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 animate-fade-in">
+        <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 animate-fade-in">
           {filteredVerses.map((verse) => (
             <VerseCard
               key={verse.id}

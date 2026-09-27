@@ -351,20 +351,20 @@ export default function QuizPage() {
   return (
     <div className="max-w-4xl mx-auto space-y-6 animate-fade-in">
       {/* Session / Week Selector Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-2 rounded-2xl glass-card border border-neutral-200/80 dark:border-white/10">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 p-2 rounded-2xl glass-card border border-neutral-200/80 dark:border-white/10">
         <div className="flex items-center gap-2 pl-2">
-          <span className="text-xs font-bold text-neutral-500 dark:text-zinc-400">
-            {t("quizWeekSelector")}
+          <span className="text-xs font-bold text-neutral-500 dark:text-zinc-400 shrink-0">
+            {t("quizWeekSelector")} :
           </span>
         </div>
 
-        <div className="flex flex-wrap items-center gap-1.5">
+        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5 px-1 max-w-full">
           {allCourses.map((c) => (
             <button
               key={c.id}
               type="button"
               onClick={() => handleSelectQuizWeek(c.id as any)}
-              className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all ${
+              className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all shrink-0 whitespace-nowrap ${
                 selectedQuizWeek === c.id
                   ? "bg-neutral-900 text-white dark:bg-[#c5a059] dark:text-zinc-950 shadow-sm"
                   : "text-neutral-600 dark:text-zinc-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-white/5"
@@ -378,7 +378,7 @@ export default function QuizPage() {
           <button
             type="button"
             onClick={() => handleSelectQuizWeek("all")}
-            className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all ${
+            className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all shrink-0 whitespace-nowrap ${
               selectedQuizWeek === "all"
                 ? "bg-neutral-900 text-white dark:bg-[#c5a059] dark:text-zinc-950 shadow-sm"
                 : "text-neutral-600 dark:text-zinc-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-white/5"
@@ -390,23 +390,23 @@ export default function QuizPage() {
       </div>
 
       {/* Top Header Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-neutral-200/80 dark:border-white/10">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-neutral-200/80 dark:border-white/10">
         <div className="flex items-center gap-2">
-          <span className="text-sm sm:text-base font-bold text-neutral-900 dark:text-zinc-100">
+          <span className="text-sm sm:text-base font-bold text-neutral-900 dark:text-zinc-100 whitespace-nowrap">
             Question {currentIndex + 1} / {questions.length}
           </span>
           <span className="text-xs text-neutral-400 dark:text-zinc-600">•</span>
-          <span className="text-xs sm:text-sm font-medium text-neutral-500 dark:text-zinc-400">
+          <span className="text-xs sm:text-sm font-medium text-neutral-500 dark:text-zinc-400 whitespace-nowrap">
             {answeredCount} {t("answeredCount")}
           </span>
         </div>
 
-        <div className="flex items-center gap-2 self-end sm:self-auto flex-wrap">
+        <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
           {/* Shuffle Options button */}
           <button
             type="button"
             onClick={handleShuffleOptions}
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold text-neutral-700 dark:text-zinc-300 hover:text-neutral-900 dark:hover:text-white bg-white dark:bg-[#15151c] hover:bg-neutral-100 dark:hover:bg-zinc-800 border border-neutral-200 dark:border-white/10 hover:border-[#c5a059]/40 transition-all shadow-sm active:scale-95"
+            className="inline-flex items-center gap-1 px-2.5 sm:px-3.5 py-1.5 rounded-full text-xs font-semibold text-neutral-700 dark:text-zinc-300 hover:text-neutral-900 dark:hover:text-white bg-white dark:bg-[#15151c] hover:bg-neutral-100 dark:hover:bg-zinc-800 border border-neutral-200 dark:border-white/10 hover:border-[#c5a059]/40 transition-all shadow-sm active:scale-95 shrink-0"
             title={language === "fr" ? "Mélanger l'ordre des choix" : "Shuffle choices order"}
           >
             <Shuffle className="w-3.5 h-3.5 text-[#9e7d32] dark:text-[#c5a059]" />
@@ -417,14 +417,14 @@ export default function QuizPage() {
           <button
             type="button"
             onClick={handleRestartQuiz}
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold text-neutral-700 dark:text-zinc-300 hover:text-neutral-900 dark:hover:text-white bg-white dark:bg-[#15151c] hover:bg-neutral-100 dark:hover:bg-zinc-800 border border-neutral-200 dark:border-white/10 hover:border-[#c5a059]/40 transition-all shadow-sm active:scale-95"
+            className="inline-flex items-center gap-1 px-2.5 sm:px-3.5 py-1.5 rounded-full text-xs font-semibold text-neutral-700 dark:text-zinc-300 hover:text-neutral-900 dark:hover:text-white bg-white dark:bg-[#15151c] hover:bg-neutral-100 dark:hover:bg-zinc-800 border border-neutral-200 dark:border-white/10 hover:border-[#c5a059]/40 transition-all shadow-sm active:scale-95 shrink-0"
           >
             <RotateCcw className="w-3.5 h-3.5 text-neutral-500 dark:text-zinc-400" />
             <span>{t("navRestart")}</span>
           </button>
 
           {/* Live Score Pill */}
-          <div className="px-3.5 py-1.5 rounded-full text-xs font-bold font-mono bg-neutral-100 dark:bg-[#15151c] text-neutral-800 dark:text-zinc-200 border border-neutral-200 dark:border-white/10 shadow-sm">
+          <div className="px-2.5 sm:px-3.5 py-1.5 rounded-full text-xs font-bold font-mono bg-neutral-100 dark:bg-[#15151c] text-neutral-800 dark:text-zinc-200 border border-neutral-200 dark:border-white/10 shadow-sm shrink-0 whitespace-nowrap">
             {t("quizScore")} : <span className="text-[#9e7d32] dark:text-[#c5a059] font-bold">{score}</span> / {questions.length} ({scorePercentage}%)
           </div>
         </div>
@@ -433,7 +433,7 @@ export default function QuizPage() {
       {!quizFinished ? (
         <div className="space-y-6">
           {/* Main Question Card with subtle ambient depth */}
-          <div className="relative overflow-hidden glass-panel rounded-3xl p-6 sm:p-8 border border-neutral-200/80 dark:border-white/10 dark:border-t-white/20 shadow-2xl space-y-6 animate-slide-up before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent [isolation:isolate]">
+          <div className="relative overflow-hidden glass-panel rounded-3xl p-4 sm:p-8 border border-neutral-200/80 dark:border-white/10 dark:border-t-white/20 shadow-2xl space-y-5 sm:space-y-6 animate-slide-up before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent [isolation:isolate]">
             {/* Subtle background ambient halos */}
             <div className="absolute -top-16 -right-16 w-64 h-64 bg-[#c5a059]/10 rounded-full blur-3xl pointer-events-none" />
             <div className="absolute -bottom-16 -left-16 w-64 h-64 bg-white/5 rounded-full blur-3xl pointer-events-none" />
@@ -634,21 +634,21 @@ export default function QuizPage() {
             )}
 
             {/* Bottom Actions Bar (Précédente / X sur N / Suivante) */}
-            <div className="flex items-center justify-between pt-6 border-t border-neutral-200/80 dark:border-white/10">
+            <div className="flex items-center justify-between gap-2 pt-5 border-t border-neutral-200/80 dark:border-white/10">
               {/* Previous Button */}
               <button
                 type="button"
                 disabled={currentIndex === 0}
                 onClick={handlePreviousQuestion}
-                className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full font-bold text-xs sm:text-sm bg-white dark:bg-[#15151c] text-neutral-700 dark:text-zinc-300 border border-neutral-200 dark:border-white/10 hover:bg-neutral-100 dark:hover:bg-zinc-800 disabled:opacity-30 disabled:cursor-not-allowed transition-all shadow-sm active:scale-95"
+                className="inline-flex items-center gap-1.5 px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full font-bold text-xs sm:text-sm bg-white dark:bg-[#15151c] text-neutral-700 dark:text-zinc-300 border border-neutral-200 dark:border-white/10 hover:bg-neutral-100 dark:hover:bg-zinc-800 disabled:opacity-30 disabled:cursor-not-allowed transition-all shadow-sm active:scale-95 shrink-0 whitespace-nowrap"
               >
-                <ArrowLeft className="w-4 h-4" />
+                <ArrowLeft className="w-4 h-4 shrink-0" />
                 <span>{t("navPrevious")}</span>
               </button>
 
-              {/* Center Page Indicator: 1 sur N */}
-              <span className="text-xs sm:text-sm font-semibold text-neutral-500 dark:text-zinc-400 font-mono">
-                {currentIndex + 1} {t("ofQuestion")} {questions.length}
+              {/* Center Page Indicator: 1 / 25 */}
+              <span className="text-xs sm:text-sm font-bold text-neutral-500 dark:text-zinc-400 font-mono shrink-0 whitespace-nowrap px-1">
+                {currentIndex + 1} / {questions.length}
               </span>
 
               {/* Right Action Button: Valider ou Suivante */}
@@ -661,7 +661,7 @@ export default function QuizPage() {
                       : !currentAns.selectedOptionId
                   }
                   onClick={handleSubmitAnswer}
-                  className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full font-bold text-xs sm:text-sm bg-neutral-900 hover:bg-black text-white dark:bg-[#c5a059] dark:hover:bg-[#d6b26d] dark:text-zinc-950 shadow-md disabled:opacity-35 disabled:cursor-not-allowed transition-all active:scale-95"
+                  className="inline-flex items-center gap-1.5 px-4 sm:px-6 py-2 sm:py-2.5 rounded-full font-bold text-xs sm:text-sm bg-neutral-900 hover:bg-black text-white dark:bg-[#c5a059] dark:hover:bg-[#d6b26d] dark:text-zinc-950 shadow-md disabled:opacity-35 disabled:cursor-not-allowed transition-all active:scale-95 shrink-0 whitespace-nowrap"
                 >
                   <span>{t("validateAnswer")}</span>
                 </button>
@@ -669,18 +669,18 @@ export default function QuizPage() {
                 <button
                   type="button"
                   onClick={handleNextQuestion}
-                  className="inline-flex items-center gap-1.5 px-6 py-2.5 rounded-full font-bold text-xs sm:text-sm bg-neutral-900 hover:bg-black text-white dark:bg-white dark:hover:bg-neutral-100 dark:text-zinc-950 shadow-md transition-all active:scale-95"
+                  className="inline-flex items-center gap-1.5 px-4 sm:px-6 py-2 sm:py-2.5 rounded-full font-bold text-xs sm:text-sm bg-neutral-900 hover:bg-black text-white dark:bg-white dark:hover:bg-neutral-100 dark:text-zinc-950 shadow-md transition-all active:scale-95 shrink-0 whitespace-nowrap"
                 >
                   <span>{t("navNextShort")}</span>
-                  <ArrowRight className="w-4 h-4" />
+                  <ArrowRight className="w-4 h-4 shrink-0" />
                 </button>
               ) : (
                 <button
                   type="button"
                   onClick={handleFinishQuiz}
-                  className="inline-flex items-center gap-1.5 px-6 py-2.5 rounded-full font-bold text-xs sm:text-sm bg-emerald-600 hover:bg-emerald-700 text-white shadow-md shadow-emerald-600/20 transition-all active:scale-95"
+                  className="inline-flex items-center gap-1.5 px-4 sm:px-6 py-2 sm:py-2.5 rounded-full font-bold text-xs sm:text-sm bg-emerald-600 hover:bg-emerald-700 text-white shadow-md shadow-emerald-600/20 transition-all active:scale-95 shrink-0 whitespace-nowrap"
                 >
-                  <Award className="w-4 h-4" />
+                  <Award className="w-4 h-4 shrink-0" />
                   <span>{t("seeFinalResults")}</span>
                 </button>
               )}
@@ -688,7 +688,7 @@ export default function QuizPage() {
           </div>
 
           {/* Numbered Navigation Grid */}
-          <div className="space-y-3 pt-2">
+          <div className="space-y-2.5 pt-2">
             <div className="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-neutral-500 dark:text-zinc-400 px-1">
               <span>{t("questionNavTitle")}</span>
               <span className="text-[11px] font-medium lowercase">
@@ -696,7 +696,7 @@ export default function QuizPage() {
               </span>
             </div>
 
-            <div className="grid grid-cols-5 sm:grid-cols-8 md:grid-cols-10 lg:grid-cols-13 gap-2">
+            <div className="grid grid-cols-5 sm:grid-cols-8 md:grid-cols-10 lg:grid-cols-13 gap-1.5 sm:gap-2">
               {questions.map((q, idx) => {
                 const ans = answers[idx];
                 const isCurrent = idx === currentIndex;
@@ -723,7 +723,7 @@ export default function QuizPage() {
                     key={q.id}
                     type="button"
                     onClick={() => handleJumpToQuestion(idx)}
-                    className={`h-10 rounded-full border text-xs sm:text-sm font-semibold flex items-center justify-center transition-all active:scale-95 ${btnStyle}`}
+                    className={`h-9 sm:h-10 rounded-xl sm:rounded-full border text-xs sm:text-sm font-semibold flex items-center justify-center transition-all active:scale-95 ${btnStyle}`}
                     title={`Question ${idx + 1}`}
                   >
                     {idx + 1}

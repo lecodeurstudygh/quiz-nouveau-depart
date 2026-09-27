@@ -297,7 +297,7 @@ export default function CardsPage() {
                 setShuffledOrder(null);
                 setFocusIndex(0);
               }}
-              className="appearance-none pl-3.5 pr-8 py-1.5 text-xs font-semibold rounded-full bg-neutral-100 dark:bg-zinc-800 border border-neutral-200 dark:border-zinc-700 text-neutral-800 dark:text-zinc-200 hover:border-[#c5a059] focus:outline-none focus:ring-1 focus:ring-[#c5a059] cursor-pointer"
+              className="appearance-none pl-3.5 pr-8 py-1.5 text-xs font-semibold rounded-full bg-neutral-100 dark:bg-zinc-800 border border-neutral-200 dark:border-zinc-700 text-neutral-800 dark:text-zinc-200 hover:border-[#c5a059] focus:outline-none focus:ring-1 focus:ring-[#c5a059] cursor-pointer max-w-[260px] sm:max-w-none truncate"
             >
               {allCourses.map((c) => (
                 <option key={c.id} value={c.id}>

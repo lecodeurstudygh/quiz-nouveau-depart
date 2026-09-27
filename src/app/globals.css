@@ -21,6 +21,13 @@
     --card-border: rgba(255, 255, 255, 0.1);
   }
 
+  html, body {
+    max-width: 100vw;
+    overflow-x: hidden;
+    position: relative;
+    -webkit-overflow-scrolling: touch;
+  }
+
   body {
     @apply antialiased bg-[#f6f6f6] text-[#111111] dark:bg-[#0b0b0e] dark:text-[#f4f4f5] min-h-screen selection:bg-neutral-900 selection:text-white dark:selection:bg-white dark:selection:text-black transition-colors duration-200;
     -webkit-font-smoothing: antialiased;

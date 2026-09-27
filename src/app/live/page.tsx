@@ -257,14 +257,14 @@ function LivePlayerContent() {
           </form>
 
           {/* Link to Host Mode for Teachers */}
-          <div className="pt-2 text-center border-t border-stone-200/80 dark:border-white/10">
+          <div className="pt-3 text-center border-t border-stone-200/80 dark:border-white/10">
             <Link
               href="/live/host"
-              className="text-xs text-stone-500 dark:text-neutral-400 hover:text-[#9e7d32] dark:hover:text-[#d6b26d] transition-colors inline-flex items-center gap-1.5"
+              className="text-xs text-stone-500 dark:text-neutral-400 hover:text-[#9e7d32] dark:hover:text-[#d6b26d] transition-colors flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2"
             >
               <span>{language === "fr" ? "Vous animez la session ?" : "Hosting the session?"}</span>
-              <span className="font-bold underline underline-offset-2">
-                {language === "fr" ? "Écran Enseignant (Zoom) ➔" : "Teacher Screen (Zoom) ➔"}
+              <span className="font-bold underline underline-offset-2 text-[#9e7d32] dark:text-[#d6b26d] whitespace-nowrap">
+                {language === "fr" ? "Écran Enseignant (Zoom) →" : "Teacher Screen (Zoom) →"}
               </span>
             </Link>
           </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import {
   X,
@@ -12,6 +12,9 @@ import {
   Target,
   Shuffle,
   Sparkles,
+  Smartphone,
+  Download,
+  Check,
 } from "lucide-react";
 import { AUDIO_TRACKS } from "@/components/AudioPlayer";
 
@@ -24,6 +27,49 @@ export const SettingsModal: React.FC = () => {
     settings,
     updateSettings,
   } = useLanguage();
+
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+  const [isInstalled, setIsInstalled] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    if (window.matchMedia("(display-mode: standalone)").matches || (window.navigator as any).standalone) {
+      setIsInstalled(true);
+    }
+
+    const handleBeforeInstall = (e: Event) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+    };
+
+    window.addEventListener("beforeinstallprompt", handleBeforeInstall);
+    window.addEventListener("appinstalled", () => {
+      setIsInstalled(true);
+      setDeferredPrompt(null);
+    });
+
+    return () => {
+      window.removeEventListener("beforeinstallprompt", handleBeforeInstall);
+    };
+  }, []);
+
+  const handleInstallPWA = async () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      if (outcome === "accepted") {
+        setIsInstalled(true);
+        setDeferredPrompt(null);
+      }
+    } else {
+      alert(
+        language === "fr"
+          ? "Pour installer l'application sur votre téléphone :\n\n• Sur Android (Chrome) : Touchez le menu ⋮ en haut à droite > 'Installer l'application'\n\n• Sur iPhone (Safari) : Touchez l'icône Partager (carré avec flèche) > 'Sur l'écran d'accueil'"
+          : "To install the app on your mobile device:\n\n• On Android (Chrome): Tap the ⋮ menu in the top right > 'Install app'\n\n• On iPhone (Safari): Tap the Share button (square with arrow) > 'Add to Home Screen'"
+      );
+    }
+  };
 
   // Close with Escape key
   useEffect(() => {
@@ -350,6 +396,50 @@ export const SettingsModal: React.FC = () => {
               <RotateCcw className="w-3.5 h-3.5" />
               <span>{t("resetDeckBtn")}</span>
             </button>
+          </div>
+
+          {/* 4. App Installation (PWA) */}
+          <div className="pt-4 border-t border-neutral-200/80 dark:border-white/10 space-y-3">
+            <div className="flex items-center justify-between gap-3">
+              <div>
+                <p className="font-semibold text-sm text-neutral-900 dark:text-white flex items-center gap-1.5">
+                  <Smartphone className="w-4 h-4 text-[#9e7d32] dark:text-[#c5a059]" />
+                  <span>{language === "fr" ? "Installer comme une application" : "Install as Mobile App"}</span>
+                </p>
+                <p className="text-xs text-neutral-500 dark:text-zinc-400">
+                  {language === "fr"
+                    ? "Plein écran sans barre d'adresse, icône sur l'écran d'accueil"
+                    : "Full-screen standalone, home screen icon"}
+                </p>
+              </div>
+
+              {isInstalled ? (
+                <span className="px-3.5 py-1.5 rounded-full text-xs font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950/60 border border-emerald-300 dark:border-emerald-800 flex items-center gap-1 shrink-0">
+                  <Check className="w-3.5 h-3.5" />
+                  <span>{language === "fr" ? "Installée" : "Installed"}</span>
+                </span>
+              ) : (
+                <button
+                  type="button"
+                  onClick={handleInstallPWA}
+                  className="px-4 py-2 rounded-full text-xs font-bold text-neutral-950 bg-[#c5a059] hover:bg-[#d6b26d] transition-all flex items-center gap-1.5 active:scale-95 shadow-sm shrink-0"
+                >
+                  <Download className="w-3.5 h-3.5" />
+                  <span>{language === "fr" ? "Installer" : "Install"}</span>
+                </button>
+              )}
+            </div>
+
+            {!isInstalled && (
+              <div className="text-[11px] text-neutral-600 dark:text-zinc-400 bg-neutral-100/90 dark:bg-zinc-900/60 p-3.5 rounded-2xl border border-neutral-200 dark:border-white/5 space-y-1 leading-relaxed">
+                <p>
+                  <span className="font-bold text-neutral-900 dark:text-zinc-200">Android (Chrome) :</span> {language === "fr" ? "Menu ⋮ en haut à droite > « Installer l'application »" : "Menu ⋮ in top right > « Install app »"}
+                </p>
+                <p>
+                  <span className="font-bold text-neutral-900 dark:text-zinc-200">iPhone (Safari) :</span> {language === "fr" ? "Bouton Partager > « Sur l'écran d'accueil »" : "Share button > « Add to Home Screen »"}
+                </p>
+              </div>
+            )}
           </div>
         </div>
 

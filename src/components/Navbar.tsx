@@ -27,28 +27,28 @@ export const Navbar: React.FC = () => {
     <>
       {/* Desktop & Main Header */}
       <header className="sticky top-0 z-40 w-full glass-nav backdrop-blur-md">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16 gap-2 sm:gap-4">
+        <div className="max-w-7xl mx-auto px-2.5 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-14 sm:h-16 gap-1.5 sm:gap-4">
             {/* Logo / Brand */}
-            <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+            <div className="flex items-center gap-2 sm:gap-3 shrink-0 min-w-0">
               <Link
                 href="/"
-                className="flex items-center gap-2.5 group transition-transform duration-200 active:scale-95 shrink-0"
+                className="flex items-center gap-2 sm:gap-2.5 group transition-transform duration-200 active:scale-95 shrink-0"
               >
-                <div className="w-9 h-9 rounded-full bg-neutral-900 dark:bg-white text-white dark:text-neutral-950 flex items-center justify-center shadow-sm shrink-0 border border-neutral-700/20 dark:border-neutral-200">
-                  <Sparkles className="w-4 h-4 text-[#c5a059] fill-[#c5a059]" />
+                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-neutral-900 dark:bg-white text-white dark:text-neutral-950 flex items-center justify-center shadow-sm shrink-0 border border-neutral-700/20 dark:border-neutral-200">
+                  <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#c5a059] fill-[#c5a059]" />
                 </div>
-                <div className="flex flex-col shrink-0">
-                  <span className="text-sm sm:text-base md:text-lg font-black tracking-tight text-neutral-900 dark:text-white whitespace-nowrap group-hover:text-neutral-600 dark:group-hover:text-neutral-300 transition-colors">
+                <div className="flex flex-col shrink min-w-0">
+                  <span className="text-xs sm:text-base md:text-lg font-black tracking-tight text-neutral-900 dark:text-white truncate group-hover:text-neutral-600 dark:group-hover:text-neutral-300 transition-colors">
                     {t("appName")}
                   </span>
-                  <span className="text-[9px] sm:text-[10px] md:text-[11px] font-bold text-[#9e7d32] dark:text-[#c5a059] tracking-wider uppercase whitespace-nowrap">
+                  <span className="text-[8px] sm:text-[10px] md:text-[11px] font-bold text-[#9e7d32] dark:text-[#c5a059] tracking-wider uppercase truncate">
                     {t("appTagline")}
                   </span>
                 </div>
               </Link>
 
-              {/* Course Switcher Pill Button (10 Modules) */}
+              {/* Desktop Course Switcher Pill Button (10 Modules) */}
               <button
                 type="button"
                 onClick={() => setIsCourseMenuOpen(true)}
@@ -89,29 +89,29 @@ export const Navbar: React.FC = () => {
             </nav>
 
             {/* Right Action Bar: Course Menu, Language Selector, Theme Switch & Settings */}
-            <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+            <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
               {/* Mobile Course Switcher Button */}
               <button
                 type="button"
                 onClick={() => setIsCourseMenuOpen(true)}
-                className="lg:hidden flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-neutral-100 dark:bg-zinc-900 text-neutral-800 dark:text-zinc-200 border border-neutral-200 dark:border-zinc-800 shrink-0"
+                className="lg:hidden flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-neutral-100 dark:bg-zinc-900 hover:bg-neutral-200/70 dark:hover:bg-zinc-800 text-neutral-800 dark:text-zinc-200 border border-neutral-200 dark:border-zinc-800 shrink-0 h-8 sm:h-9 active:scale-95 transition-all shadow-sm"
                 title={t("openCourseMenu")}
               >
-                <Compass className="w-3.5 h-3.5 text-[#c5a059]" />
-                <span className="font-mono">{language === "fr" ? "S" : "W"}{currentCourse.weekNumber}</span>
-                <ChevronDown className="w-3 h-3 text-neutral-400" />
+                <Compass className="w-3.5 h-3.5 text-[#c5a059] shrink-0" />
+                <span className="font-mono text-xs">{language === "fr" ? "S" : "W"}{currentCourse.weekNumber}</span>
+                <ChevronDown className="w-3 h-3 text-neutral-400 shrink-0" />
               </button>
 
               {/* Single Compact Language Toggle Button (FR / EN) */}
               <button
                 type="button"
                 onClick={() => setLanguage(language === "fr" ? "en" : "fr")}
-                className="h-9 sm:h-10 px-3 rounded-full flex items-center gap-1.5 text-xs font-bold bg-neutral-100 dark:bg-zinc-900 hover:bg-neutral-200/70 dark:hover:bg-zinc-800 border border-neutral-200 dark:border-zinc-800 transition-all duration-200 active:scale-95 shadow-sm shrink-0"
+                className="h-8 sm:h-9 px-2 sm:px-2.5 rounded-full flex items-center gap-1 text-xs font-bold bg-neutral-100 dark:bg-zinc-900 hover:bg-neutral-200/70 dark:hover:bg-zinc-800 border border-neutral-200 dark:border-zinc-800 transition-all duration-200 active:scale-95 shadow-sm shrink-0"
                 title={language === "fr" ? "Passer en anglais (Switch to English)" : "Passer en français (Switch to French)"}
                 aria-label="Toggle language FR/EN"
               >
-                <span className="text-sm">{language === "fr" ? "🇫🇷" : "🇬🇧"}</span>
-                <span className="font-black text-neutral-800 dark:text-zinc-200">
+                <span className="text-xs">{language === "fr" ? "🇫🇷" : "🇬🇧"}</span>
+                <span className="font-black text-[11px] sm:text-xs text-neutral-800 dark:text-zinc-200">
                   {language === "fr" ? "FR" : "EN"}
                 </span>
               </button>
@@ -120,14 +120,14 @@ export const Navbar: React.FC = () => {
               <button
                 type="button"
                 onClick={toggleTheme}
-                className="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-neutral-600 dark:text-zinc-300 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-200/70 dark:hover:bg-zinc-800 border border-neutral-200 dark:border-zinc-800 transition-all duration-200 active:scale-95 shadow-sm"
+                className="w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center text-neutral-600 dark:text-zinc-300 hover:text-neutral-900 dark:hover:text-white bg-neutral-100 dark:bg-zinc-900 hover:bg-neutral-200/70 dark:hover:bg-zinc-800 border border-neutral-200 dark:border-zinc-800 transition-all duration-200 active:scale-95 shadow-sm shrink-0"
                 title={settings.theme === "dark" ? (language === "fr" ? "Passer en mode clair" : "Switch to light mode") : (language === "fr" ? "Passer en mode sombre" : "Switch to dark mode")}
                 aria-label="Toggle light/dark theme"
               >
                 {settings.theme === "dark" ? (
-                  <Sun className="w-4 h-4 text-[#c5a059] hover:rotate-45 transition-transform" />
+                  <Sun className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#c5a059] hover:rotate-45 transition-transform" />
                 ) : (
-                  <Moon className="w-4 h-4 text-neutral-700 hover:-rotate-12 transition-transform" />
+                  <Moon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-neutral-700 hover:-rotate-12 transition-transform" />
                 )}
               </button>
 
@@ -135,11 +135,11 @@ export const Navbar: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setIsSettingsOpen(true)}
-                className="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-neutral-500 dark:text-zinc-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-zinc-800 border border-transparent hover:border-neutral-200 dark:hover:border-zinc-700 transition-all duration-200 active:scale-95"
+                className="w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center text-neutral-600 dark:text-zinc-300 hover:text-neutral-900 dark:hover:text-white bg-neutral-100 dark:bg-zinc-900 hover:bg-neutral-200/70 dark:hover:bg-zinc-800 border border-neutral-200 dark:border-zinc-800 transition-all duration-200 active:scale-95 shadow-sm shrink-0"
                 title={t("navSettings")}
                 aria-label={t("navSettings")}
               >
-                <Settings className="w-4 h-4 sm:w-5 sm:h-5" />
+                <Settings className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               </button>
             </div>
           </div>
@@ -154,35 +154,37 @@ export const Navbar: React.FC = () => {
 
       {/* Mobile Bottom Navigation Bar (Hidden during full-screen Live game) */}
       {!pathname.startsWith("/live") && (
-        <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-[#131313]/95 border-t border-neutral-200 dark:border-zinc-800 backdrop-blur-xl px-4 py-2 pb-safe">
-        <div className="flex items-center justify-between max-w-md mx-auto px-1">
-          {navLinks.map((link) => {
-            const Icon = link.icon;
-            const isActive = pathname === link.href || (link.href === "/live" && pathname.startsWith("/live"));
-            return (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`flex flex-col items-center gap-0.5 py-1 px-2 rounded-xl transition-all duration-200 relative ${
-                  isActive ? "text-neutral-950 dark:text-white font-semibold" : "text-neutral-500 dark:text-zinc-400 hover:text-neutral-900 dark:hover:text-zinc-200"
-                }`}
-              >
-                <div
-                  className={`p-1.5 rounded-full transition-all relative ${
-                    isActive ? "bg-neutral-900 text-white dark:bg-white dark:text-neutral-950" : ""
+        <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-[#0c0c11]/95 border-t border-neutral-200/80 dark:border-white/10 backdrop-blur-2xl px-1 py-1 pb-[calc(env(safe-area-inset-bottom,0px)+4px)] shadow-lg">
+          <div className="grid grid-cols-5 w-full max-w-md mx-auto items-center">
+            {navLinks.map((link) => {
+              const Icon = link.icon;
+              const isActive = pathname === link.href || (link.href === "/live" && pathname.startsWith("/live"));
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`flex flex-col items-center justify-center py-1 rounded-xl transition-all duration-200 relative w-full ${
+                    isActive ? "text-neutral-950 dark:text-white font-bold" : "text-neutral-500 dark:text-zinc-400 hover:text-neutral-900 dark:hover:text-zinc-200"
                   }`}
                 >
-                  <Icon className="w-4 h-4 sm:w-5 sm:h-5" />
-                  {link.isLive && (
-                    <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-                  )}
-                </div>
-                <span className="text-[10px] font-medium tracking-tight">{link.label}</span>
-              </Link>
-            );
-          })}
-        </div>
-      </nav>
+                  <div
+                    className={`p-1.5 rounded-full transition-all relative ${
+                      isActive ? "bg-neutral-900 text-white dark:bg-white dark:text-neutral-950 shadow-sm" : ""
+                    }`}
+                  >
+                    <Icon className="w-4 h-4" />
+                    {link.isLive && (
+                      <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+                    )}
+                  </div>
+                  <span className="text-[10px] leading-tight font-medium tracking-tight truncate max-w-full px-0.5 text-center">
+                    {link.label}
+                  </span>
+                </Link>
+              );
+            })}
+          </div>
+        </nav>
       )}
     </>
   );

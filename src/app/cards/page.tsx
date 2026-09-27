@@ -18,6 +18,7 @@ import {
   Grid,
   X,
 } from "lucide-react";
+import { CustomDropdown, DropdownOption } from "@/components/CustomDropdown";
 
 // Semantic synonym clusters for natural exploration in FR & EN
 const SEMANTIC_CLUSTERS: { name: { fr: string; en: string }; terms: string[] }[] = [
@@ -260,6 +261,71 @@ export default function CardsPage() {
 
   const currentFocusVerse = filteredVerses[focusIndex];
 
+  // Dropdown options for custom mobile & desktop menus
+  const weekOptions: DropdownOption[] = useMemo(() => {
+    const list: DropdownOption[] = allCourses.map((c) => ({
+      value: c.id,
+      label:
+        language === "fr"
+          ? `Semaine ${c.weekNumber} : ${c.title.fr} (${c.verses.length})`
+          : `Week ${c.weekNumber}: ${c.title.en} (${c.verses.length})`,
+    }));
+    list.push({
+      value: "all",
+      label:
+        language === "fr"
+          ? `Toutes les semaines (${getAllVerses().length})`
+          : `All Weeks (${getAllVerses().length})`,
+    });
+    return list;
+  }, [language]);
+
+  const themeOptions: DropdownOption[] = useMemo(() => {
+    return [
+      {
+        value: "",
+        label: language === "fr" ? "Tous les thèmes" : "All Themes",
+      },
+      ...SEMANTIC_CLUSTERS.map((cluster) => ({
+        value: cluster.name[language],
+        label: cluster.name[language],
+      })),
+    ];
+  }, [language]);
+
+  const statusOptions: DropdownOption[] = useMemo(() => {
+    return [
+      {
+        value: "all",
+        label:
+          language === "fr"
+            ? `Tous les versets (${baseVerses.length})`
+            : `All Verses (${baseVerses.length})`,
+      },
+      {
+        value: "key",
+        label:
+          language === "fr"
+            ? `Versets Clés (${keyCount})`
+            : `Key Verses (${keyCount})`,
+      },
+      {
+        value: "memorized",
+        label:
+          language === "fr"
+            ? `Mémorisés (${currentMemorizedCount})`
+            : `Memorized (${currentMemorizedCount})`,
+      },
+      {
+        value: "toReview",
+        label:
+          language === "fr"
+            ? `À réviser (${baseVerses.length - currentMemorizedCount})`
+            : `To Review (${baseVerses.length - currentMemorizedCount})`,
+      },
+    ];
+  }, [baseVerses.length, keyCount, currentMemorizedCount, language]);
+
   return (
     <div className="space-y-6 animate-fade-in">
       {/* Sober Header: Clean Title on Left, Compact Counter on Right */}
@@ -286,90 +352,43 @@ export default function CardsPage() {
       <div className="flex flex-wrap items-center justify-between gap-2.5 p-2.5 sm:p-3 rounded-3xl bg-white/90 dark:bg-zinc-900/80 border border-neutral-200 dark:border-zinc-800 shadow-sm backdrop-blur-md">
         {/* Dropdowns Group */}
         <div className="flex flex-wrap items-center gap-2">
-          {/* Week Select Dropdown */}
-          <div className="relative">
-            <select
-              value={weekFilter}
-              onChange={(e) => {
-                const val = e.target.value;
-                setWeekFilter(val);
-                if (val !== "all") setSelectedWeekId(val);
-                setShuffledOrder(null);
-                setFocusIndex(0);
-              }}
-              className="appearance-none pl-3.5 pr-8 py-1.5 text-xs font-semibold rounded-full bg-neutral-100 dark:bg-zinc-800 border border-neutral-200 dark:border-zinc-700 text-neutral-800 dark:text-zinc-200 hover:border-[#c5a059] focus:outline-none focus:ring-1 focus:ring-[#c5a059] cursor-pointer max-w-[260px] sm:max-w-none truncate"
-            >
-              {allCourses.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {language === "fr"
-                    ? `Semaine ${c.weekNumber} : ${c.title.fr} (${c.verses.length})`
-                    : `Week ${c.weekNumber}: ${c.title.en} (${c.verses.length})`}
-                </option>
-              ))}
-              <option value="all">
-                {language === "fr"
-                  ? `Toutes les semaines (${getAllVerses().length})`
-                  : `All Weeks (${getAllVerses().length})`}
-              </option>
-            </select>
-            <ChevronDown className="w-3.5 h-3.5 absolute right-2.5 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none" />
-          </div>
+          {/* Week Select Custom Dropdown */}
+          <CustomDropdown
+            title={language === "fr" ? "Chapitre / Semaine" : "Chapter / Week"}
+            value={weekFilter}
+            options={weekOptions}
+            onChange={(val) => {
+              setWeekFilter(val);
+              if (val !== "all") setSelectedWeekId(val);
+              setShuffledOrder(null);
+              setFocusIndex(0);
+            }}
+            maxTriggerWidth="max-w-[200px] sm:max-w-xs"
+          />
 
-          {/* Theme Select Dropdown */}
-          <div className="relative">
-            <select
-              value={selectedSemanticTheme || ""}
-              onChange={(e) => {
-                setSelectedSemanticTheme(e.target.value ? e.target.value : null);
-                setFocusIndex(0);
-              }}
-              className="appearance-none pl-3.5 pr-8 py-1.5 text-xs font-semibold rounded-full bg-neutral-100 dark:bg-zinc-800 border border-neutral-200 dark:border-zinc-700 text-neutral-800 dark:text-zinc-200 hover:border-[#c5a059] focus:outline-none focus:ring-1 focus:ring-[#c5a059] cursor-pointer"
-            >
-              <option value="">
-                {language === "fr" ? "Tous les thèmes" : "All Themes"}
-              </option>
-              {SEMANTIC_CLUSTERS.map((cluster) => (
-                <option key={cluster.name.fr} value={cluster.name[language]}>
-                  {cluster.name[language]}
-                </option>
-              ))}
-            </select>
-            <ChevronDown className="w-3.5 h-3.5 absolute right-2.5 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none" />
-          </div>
+          {/* Theme Select Custom Dropdown */}
+          <CustomDropdown
+            title={language === "fr" ? "Thème Biblique" : "Biblical Theme"}
+            value={selectedSemanticTheme || ""}
+            options={themeOptions}
+            onChange={(val) => {
+              setSelectedSemanticTheme(val ? val : null);
+              setFocusIndex(0);
+            }}
+            maxTriggerWidth="max-w-[140px] sm:max-w-[180px]"
+          />
 
-          {/* Verses Status Select Dropdown */}
-          <div className="relative">
-            <select
-              value={filterMode}
-              onChange={(e) => {
-                setFilterMode(e.target.value as "all" | "key" | "memorized" | "toReview");
-                setFocusIndex(0);
-              }}
-              className="appearance-none pl-3.5 pr-8 py-1.5 text-xs font-semibold rounded-full bg-neutral-100 dark:bg-zinc-800 border border-neutral-200 dark:border-zinc-700 text-neutral-800 dark:text-zinc-200 hover:border-[#c5a059] focus:outline-none focus:ring-1 focus:ring-[#c5a059] cursor-pointer"
-            >
-              <option value="all">
-                {language === "fr"
-                  ? `Tous les versets (${baseVerses.length})`
-                  : `All Verses (${baseVerses.length})`}
-              </option>
-              <option value="key">
-                {language === "fr"
-                  ? `Versets Clés (${keyCount})`
-                  : `Key Verses (${keyCount})`}
-              </option>
-              <option value="memorized">
-                {language === "fr"
-                  ? `Mémorisés (${currentMemorizedCount})`
-                  : `Memorized (${currentMemorizedCount})`}
-              </option>
-              <option value="toReview">
-                {language === "fr"
-                  ? `À réviser (${baseVerses.length - currentMemorizedCount})`
-                  : `To Review (${baseVerses.length - currentMemorizedCount})`}
-              </option>
-            </select>
-            <ChevronDown className="w-3.5 h-3.5 absolute right-2.5 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none" />
-          </div>
+          {/* Verses Status Select Custom Dropdown */}
+          <CustomDropdown
+            title={language === "fr" ? "Statut de mémorisation" : "Memorization Status"}
+            value={filterMode}
+            options={statusOptions}
+            onChange={(val) => {
+              setFilterMode(val as "all" | "key" | "memorized" | "toReview");
+              setFocusIndex(0);
+            }}
+            maxTriggerWidth="max-w-[140px] sm:max-w-[180px]"
+          />
         </div>
 
         {/* Right Search, Actions & Mode Switcher */}

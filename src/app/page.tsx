@@ -18,6 +18,8 @@ import {
   Flame,
   MessageSquareText,
   ChevronDown,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 
 // Tailored harmonious metallic styling for Hillsong-style pillar badges
@@ -81,6 +83,43 @@ export default function CourseOverviewPage() {
     memorizedIds.includes(v.id)
   ).length;
 
+  const [mobileVerseIdx, setMobileVerseIdx] = useState(0);
+  const [touchStartX, setTouchStartX] = useState<number | null>(null);
+  const [touchStartY, setTouchStartY] = useState<number | null>(null);
+
+  // Reset mobile carousel when course changes
+  useEffect(() => {
+    setMobileVerseIdx(0);
+  }, [selectedWeekId]);
+
+  const weekPrefix = language === "fr" ? "S" : "W";
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStartX(e.touches[0].clientX);
+    setTouchStartY(e.touches[0].clientY);
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX === null || touchStartY === null) return;
+    const deltaX = e.changedTouches[0].clientX - touchStartX;
+    const deltaY = e.changedTouches[0].clientY - touchStartY;
+    setTouchStartX(null);
+    setTouchStartY(null);
+
+    // Genuine horizontal swipe
+    if (Math.abs(deltaX) > 40 && Math.abs(deltaX) > Math.abs(deltaY) * 1.3) {
+      const total = Math.min(4, keyVerses.length);
+      if (total <= 1) return;
+      if (deltaX < 0) {
+        // Swipe left -> Next verse
+        setMobileVerseIdx((prev) => (prev + 1) % total);
+      } else {
+        // Swipe right -> Prev verse
+        setMobileVerseIdx((prev) => (prev - 1 + total) % total);
+      }
+    }
+  };
+
   return (
     <div className="space-y-10 animate-fade-in">
       {/* Course Modal */}
@@ -101,7 +140,7 @@ export default function CourseOverviewPage() {
           >
             <div className="flex items-center gap-2.5 min-w-0">
               <div className="w-8 h-8 rounded-full bg-[#c5a059]/15 text-[#9e7d32] dark:text-[#d6b26d] flex items-center justify-center font-bold text-xs shrink-0 border border-[#c5a059]/30">
-                S{currentWeek.weekNumber}
+                {weekPrefix}{currentWeek.weekNumber}
               </div>
               <div className="text-left min-w-0">
                 <span className="text-[10px] font-bold uppercase tracking-wider text-[#9e7d32] dark:text-[#d6b26d] block">
@@ -134,7 +173,7 @@ export default function CourseOverviewPage() {
                       : "bg-white dark:bg-[#15151c] text-neutral-600 dark:text-zinc-400 border border-neutral-200 dark:border-white/10 hover:text-neutral-900 dark:hover:text-white"
                   }`}
                 >
-                  S{c.weekNumber}
+                  {weekPrefix}{c.weekNumber}
                 </button>
               );
             })}
@@ -224,25 +263,25 @@ export default function CourseOverviewPage() {
           </p>
 
           {/* Call to actions in Hillsong Instrumentals style */}
-          <div className="pt-4 flex flex-wrap items-center gap-3">
+          <div className="pt-4 flex flex-wrap items-center gap-2 sm:gap-3">
             <Link
               href="/cards"
-              className="inline-flex items-center gap-2 px-7 py-3 rounded-full bg-neutral-900 text-white dark:bg-transparent dark:border dark:border-white dark:text-white dark:hover:bg-white dark:hover:text-black font-semibold text-xs uppercase tracking-wider shadow-sm transition-all active:scale-95 backdrop-blur-md"
+              className="inline-flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-6 py-2.5 sm:py-3 rounded-full bg-neutral-900 text-white dark:bg-transparent dark:border dark:border-white dark:text-white dark:hover:bg-white dark:hover:text-black font-semibold text-[10.5px] sm:text-xs uppercase tracking-wider shadow-sm transition-all active:scale-95 backdrop-blur-md whitespace-nowrap"
             >
-              <Layers className="w-4 h-4" />
+              <Layers className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
               <span>
                 {language === "fr"
                   ? `Mémoriser les versets (${currentWeek.verses.length})`
                   : `Memorize Verses (${currentWeek.verses.length})`}
               </span>
-              <ArrowRight className="w-4 h-4" />
+              <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
             </Link>
 
             <Link
               href="/quiz"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white dark:bg-black/50 text-neutral-800 dark:text-zinc-200 hover:text-neutral-950 dark:hover:text-white font-semibold text-xs uppercase tracking-wider border border-neutral-200 dark:border-white/15 hover:bg-neutral-50 dark:hover:bg-white/10 transition-all active:scale-95 shadow-sm backdrop-blur-md"
+              className="inline-flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-5 py-2.5 sm:py-3 rounded-full bg-white dark:bg-black/50 text-neutral-800 dark:text-zinc-200 hover:text-neutral-950 dark:hover:text-white font-semibold text-[10.5px] sm:text-xs uppercase tracking-wider border border-neutral-200 dark:border-white/15 hover:bg-neutral-50 dark:hover:bg-white/10 transition-all active:scale-95 shadow-sm backdrop-blur-md whitespace-nowrap"
             >
-              <HelpCircle className="w-4 h-4 text-[#c5a059]" />
+              <HelpCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#c5a059] shrink-0" />
               <span>
                 {language === "fr"
                   ? `Lancer le Quiz (${currentWeek.questions.length} Q)`
@@ -252,9 +291,9 @@ export default function CourseOverviewPage() {
 
             <Link
               href="/discussion"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-neutral-100 dark:bg-black/50 text-neutral-800 dark:text-zinc-200 hover:text-neutral-950 dark:hover:text-white font-semibold text-xs uppercase tracking-wider border border-neutral-200 dark:border-white/15 hover:bg-neutral-200/80 dark:hover:bg-white/10 transition-all active:scale-95 shadow-sm backdrop-blur-md"
+              className="inline-flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-5 py-2.5 sm:py-3 rounded-full bg-neutral-100 dark:bg-black/50 text-neutral-800 dark:text-zinc-200 hover:text-neutral-950 dark:hover:text-white font-semibold text-[10.5px] sm:text-xs uppercase tracking-wider border border-neutral-200 dark:border-white/15 hover:bg-neutral-200/80 dark:hover:bg-white/10 transition-all active:scale-95 shadow-sm backdrop-blur-md whitespace-nowrap"
             >
-              <MessageSquareText className="w-4 h-4 text-[#c5a059]" />
+              <MessageSquareText className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#c5a059] shrink-0" />
               <span>
                 {language === "fr"
                   ? `Discussion (${currentWeek.discussionCards?.length || 0} Q&A)`
@@ -358,34 +397,110 @@ export default function CourseOverviewPage() {
 
       {/* Featured 3D Verses Carousel / Cards Preview */}
       <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-xl sm:text-2xl font-bold text-neutral-900 dark:text-white tracking-tight flex items-center gap-2">
-              <BookOpen className="w-5 h-5 text-[#9e7d32] dark:text-[#c5a059]" />
-              <span>
+        {/* Section Header */}
+        <div className="flex items-center justify-between gap-2">
+          <div className="min-w-0">
+            <h2 className="text-base sm:text-2xl font-bold text-neutral-900 dark:text-white tracking-tight flex items-center gap-1.5 sm:gap-2 truncate">
+              <BookOpen className="w-4 h-4 sm:w-5 sm:h-5 text-[#9e7d32] dark:text-[#c5a059] shrink-0" />
+              <span className="truncate">
                 {language === "fr"
                   ? "Versets Clés à Mémoriser"
                   : "Key Memory Verses"}
               </span>
             </h2>
-            <p className="text-xs text-neutral-500 dark:text-zinc-400">
+            <p className="text-[11px] sm:text-xs text-neutral-500 dark:text-zinc-400 truncate hidden xs:block">
               {t("flipCardInstruction")}
             </p>
           </div>
           <Link
             href="/cards"
-            className="text-xs font-bold text-[#9e7d32] dark:text-[#c5a059] hover:text-neutral-900 dark:hover:text-white flex items-center gap-1 transition-colors"
+            className="text-[11px] sm:text-xs font-bold text-[#9e7d32] dark:text-[#c5a059] hover:text-neutral-900 dark:hover:text-white flex items-center gap-1 transition-colors shrink-0 whitespace-nowrap"
           >
             <span>
               {language === "fr"
-                ? `Voir les ${currentWeek.verses.length} versets`
-                : `View all ${currentWeek.verses.length} verses`}
+                ? `Voir les ${currentWeek.verses.length}`
+                : `View all ${currentWeek.verses.length}`}
             </span>
             <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        {/* Mobile View: Single Focus Card with Finger Swipe & Dot Pagination */}
+        <div className="sm:hidden space-y-3">
+          {keyVerses.length > 0 && (
+            <div
+              onTouchStart={handleTouchStart}
+              onTouchEnd={handleTouchEnd}
+              className="touch-pan-y"
+            >
+              {keyVerses.slice(0, 4)[mobileVerseIdx] && (
+                <div key={keyVerses.slice(0, 4)[mobileVerseIdx].id} className="animate-fade-in">
+                  <VerseCard
+                    verse={keyVerses.slice(0, 4)[mobileVerseIdx]}
+                    isMemorized={memorizedIds.includes(keyVerses.slice(0, 4)[mobileVerseIdx].id)}
+                    onToggleMemorized={handleToggleMemorized}
+                  />
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Navigation Controls: Arrows + Dots + Counter */}
+          {keyVerses.length > 1 && (
+            <div className="flex items-center justify-between px-2 pt-1">
+              {/* Prev Button */}
+              <button
+                type="button"
+                onClick={() =>
+                  setMobileVerseIdx((prev) =>
+                    (prev - 1 + Math.min(4, keyVerses.length)) % Math.min(4, keyVerses.length)
+                  )
+                }
+                className="w-8 h-8 rounded-full bg-white dark:bg-zinc-800 border border-neutral-200 dark:border-white/10 text-neutral-700 dark:text-zinc-300 flex items-center justify-center transition-all active:scale-90 shadow-sm"
+                aria-label="Verset précédent"
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+
+              {/* Dots & Counter */}
+              <div className="flex flex-col items-center gap-1">
+                <div className="flex items-center gap-1.5">
+                  {keyVerses.slice(0, 4).map((_, idx) => (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => setMobileVerseIdx(idx)}
+                      className={`h-2 rounded-full transition-all ${
+                        idx === mobileVerseIdx
+                          ? "w-6 bg-[#c5a059]"
+                          : "w-2 bg-neutral-300 dark:bg-white/20 hover:bg-neutral-400"
+                      }`}
+                      aria-label={`Aller au verset ${idx + 1}`}
+                    />
+                  ))}
+                </div>
+                <span className="text-[10px] font-mono text-neutral-500 dark:text-zinc-400 font-semibold">
+                  {mobileVerseIdx + 1} / {Math.min(4, keyVerses.length)} • {language === "fr" ? "Glisser ou Tap" : "Swipe or Tap"}
+                </span>
+              </div>
+
+              {/* Next Button */}
+              <button
+                type="button"
+                onClick={() =>
+                  setMobileVerseIdx((prev) => (prev + 1) % Math.min(4, keyVerses.length))
+                }
+                className="w-8 h-8 rounded-full bg-white dark:bg-zinc-800 border border-neutral-200 dark:border-white/10 text-neutral-700 dark:text-zinc-300 flex items-center justify-center transition-all active:scale-90 shadow-sm"
+                aria-label="Verset suivant"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* Desktop View: 4-Column Grid */}
+        <div className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {keyVerses.slice(0, 4).map((verse) => (
             <VerseCard
               key={verse.id}

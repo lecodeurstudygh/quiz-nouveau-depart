@@ -19,6 +19,7 @@ import {
   BookOpen,
   X,
 } from "lucide-react";
+import { CustomDropdown, DropdownOption } from "@/components/CustomDropdown";
 
 export default function DiscussionPage() {
   const { language, t, selectedWeekId, setSelectedWeekId } = useLanguage();
@@ -102,6 +103,38 @@ export default function DiscussionPage() {
     });
     return Array.from(themes);
   }, [baseCards, language]);
+
+  // Dropdown options for custom mobile & desktop menus
+  const weekOptions: DropdownOption[] = useMemo(() => {
+    const list: DropdownOption[] = allCourses.map((c) => ({
+      value: c.id,
+      label:
+        language === "fr"
+          ? `Semaine ${c.weekNumber} : ${c.title.fr} (${c.discussionCards?.length || 0} Q&A)`
+          : `Week ${c.weekNumber}: ${c.title.en} (${c.discussionCards?.length || 0} Q&A)`,
+    }));
+    list.push({
+      value: "all",
+      label:
+        language === "fr"
+          ? `Toutes les semaines (${getAllDiscussionCards().length} Q&A)`
+          : `All Weeks (${getAllDiscussionCards().length} Q&A)`,
+    });
+    return list;
+  }, [language]);
+
+  const themeOptions: DropdownOption[] = useMemo(() => {
+    return [
+      {
+        value: "",
+        label: language === "fr" ? "Tous les thèmes" : "All Themes",
+      },
+      ...availableThemes.map((th) => ({
+        value: th,
+        label: th,
+      })),
+    ];
+  }, [availableThemes, language]);
 
   const handleShuffle = () => {
     const ids = baseCards.map((c) => c.id).sort(() => Math.random() - 0.5);
@@ -227,57 +260,32 @@ export default function DiscussionPage() {
       <div className="flex flex-wrap items-center justify-between gap-2.5 p-2.5 sm:p-3 rounded-3xl bg-white/90 dark:bg-zinc-900/80 border border-neutral-200 dark:border-zinc-800 shadow-sm backdrop-blur-md">
         {/* Dropdowns Group */}
         <div className="flex flex-wrap items-center gap-2">
-          {/* Week Select Dropdown */}
-          <div className="relative">
-            <select
-              value={weekFilter}
-              onChange={(e) => {
-                const val = e.target.value;
-                setWeekFilter(val);
-                if (val !== "all") setSelectedWeekId(val);
-                setShuffledOrder(null);
+          {/* Week Select Custom Dropdown */}
+          <CustomDropdown
+            title={language === "fr" ? "Chapitre / Semaine" : "Chapter / Week"}
+            value={weekFilter}
+            options={weekOptions}
+            onChange={(val) => {
+              setWeekFilter(val);
+              if (val !== "all") setSelectedWeekId(val);
+              setShuffledOrder(null);
+              setFocusIndex(0);
+            }}
+            maxTriggerWidth="max-w-[200px] sm:max-w-xs"
+          />
+
+          {/* Theme Select Custom Dropdown */}
+          {availableThemes.length > 0 && (
+            <CustomDropdown
+              title={language === "fr" ? "Thème de réflexion" : "Reflection Theme"}
+              value={selectedTheme || ""}
+              options={themeOptions}
+              onChange={(val) => {
+                setSelectedTheme(val ? val : null);
                 setFocusIndex(0);
               }}
-              className="appearance-none pl-3.5 pr-8 py-1.5 text-xs font-semibold rounded-full bg-neutral-100 dark:bg-zinc-800 border border-neutral-200 dark:border-zinc-700 text-neutral-800 dark:text-zinc-200 hover:border-[#c5a059] focus:outline-none focus:ring-1 focus:ring-[#c5a059] cursor-pointer max-w-[260px] sm:max-w-none truncate"
-            >
-              {allCourses.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {language === "fr"
-                    ? `Semaine ${c.weekNumber} : ${c.title.fr} (${c.discussionCards?.length || 0} Q&A)`
-                    : `Week ${c.weekNumber}: ${c.title.en} (${c.discussionCards?.length || 0} Q&A)`}
-                </option>
-              ))}
-              <option value="all">
-                {language === "fr"
-                  ? `Toutes les semaines (${getAllDiscussionCards().length} Q&A)`
-                  : `All Weeks (${getAllDiscussionCards().length} Q&A)`}
-              </option>
-            </select>
-            <ChevronDown className="w-3.5 h-3.5 absolute right-2.5 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none" />
-          </div>
-
-          {/* Theme Select Dropdown */}
-          {availableThemes.length > 0 && (
-            <div className="relative">
-              <select
-                value={selectedTheme || ""}
-                onChange={(e) => {
-                  setSelectedTheme(e.target.value ? e.target.value : null);
-                  setFocusIndex(0);
-                }}
-                className="appearance-none pl-3.5 pr-8 py-1.5 text-xs font-semibold rounded-full bg-neutral-100 dark:bg-zinc-800 border border-neutral-200 dark:border-zinc-700 text-neutral-800 dark:text-zinc-200 hover:border-[#c5a059] focus:outline-none focus:ring-1 focus:ring-[#c5a059] cursor-pointer max-w-[180px] sm:max-w-[220px] truncate"
-              >
-                <option value="">
-                  {language === "fr" ? "Tous les thèmes" : "All Themes"}
-                </option>
-                {availableThemes.map((th) => (
-                  <option key={th} value={th}>
-                    {th}
-                  </option>
-                ))}
-              </select>
-              <ChevronDown className="w-3.5 h-3.5 absolute right-2.5 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none" />
-            </div>
+              maxTriggerWidth="max-w-[140px] sm:max-w-[200px]"
+            />
           )}
         </div>
 

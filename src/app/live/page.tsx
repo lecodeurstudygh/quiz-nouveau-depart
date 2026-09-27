@@ -15,6 +15,7 @@ import {
   Check,
   RotateCcw,
   Volume2,
+  X,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -160,7 +161,17 @@ function LivePlayerContent() {
         <div className="absolute bottom-0 left-0 w-80 h-80 bg-neutral-200/50 dark:bg-white/5 rounded-full blur-3xl pointer-events-none" />
 
         <div className="relative z-10 w-full max-w-md bg-white/95 dark:bg-[#121217] border border-stone-200/90 dark:border-white/10 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6 before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-stone-300 dark:before:via-white/20 before:to-transparent">
-          <div className="text-center space-y-2">
+          {/* Top Close Button to exit to Courses at any time */}
+          <Link
+            href="/"
+            className="absolute top-4 right-4 w-8 h-8 rounded-full bg-stone-100 hover:bg-stone-200 dark:bg-white/10 dark:hover:bg-white/20 text-stone-500 dark:text-zinc-400 hover:text-neutral-900 dark:hover:text-white flex items-center justify-center transition-all active:scale-95 z-20 shadow-sm"
+            title={language === "fr" ? "Fermer et retourner aux cours" : "Close and return to courses"}
+            aria-label="Fermer"
+          >
+            <X className="w-4 h-4" />
+          </Link>
+
+          <div className="text-center space-y-2 pr-6 pl-6">
             <div className="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-widest text-[#9e7d32] dark:text-[#d6b26d] px-3.5 py-1 bg-[#c5a059]/15 border border-[#c5a059]/30 rounded-full shadow-sm">
               <Sparkles className="w-3.5 h-3.5 text-[#c5a059]" />
               <span>{language === "fr" ? "Quiz Live • Nouveau Départ" : "Live Quiz • New Beginnings"}</span>
@@ -276,11 +287,21 @@ function LivePlayerContent() {
   // 2. PLAYER LOBBY (WAITING ROOM)
   if (state.status === "lobby") {
     return (
-      <div className="min-h-[75vh] text-neutral-900 dark:text-white flex flex-col items-center justify-center p-4 sm:p-6 text-center select-none relative overflow-hidden [isolation:isolate]">
+      <div className="min-h-[75vh] text-neutral-900 dark:text-white flex flex-col items-center justify-center p-4 sm:p-6 pb-24 sm:pb-8 text-center select-none relative overflow-hidden [isolation:isolate]">
         <div className="absolute top-0 right-0 w-96 h-96 bg-[#c5a059]/10 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-80 h-80 bg-neutral-200/50 dark:bg-white/5 rounded-full blur-3xl pointer-events-none" />
 
         <div className="relative z-10 w-full max-w-sm bg-white/95 dark:bg-[#121217] border border-stone-200/90 dark:border-white/10 rounded-3xl p-8 shadow-2xl space-y-6 before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-stone-300 dark:before:via-white/20 before:to-transparent">
+          {/* Close button to leave lobby */}
+          <Link
+            href="/"
+            className="absolute top-4 right-4 w-8 h-8 rounded-full bg-stone-100 hover:bg-stone-200 dark:bg-white/10 dark:hover:bg-white/20 text-stone-500 dark:text-zinc-400 hover:text-neutral-900 dark:hover:text-white flex items-center justify-center transition-all active:scale-95 z-20 shadow-sm"
+            title={language === "fr" ? "Quitter la salle d'attente" : "Leave waiting room"}
+            aria-label="Quitter"
+          >
+            <X className="w-4 h-4" />
+          </Link>
+
           <div className="w-24 h-24 rounded-full bg-[#c5a059]/15 border-2 border-[#c5a059]/40 flex items-center justify-center text-5xl mx-auto shadow-xl shadow-[#c5a059]/10">
             {myPlayer?.avatar || avatar}
           </div>
@@ -312,8 +333,18 @@ function LivePlayerContent() {
 
     if (hasAnswered) {
       return (
-        <div className="min-h-[75vh] text-neutral-900 dark:text-white flex flex-col items-center justify-center p-4 sm:p-6 text-center select-none relative overflow-hidden [isolation:isolate]">
+        <div className="min-h-[75vh] text-neutral-900 dark:text-white flex flex-col items-center justify-center p-4 sm:p-6 pb-24 sm:pb-8 text-center select-none relative overflow-hidden [isolation:isolate]">
           <div className="relative z-10 w-full max-w-sm bg-white/95 dark:bg-[#121217] border border-stone-200/90 dark:border-white/10 rounded-3xl p-8 shadow-2xl space-y-4 animate-scale-in before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-stone-300 dark:before:via-white/20 before:to-transparent">
+            {/* Close button */}
+            <Link
+              href="/"
+              className="absolute top-4 right-4 w-8 h-8 rounded-full bg-stone-100 hover:bg-stone-200 dark:bg-white/10 dark:hover:bg-white/20 text-stone-500 dark:text-zinc-400 hover:text-neutral-900 dark:hover:text-white flex items-center justify-center transition-all active:scale-95 z-20 shadow-sm"
+              title={language === "fr" ? "Quitter la partie" : "Leave game"}
+              aria-label="Quitter"
+            >
+              <X className="w-4 h-4" />
+            </Link>
+
             <div className="w-20 h-20 rounded-full bg-[#c5a059]/15 border border-[#c5a059]/40 flex items-center justify-center text-[#9e7d32] dark:text-[#d6b26d] mx-auto shadow-lg shadow-[#c5a059]/15">
               <Check className="w-10 h-10 stroke-[3]" />
             </div>
@@ -331,15 +362,25 @@ function LivePlayerContent() {
     }
 
     return (
-      <div className="min-h-[75vh] text-neutral-900 dark:text-white flex flex-col justify-between p-2 sm:p-6 select-none relative overflow-hidden [isolation:isolate]">
+      <div className="min-h-[75vh] text-neutral-900 dark:text-white flex flex-col justify-between p-2 sm:p-6 pb-24 sm:pb-8 select-none relative overflow-hidden [isolation:isolate]">
         <div className="w-full max-w-md mx-auto flex-1 flex flex-col justify-between py-2 sm:py-4">
           {/* Top Header */}
           <div className="flex items-center justify-between border-b border-stone-200/80 dark:border-white/10 pb-3">
             <div className="text-xs font-bold uppercase tracking-wider text-[#9e7d32] dark:text-[#d6b26d]">
               Q{state.currentQuestionIndex + 1} / {state.totalQuestions}
             </div>
-            <div className="text-xs font-mono font-semibold text-stone-600 dark:text-neutral-400">
-              {myPlayer?.name} • <span className="text-[#9e7d32] dark:text-[#d6b26d] font-bold">{myPlayer?.score} pts</span>
+            <div className="flex items-center gap-3">
+              <div className="text-xs font-mono font-semibold text-stone-600 dark:text-neutral-400">
+                {myPlayer?.name} • <span className="text-[#9e7d32] dark:text-[#d6b26d] font-bold">{myPlayer?.score} pts</span>
+              </div>
+              <Link
+                href="/"
+                className="w-7 h-7 rounded-full bg-stone-100 hover:bg-stone-200 dark:bg-white/10 dark:hover:bg-white/20 text-stone-500 dark:text-zinc-400 flex items-center justify-center transition-colors"
+                title={language === "fr" ? "Quitter la partie" : "Leave game"}
+                aria-label="Quitter"
+              >
+                <X className="w-3.5 h-3.5" />
+              </Link>
             </div>
           </div>
 
@@ -383,7 +424,7 @@ function LivePlayerContent() {
     const points = myPlayer?.lastPointsEarned || 0;
 
     return (
-      <div className="min-h-[75vh] text-neutral-900 dark:text-white flex flex-col items-center justify-center p-4 sm:p-6 text-center select-none relative overflow-hidden [isolation:isolate]">
+      <div className="min-h-[75vh] text-neutral-900 dark:text-white flex flex-col items-center justify-center p-4 sm:p-6 pb-24 sm:pb-8 text-center select-none relative overflow-hidden [isolation:isolate]">
         <div
           className={`w-full max-w-sm rounded-3xl p-8 border shadow-2xl space-y-4 animate-scale-in before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-stone-300 dark:before:via-white/20 before:to-transparent relative overflow-hidden ${
             isCorrect
@@ -391,6 +432,16 @@ function LivePlayerContent() {
               : "bg-rose-50 dark:bg-[#251216] border-rose-300 dark:border-rose-500/50 text-rose-950 dark:text-rose-100 shadow-rose-500/10 dark:shadow-rose-950/40"
           }`}
         >
+          {/* Close button */}
+          <Link
+            href="/"
+            className="absolute top-4 right-4 w-8 h-8 rounded-full bg-stone-100/80 hover:bg-stone-200 dark:bg-white/10 dark:hover:bg-white/20 text-stone-600 dark:text-zinc-300 flex items-center justify-center transition-all active:scale-95 z-20 shadow-sm"
+            title={language === "fr" ? "Quitter la partie" : "Leave game"}
+            aria-label="Quitter"
+          >
+            <X className="w-4 h-4" />
+          </Link>
+
           <div className="text-5xl">
             {isCorrect ? "🎉" : "😅"}
           </div>
@@ -441,8 +492,18 @@ function LivePlayerContent() {
     const myRank = state.leaderboard.find((p) => p.id === playerId)?.rank || "-";
 
     return (
-      <div className="min-h-[75vh] text-neutral-900 dark:text-white flex flex-col items-center justify-center p-4 sm:p-6 text-center select-none relative overflow-hidden [isolation:isolate]">
+      <div className="min-h-[75vh] text-neutral-900 dark:text-white flex flex-col items-center justify-center p-4 sm:p-6 pb-24 sm:pb-8 text-center select-none relative overflow-hidden [isolation:isolate]">
         <div className="w-full max-w-sm bg-white/95 dark:bg-[#121217] border border-stone-200/90 dark:border-white/10 rounded-3xl p-8 shadow-2xl space-y-6 before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-stone-300 dark:before:via-white/20 before:to-transparent relative overflow-hidden">
+          {/* Close button */}
+          <Link
+            href="/"
+            className="absolute top-4 right-4 w-8 h-8 rounded-full bg-stone-100 hover:bg-stone-200 dark:bg-white/10 dark:hover:bg-white/20 text-stone-500 dark:text-zinc-400 hover:text-neutral-900 dark:hover:text-white flex items-center justify-center transition-all active:scale-95 z-20 shadow-sm"
+            title={language === "fr" ? "Quitter la partie" : "Leave game"}
+            aria-label="Quitter"
+          >
+            <X className="w-4 h-4" />
+          </Link>
+
           <div className="w-20 h-20 rounded-full bg-[#c5a059]/15 border border-[#c5a059]/30 flex items-center justify-center text-[#9e7d32] dark:text-[#d6b26d] mx-auto shadow-lg shadow-[#c5a059]/10">
             <Trophy className="w-10 h-10" />
           </div>
@@ -474,8 +535,18 @@ function LivePlayerContent() {
     const myRank = state.leaderboard.find((p) => p.id === playerId)?.rank || "-";
 
     return (
-      <div className="min-h-[75vh] text-neutral-900 dark:text-white flex flex-col items-center justify-center p-4 sm:p-6 text-center select-none relative overflow-hidden [isolation:isolate]">
+      <div className="min-h-[75vh] text-neutral-900 dark:text-white flex flex-col items-center justify-center p-4 sm:p-6 pb-24 sm:pb-8 text-center select-none relative overflow-hidden [isolation:isolate]">
         <div className="w-full max-w-sm bg-white/95 dark:bg-[#121217] border border-stone-200/90 dark:border-[#c5a059]/30 rounded-3xl p-8 shadow-2xl space-y-6 before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-stone-300 dark:before:via-white/20 before:to-transparent relative overflow-hidden">
+          {/* Close button */}
+          <Link
+            href="/"
+            className="absolute top-4 right-4 w-8 h-8 rounded-full bg-stone-100 hover:bg-stone-200 dark:bg-white/10 dark:hover:bg-white/20 text-stone-500 dark:text-zinc-400 hover:text-neutral-900 dark:hover:text-white flex items-center justify-center transition-all active:scale-95 z-20 shadow-sm"
+            title={language === "fr" ? "Retour à l'accueil" : "Back to Home"}
+            aria-label="Quitter"
+          >
+            <X className="w-4 h-4" />
+          </Link>
+
           <div className="text-5xl">👑</div>
 
           <div className="space-y-1">

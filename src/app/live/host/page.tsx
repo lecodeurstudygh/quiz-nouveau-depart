@@ -23,6 +23,7 @@ import {
   BookOpen,
   Award,
   Crown,
+  X,
 } from "lucide-react";
 import Link from "next/link";
 import { allCourses } from "@/data/courses";
@@ -153,6 +154,20 @@ export default function LiveHostPage() {
     setTimeout(() => setCopiedLink(false), 2000);
   };
 
+  const handleExitHost = () => {
+    if (
+      window.confirm(
+        language === "fr"
+          ? "Voulez-vous vraiment fermer cette session et retourner aux cours ?"
+          : "Do you really want to close this session and return to courses?"
+      )
+    ) {
+      setPin(null);
+      setHostToken(null);
+      window.location.href = "/";
+    }
+  };
+
   // Modal QR Code & PIN pour les retardataires (accessible en direct à tout moment)
   const renderLateJoinModal = () => {
     if (!showQrModal || !state) return null;
@@ -213,6 +228,16 @@ export default function LiveHostPage() {
         <div className="absolute top-0 right-0 w-96 h-96 bg-[#c5a059]/10 rounded-full blur-3xl pointer-events-none" />
 
         <div className="relative z-10 w-full max-w-xl bg-white dark:bg-[#121217] border border-stone-200/90 dark:border-white/10 rounded-3xl p-6 sm:p-8 shadow-2xl before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-stone-300 dark:before:via-white/20 before:to-transparent">
+          {/* Top Close Button to exit setup and return to home */}
+          <Link
+            href="/"
+            className="absolute top-5 right-5 w-8 h-8 rounded-full bg-stone-100 hover:bg-stone-200 dark:bg-white/10 dark:hover:bg-white/20 text-stone-500 dark:text-zinc-400 hover:text-neutral-900 dark:hover:text-white flex items-center justify-center transition-all active:scale-95 z-20 shadow-sm"
+            title={language === "fr" ? "Fermer et retourner aux cours" : "Close and return to courses"}
+            aria-label="Fermer"
+          >
+            <X className="w-4 h-4" />
+          </Link>
+
           <div className="flex items-center gap-3 mb-6">
             <span className="w-2.5 h-2.5 rounded-full bg-[#c5a059] animate-ping" />
             <span className="text-xs uppercase tracking-widest font-semibold text-[#9e7d32] dark:text-[#d6b26d]">
@@ -342,6 +367,15 @@ export default function LiveHostPage() {
               {copiedLink
                 ? language === "fr" ? "Lien copié !" : "Link copied!"
                 : language === "fr" ? "Copier le lien direct" : "Copy direct link"}
+            </button>
+            <button
+              type="button"
+              onClick={handleExitHost}
+              className="flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-full bg-stone-100 hover:bg-stone-200 dark:bg-white/10 dark:hover:bg-white/20 text-stone-600 dark:text-zinc-300 transition-colors shadow-sm"
+              title={language === "fr" ? "Fermer la session" : "Close session"}
+            >
+              <X className="w-3.5 h-3.5" />
+              <span>{language === "fr" ? "Quitter" : "Exit"}</span>
             </button>
           </div>
         </div>
@@ -481,14 +515,25 @@ export default function LiveHostPage() {
             <span>{secondsLeft}s</span>
           </div>
 
-          {/* Answered counter */}
-          <div className="flex items-center gap-2 text-sm text-stone-500 dark:text-neutral-400 font-semibold">
-            <Users className="w-4 h-4 text-[#c5a059]" />
-            <span>
-              {language === "fr"
-                ? `${answeredCount} / ${totalPlayers} ont répondu`
-                : `${answeredCount} / ${totalPlayers} answered`}
-            </span>
+          {/* Answered counter & Exit */}
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 text-sm text-stone-500 dark:text-neutral-400 font-semibold">
+              <Users className="w-4 h-4 text-[#c5a059]" />
+              <span>
+                {language === "fr"
+                  ? `${answeredCount} / ${totalPlayers} ont répondu`
+                  : `${answeredCount} / ${totalPlayers} answered`}
+              </span>
+            </div>
+            <button
+              type="button"
+              onClick={handleExitHost}
+              className="flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 rounded-full bg-stone-100 hover:bg-stone-200 dark:bg-white/10 dark:hover:bg-white/20 text-stone-600 dark:text-zinc-300 transition-colors shadow-sm"
+              title={language === "fr" ? "Fermer la session" : "Close session"}
+            >
+              <X className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">{language === "fr" ? "Quitter" : "Exit"}</span>
+            </button>
           </div>
         </div>
 
@@ -577,13 +622,23 @@ export default function LiveHostPage() {
             </button>
           </div>
 
-          <button
-            onClick={() => sendHostAction({ type: "show_leaderboard" })}
-            className="flex items-center gap-2 px-6 py-3 rounded-full bg-[#c5a059] hover:bg-[#d6b26d] text-zinc-950 font-black text-sm shadow-lg transition-transform hover:scale-105 active:scale-95"
-          >
-            <span>{language === "fr" ? "Voir le Classement" : "View Leaderboard"}</span>
-            <Trophy className="w-4 h-4" />
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => sendHostAction({ type: "show_leaderboard" })}
+              className="flex items-center gap-2 px-6 py-3 rounded-full bg-[#c5a059] hover:bg-[#d6b26d] text-zinc-950 font-black text-sm shadow-lg transition-transform hover:scale-105 active:scale-95"
+            >
+              <span>{language === "fr" ? "Voir le Classement" : "View Leaderboard"}</span>
+              <Trophy className="w-4 h-4" />
+            </button>
+            <button
+              type="button"
+              onClick={handleExitHost}
+              className="flex items-center gap-1 text-xs font-semibold px-2.5 py-2 rounded-full bg-stone-100 hover:bg-stone-200 dark:bg-white/10 dark:hover:bg-white/20 text-stone-600 dark:text-zinc-300 transition-colors shadow-sm"
+              title={language === "fr" ? "Fermer la session" : "Close session"}
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          </div>
         </div>
 
         {/* Central Card: Options with Vote Bars and Correct Answer Highlight */}
@@ -699,23 +754,33 @@ export default function LiveHostPage() {
             </button>
           </div>
 
-          <button
-            onClick={() => {
-              if (isLastQuestion) {
-                sendHostAction({ type: "end_quiz" });
-              } else {
-                sendHostAction({ type: "next_question" });
-              }
-            }}
-            className="flex items-center gap-2 px-8 py-3 rounded-full bg-[#c5a059] hover:bg-[#d6b26d] text-zinc-950 font-black text-base shadow-xl transition-transform hover:scale-105 active:scale-95"
-          >
-            <span>
-              {isLastQuestion
-                ? language === "fr" ? "Podium Final !" : "Final Podium!"
-                : language === "fr" ? "Question Suivante" : "Next Question"}
-            </span>
-            <ArrowRight className="w-5 h-5" />
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => {
+                if (isLastQuestion) {
+                  sendHostAction({ type: "end_quiz" });
+                } else {
+                  sendHostAction({ type: "next_question" });
+                }
+              }}
+              className="flex items-center gap-2 px-8 py-3 rounded-full bg-[#c5a059] hover:bg-[#d6b26d] text-zinc-950 font-black text-base shadow-xl transition-transform hover:scale-105 active:scale-95"
+            >
+              <span>
+                {isLastQuestion
+                  ? language === "fr" ? "Podium Final !" : "Final Podium!"
+                  : language === "fr" ? "Question Suivante" : "Next Question"}
+              </span>
+              <ArrowRight className="w-5 h-5" />
+            </button>
+            <button
+              type="button"
+              onClick={handleExitHost}
+              className="flex items-center gap-1 text-xs font-semibold px-2.5 py-2 rounded-full bg-stone-100 hover:bg-stone-200 dark:bg-white/10 dark:hover:bg-white/20 text-stone-600 dark:text-zinc-300 transition-colors shadow-sm"
+              title={language === "fr" ? "Fermer la session" : "Close session"}
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          </div>
         </div>
 
         {/* Central Leaderboard list */}
@@ -776,6 +841,16 @@ export default function LiveHostPage() {
       <div className="min-h-[85vh] text-neutral-900 dark:text-white flex flex-col justify-between p-6 sm:p-10 select-none relative overflow-hidden [isolation:isolate] bg-white/95 dark:bg-[#0f0f14] border border-stone-200/90 dark:border-white/10 rounded-3xl shadow-xl">
         <div className="absolute top-0 right-0 w-96 h-96 bg-[#c5a059]/10 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-80 h-80 bg-neutral-200/50 dark:bg-white/5 rounded-full blur-3xl pointer-events-none" />
+
+        {/* Top Close Button */}
+        <button
+          type="button"
+          onClick={handleExitHost}
+          className="absolute top-6 right-6 w-9 h-9 rounded-full bg-stone-100 hover:bg-stone-200 dark:bg-white/10 dark:hover:bg-white/20 text-stone-500 dark:text-zinc-400 hover:text-neutral-900 dark:hover:text-white flex items-center justify-center transition-all active:scale-95 z-20 shadow-sm"
+          title={language === "fr" ? "Fermer la session" : "Close session"}
+        >
+          <X className="w-4 h-4" />
+        </button>
 
         <div className="relative z-10 text-center space-y-2 pt-4">
           <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#9e7d32] dark:text-[#d6b26d] px-4 py-1.5 bg-[#c5a059]/15 border border-[#c5a059]/30 rounded-full shadow-sm">

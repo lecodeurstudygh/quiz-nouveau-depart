@@ -149,7 +149,7 @@ export default function CourseOverviewPage() {
         <div className="absolute top-0 right-0 -mt-12 -mr-12 w-96 h-96 bg-[#c5a059]/10 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 left-0 -mb-12 -ml-12 w-80 h-80 bg-neutral-500/5 rounded-full blur-3xl pointer-events-none" />
 
-        <div className="relative z-10 max-w-3xl space-y-4">
+        <div key={`hero-info-${currentWeek.id}-${language}`} className="relative z-10 max-w-3xl space-y-4">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-[11px] font-semibold tracking-wide bg-neutral-100 dark:bg-black/75 text-neutral-800 dark:text-[#d6b26d] border border-neutral-200 dark:border-white/20 backdrop-blur-md shadow-sm">
             <Sparkles className="w-3 h-3 text-[#c5a059] fill-[#c5a059]" />
             <span>{currentWeek.subtitle[language]}</span>
@@ -208,7 +208,7 @@ export default function CourseOverviewPage() {
       </div>
 
       {/* "La Grande Idée" Highlight Card - Shimmering Glass & Negative Texture */}
-      <div className="relative overflow-hidden rounded-3xl p-7 sm:p-9 shadow-2xl border border-neutral-200/80 dark:border-white/10 dark:border-t-white/25 bg-white/70 dark:bg-[#0c0c11]/85 backdrop-blur-xl group before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-white/30 before:to-transparent [isolation:isolate]">
+      <div className="relative overflow-hidden rounded-3xl p-7 sm:p-9 shadow-2xl border border-neutral-200/80 dark:border-white/10 dark:border-t-white/25 bg-white/70 dark:bg-[#0c0c11]/85 backdrop-blur-xl group before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-white/30 before:to-transparent">
         {/* Subtle B&W Film Texture Layer */}
         <div className="absolute inset-0 hidden dark:block pointer-events-none select-none opacity-15 mix-blend-luminosity">
           <img
@@ -227,12 +227,12 @@ export default function CourseOverviewPage() {
           <div className="w-12 h-12 rounded-2xl bg-neutral-100 dark:bg-black/60 text-[#c5a059] flex-shrink-0 flex items-center justify-center border border-neutral-200 dark:border-white/15 backdrop-blur-md shadow-md shadow-black/20">
             <Flame className="w-6 h-6 text-[#c5a059] fill-[#c5a059]/30" />
           </div>
-          <div className="space-y-3">
+          <div key={`big-idea-${currentWeek.id}-${language}`} className="space-y-3 flex-1 min-w-0">
             <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-[11px] font-semibold tracking-wide bg-neutral-100 dark:bg-black/75 text-neutral-800 dark:text-[#d6b26d] border border-neutral-200 dark:border-white/20 backdrop-blur-md shadow-sm">
               <Sparkles className="w-3 h-3 text-[#c5a059] fill-[#c5a059]" />
               <span>{t("bigIdeaTitle")}</span>
             </div>
-            <blockquote className="text-lg sm:text-xl font-medium text-neutral-800 dark:text-neutral-100 italic leading-relaxed">
+            <blockquote className="text-lg sm:text-xl font-medium text-neutral-800 dark:text-neutral-100 italic leading-relaxed sm:leading-relaxed pb-1.5">
               « {currentWeek.bigIdea[language]} »
             </blockquote>
           </div>
@@ -350,7 +350,7 @@ export default function CourseOverviewPage() {
               {t("prayerTargetTitle")}
             </h3>
           </div>
-          <p className="relative z-10 text-sm text-neutral-600 dark:text-zinc-300 leading-relaxed italic">
+          <p key={`prayer-text-${currentWeek.id}-${language}`} className="relative z-10 text-sm text-neutral-600 dark:text-zinc-300 leading-relaxed italic pb-1">
             {currentWeek.targetPrayer[language]}
           </p>
         </div>
@@ -364,7 +364,7 @@ export default function CourseOverviewPage() {
               {t("nextStepTitle")}
             </h3>
           </div>
-          <p className="relative z-10 text-sm text-neutral-600 dark:text-zinc-300 leading-relaxed">
+          <p key={`nextstep-text-${currentWeek.id}-${language}`} className="relative z-10 text-sm text-neutral-600 dark:text-zinc-300 leading-relaxed pb-1">
             {currentWeek.nextStep[language]}
           </p>
           <div className="relative z-10 pt-2">

@@ -8,6 +8,7 @@ import { AudioPlayer } from "@/components/AudioPlayer";
 
 const inter = Inter({
   subsets: ["latin"],
+  style: ["normal", "italic"],
   variable: "--font-inter",
   display: "swap",
 });

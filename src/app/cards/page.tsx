@@ -587,9 +587,16 @@ export default function CardsPage() {
           {/* Keyboard hint & Mode switch shortcut */}
           <div className="flex items-center justify-between text-[11px] text-neutral-500 dark:text-zinc-400 px-1">
             <span>
-              {language === "fr"
-                ? "Glisser le doigt ou touches ← → • Clic pour retourner"
-                : "Swipe or use ← → arrow keys • Click to flip"}
+              <span className="sm:hidden">
+                {language === "fr"
+                  ? "Glisser pour naviguer • Toucher pour retourner"
+                  : "Swipe to navigate • Tap to flip"}
+              </span>
+              <span className="hidden sm:inline">
+                {language === "fr"
+                  ? "Touches ← → pour naviguer • Clic pour retourner"
+                  : "Use ← → arrow keys • Click to flip"}
+              </span>
             </span>
             <button
               type="button"

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { ChevronDown, Check, X } from "lucide-react";
 
@@ -35,20 +35,61 @@ export const CustomDropdown: React.FC<CustomDropdownProps> = ({
   const [isOpen, setIsOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const drawerRef = useRef<HTMLDivElement | null>(null);
+  const popoverRef = useRef<HTMLDivElement | null>(null);
+
+  const [popoverCoords, setPopoverCoords] = useState<{ top: number; left: number; width: number }>({
+    top: 0,
+    left: 0,
+    width: 280,
+  });
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
+  const updateCoords = useCallback(() => {
+    if (containerRef.current) {
+      const rect = containerRef.current.getBoundingClientRect();
+      const minWidth = Math.max(rect.width, 280);
+      let left = rect.left;
+      if (left + minWidth > window.innerWidth - 16) {
+        left = Math.max(16, window.innerWidth - minWidth - 16);
+      }
+      setPopoverCoords({
+        top: rect.bottom + 6,
+        left,
+        width: minWidth,
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isOpen) {
+      updateCoords();
+      const handleScrollOrResize = () => updateCoords();
+      window.addEventListener("scroll", handleScrollOrResize, { passive: true });
+      window.addEventListener("resize", handleScrollOrResize);
+      return () => {
+        window.removeEventListener("scroll", handleScrollOrResize);
+        window.removeEventListener("resize", handleScrollOrResize);
+      };
+    }
+  }, [isOpen, updateCoords]);
+
   const selectedOption = options.find((opt) => opt.value === value) || options[0];
 
-  // Close when clicking outside
+  // Close when clicking outside - safely checking container, desktop popover, and mobile drawer
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(event.target as Node)
-      ) {
+    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
+      const target = event.target as Node;
+      if (!target) return;
+
+      const inContainer = containerRef.current?.contains(target);
+      const inPopover = popoverRef.current?.contains(target);
+      const inDrawer = drawerRef.current?.contains(target);
+
+      if (!inContainer && !inPopover && !inDrawer) {
         setIsOpen(false);
       }
     };
@@ -59,10 +100,12 @@ export const CustomDropdown: React.FC<CustomDropdownProps> = ({
 
     if (isOpen) {
       document.addEventListener("mousedown", handleClickOutside);
+      document.addEventListener("touchstart", handleClickOutside, { passive: true });
       window.addEventListener("keydown", handleKeyDown);
     }
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [isOpen]);
@@ -73,11 +116,14 @@ export const CustomDropdown: React.FC<CustomDropdownProps> = ({
   };
 
   return (
-    <div className={`relative ${isOpen ? "z-50" : "z-10"} ${className}`} ref={containerRef}>
+    <div className={`relative ${className}`} ref={containerRef}>
       {/* Trigger Button */}
       <button
         type="button"
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => {
+          if (!isOpen) updateCoords();
+          setIsOpen(!isOpen);
+        }}
         className={
           triggerClassName ||
           `flex items-center justify-between gap-2 pl-3.5 pr-2.5 py-1.5 text-xs font-semibold rounded-full bg-neutral-100 hover:bg-neutral-200/80 dark:bg-zinc-800/90 dark:hover:bg-zinc-800 border border-neutral-200 dark:border-zinc-700 text-neutral-800 dark:text-zinc-200 hover:border-[#c5a059]/60 dark:hover:border-[#c5a059]/60 transition-all active:scale-[0.98] shadow-sm select-none ${maxTriggerWidth}`
@@ -93,10 +139,18 @@ export const CustomDropdown: React.FC<CustomDropdownProps> = ({
         />
       </button>
 
-      {/* 1. Desktop Popover (rendered in-place below trigger with elevated z-index) */}
-      {isOpen && (
-        <div className="hidden sm:flex absolute left-0 top-full mt-1.5 z-[100] w-72 max-w-sm max-h-80 bg-white/98 dark:bg-[#121217]/98 backdrop-blur-2xl rounded-2xl border border-neutral-200 dark:border-white/10 shadow-2xl overflow-hidden flex-col animate-scale-in">
-          <div className="overflow-y-auto p-1.5 space-y-1 divide-y divide-transparent custom-scrollbar max-h-72">
+      {/* 1. Desktop Popover Portaled to body to escape 3D flip card transforms and backdrop-filters */}
+      {isOpen && mounted && createPortal(
+        <div
+          ref={popoverRef}
+          style={{
+            top: `${popoverCoords.top}px`,
+            left: `${popoverCoords.left}px`,
+            minWidth: `${popoverCoords.width}px`,
+          }}
+          className="hidden sm:flex fixed z-[99999] max-w-sm max-h-80 bg-white dark:bg-[#18181f] rounded-2xl border border-neutral-200 dark:border-white/10 shadow-[0_16px_45px_rgba(0,0,0,0.18)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.7)] overflow-hidden flex-col animate-scale-in"
+        >
+          <div className="overflow-y-auto p-1.5 space-y-1 custom-scrollbar max-h-72">
             {options.map((opt) => {
               const isSelected = opt.value === value;
               return (
@@ -104,10 +158,10 @@ export const CustomDropdown: React.FC<CustomDropdownProps> = ({
                   key={opt.value}
                   type="button"
                   onClick={() => handleSelect(opt.value)}
-                  className={`w-full flex items-center justify-between gap-3 px-3.5 py-2 rounded-xl text-xs font-medium text-left transition-all ${
+                  className={`w-full flex items-center justify-between gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-left transition-all ${
                     isSelected
                       ? "bg-neutral-900 text-white dark:bg-[#c5a059] dark:text-zinc-950 font-bold shadow-sm"
-                      : "text-neutral-700 dark:text-zinc-300 hover:bg-neutral-100 dark:hover:bg-white/5 hover:text-neutral-950 dark:hover:text-white"
+                      : "text-neutral-700 dark:text-zinc-200 hover:bg-neutral-100 dark:hover:bg-white/10 hover:text-neutral-950 dark:hover:text-white"
                   }`}
                 >
                   <span className="truncate flex-1">{opt.label}</span>
@@ -118,12 +172,13 @@ export const CustomDropdown: React.FC<CustomDropdownProps> = ({
               );
             })}
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
-      {/* 2. Mobile Bottom Sheet Drawer (Portaled to body to escape parent transform/backdrop-filter) */}
+      {/* 2. Mobile Bottom Sheet Drawer Portaled to body */}
       {isOpen && mounted && createPortal(
-        <div className="sm:hidden fixed inset-0 z-[150] flex flex-col justify-end">
+        <div className="sm:hidden fixed inset-0 z-[99999] flex flex-col justify-end">
           {/* Backdrop */}
           <div
             className="fixed inset-0 bg-black/75 backdrop-blur-sm animate-fade-in"
@@ -131,7 +186,10 @@ export const CustomDropdown: React.FC<CustomDropdownProps> = ({
           />
 
           {/* Luxury Bottom Drawer */}
-          <div className="relative z-[160] w-full max-h-[75vh] bg-[#fcfbfa] dark:bg-[#121217] rounded-t-3xl border-t border-neutral-200 dark:border-white/10 shadow-[0_-10px_35px_rgba(0,0,0,0.6)] overflow-hidden flex flex-col pb-[calc(env(safe-area-inset-bottom,0px)+28px)] animate-slide-up">
+          <div
+            ref={drawerRef}
+            className="relative z-[100000] w-full max-h-[75vh] bg-[#fcfbfa] dark:bg-[#14141a] rounded-t-3xl border-t border-neutral-200 dark:border-white/10 shadow-[0_-10px_35px_rgba(0,0,0,0.6)] overflow-hidden flex flex-col pb-[calc(env(safe-area-inset-bottom,0px)+28px)] animate-slide-up"
+          >
             {/* Grab handle */}
             <div className="w-10 h-1 rounded-full bg-neutral-300 dark:bg-white/20 mx-auto mt-2.5 mb-1" />
 
@@ -157,7 +215,11 @@ export const CustomDropdown: React.FC<CustomDropdownProps> = ({
                   <button
                     key={opt.value}
                     type="button"
-                    onClick={() => handleSelect(opt.value)}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      handleSelect(opt.value);
+                    }}
                     className={`w-full flex items-center justify-between gap-3 px-4 py-3 rounded-2xl text-xs font-medium text-left transition-all active:scale-[0.98] ${
                       isSelected
                         ? "bg-[#c5a059] text-zinc-950 font-bold shadow-md shadow-[#c5a059]/20"

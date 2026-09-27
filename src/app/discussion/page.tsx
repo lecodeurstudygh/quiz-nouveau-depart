@@ -505,9 +505,16 @@ export default function DiscussionPage() {
 
           {/* Swipe & Navigation Hint */}
           <div className="text-center text-[11px] text-neutral-500 dark:text-zinc-400">
-            {language === "fr"
-              ? "Glisser le doigt ou touches ← → • Clic pour révéler"
-              : "Swipe or use ← → arrow keys • Click to reveal"}
+            <span className="sm:hidden">
+              {language === "fr"
+                ? "Glisser pour naviguer • Toucher pour révéler"
+                : "Swipe to navigate • Tap to reveal"}
+            </span>
+            <span className="hidden sm:inline">
+              {language === "fr"
+                ? "Touches ← → pour naviguer • Clic pour révéler"
+                : "Use ← → arrow keys • Click to reveal"}
+            </span>
           </div>
         </div>
       ) : (

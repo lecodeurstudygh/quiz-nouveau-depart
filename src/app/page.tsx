@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { allCourses, getCourseById, week01 } from "@/data/courses";
 import { useLanguage } from "@/context/LanguageContext";
@@ -45,9 +45,23 @@ export default function CourseOverviewPage() {
   const { language, t, selectedWeekId, setSelectedWeekId } = useLanguage();
   const [memorizedIds, setMemorizedIds] = useState<string[]>([]);
   const [isCourseMenuOpen, setIsCourseMenuOpen] = useState(false);
+  const [activePillarTab, setActivePillarTab] = useState(0);
 
   // Active course selection dynamically resolved from selectedWeekId
   const currentWeek = getCourseById(selectedWeekId) || week01;
+
+  useEffect(() => {
+    setActivePillarTab(0);
+  }, [selectedWeekId]);
+
+  const currentIdx = allCourses.findIndex((c) => c.id === currentWeek.id);
+  const displayedLessons = useMemo(() => {
+    const safeIdx = currentIdx >= 0 ? currentIdx : 0;
+    if (safeIdx === allCourses.length - 1) {
+      return [allCourses[safeIdx - 1], allCourses[safeIdx]];
+    }
+    return [allCourses[safeIdx], allCourses[safeIdx + 1]];
+  }, [currentIdx]);
 
   useEffect(() => {
     try {
@@ -188,36 +202,67 @@ export default function CourseOverviewPage() {
           </div>
         </div>
 
-        {/* Desktop View: Sleek Segmented Horizontal Strip with Momentum Scroll */}
+        {/* Desktop View: Sleek Segmented Horizontal Strip with 2 Lessons preview + 10 Fixed Pastilles */}
         <div className="hidden sm:flex items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 shrink-0">
             <span className="text-xs font-bold uppercase tracking-wider text-neutral-500 dark:text-zinc-400">
               {t("chooseCourseWeek")} :
             </span>
           </div>
 
-          <div className="flex items-center gap-1.5 p-1.5 rounded-full bg-neutral-200/80 dark:bg-black/80 backdrop-blur-xl border border-neutral-300/80 dark:border-white/10 shadow-lg overflow-x-auto no-scrollbar max-w-2xl">
-            {allCourses.map((c) => {
-              const isSelected = currentWeek.id === c.id;
-              return (
-                <button
-                  key={c.id}
-                  onClick={() => setSelectedWeekId(c.id)}
-                  className={`px-4 py-2 rounded-full text-xs sm:text-sm whitespace-nowrap transition-all ${
-                    isSelected
-                      ? "bg-neutral-900 text-white dark:bg-white/20 dark:text-white dark:border dark:border-white/25 shadow-sm font-semibold"
-                      : "text-neutral-600 dark:text-zinc-400 hover:text-neutral-950 dark:hover:text-white hover:bg-neutral-200/60 dark:hover:bg-white/5 font-medium"
-                  }`}
-                >
-                  {language === "fr"
-                    ? `Semaine ${c.weekNumber} : ${c.title.fr}`
-                    : `Week ${c.weekNumber}: ${c.title.en}`}
-                </button>
-              );
-            })}
+          <div className="flex items-center gap-2 overflow-hidden">
+            {/* The 2 Lessons preview (selected first, then next; or 9 + 10 if 10th selected) */}
+            <div className="flex items-center gap-1.5 p-1 rounded-full bg-neutral-200/80 dark:bg-black/80 backdrop-blur-xl border border-neutral-300/80 dark:border-white/10 shadow-sm">
+              {displayedLessons.map((c) => {
+                const isSelected = currentWeek.id === c.id;
+                return (
+                  <button
+                    key={c.id}
+                    onClick={() => setSelectedWeekId(c.id)}
+                    className={`px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all ${
+                      isSelected
+                        ? "bg-neutral-900 text-white dark:bg-white/20 dark:text-white dark:border dark:border-white/25 shadow-sm font-bold"
+                        : "text-neutral-600 dark:text-zinc-400 hover:text-neutral-950 dark:hover:text-white hover:bg-neutral-200/60 dark:hover:bg-white/5 font-medium"
+                    }`}
+                  >
+                    {language === "fr"
+                      ? `Semaine ${c.weekNumber} : ${c.title.fr}`
+                      : `Week ${c.weekNumber}: ${c.title.en}`}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* 10 Fixed Numbered Pastilles S1 to S10 */}
+            <div className="flex items-center gap-1 p-1 rounded-full bg-neutral-200/80 dark:bg-black/80 backdrop-blur-xl border border-neutral-300/80 dark:border-white/10 shadow-sm">
+              {allCourses.map((c) => {
+                const isSelected = currentWeek.id === c.id;
+                return (
+                  <button
+                    key={c.id}
+                    type="button"
+                    onClick={() => setSelectedWeekId(c.id)}
+                    title={
+                      language === "fr"
+                        ? `Semaine ${c.weekNumber} : ${c.title.fr}`
+                        : `Week ${c.weekNumber}: ${c.title.en}`
+                    }
+                    className={`w-7 h-7 rounded-full text-xs font-bold flex items-center justify-center transition-all ${
+                      isSelected
+                        ? "bg-neutral-900 text-white dark:bg-[#c5a059] dark:text-zinc-950 shadow-sm scale-105"
+                        : "text-neutral-600 dark:text-zinc-400 hover:text-neutral-950 dark:hover:text-white hover:bg-neutral-300/60 dark:hover:bg-white/10"
+                    }`}
+                  >
+                    {weekPrefix}{c.weekNumber}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Fixed 10 Semaines drawer button */}
             <button
               onClick={() => setIsCourseMenuOpen(true)}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold text-[#9e7d32] dark:text-[#c5a059] hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-300/50 dark:hover:bg-white/10 transition-all whitespace-nowrap shrink-0"
+              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold text-[#9e7d32] dark:text-[#c5a059] hover:text-neutral-900 dark:hover:text-white bg-neutral-200/80 dark:bg-black/80 border border-neutral-300/80 dark:border-white/10 hover:bg-neutral-300/70 dark:hover:bg-white/15 transition-all whitespace-nowrap shrink-0 shadow-sm"
               title={t("openCourseMenu")}
             >
               <Compass className="w-3.5 h-3.5 text-[#c5a059]" />
@@ -262,27 +307,37 @@ export default function CourseOverviewPage() {
             {currentWeek.summary[language]}
           </p>
 
-          {/* Call to actions in Hillsong Instrumentals style */}
-          <div className="pt-4 flex flex-wrap items-center gap-2 sm:gap-3">
+          {/* Call to actions on a single row on both mobile and desktop */}
+          <div className="pt-4 flex flex-row items-center justify-between gap-1.5 sm:gap-3 w-full">
             <Link
               href="/cards"
-              className="inline-flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-6 py-2.5 sm:py-3 rounded-full bg-neutral-900 text-white dark:bg-transparent dark:border dark:border-white dark:text-white dark:hover:bg-white dark:hover:text-black font-semibold text-[10.5px] sm:text-xs uppercase tracking-wider shadow-sm transition-all active:scale-95 backdrop-blur-md whitespace-nowrap"
+              className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1 sm:gap-2 px-2 sm:px-6 py-2.5 sm:py-3 rounded-full bg-neutral-900 text-white dark:bg-transparent dark:border dark:border-white dark:text-white dark:hover:bg-white dark:hover:text-black font-semibold text-[10px] sm:text-xs uppercase tracking-wider shadow-sm transition-all active:scale-95 backdrop-blur-md text-center whitespace-nowrap"
             >
-              <Layers className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
-              <span>
+              <Layers className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0 text-[#c5a059]" />
+              <span className="sm:hidden">
+                {language === "fr"
+                  ? `Versets (${currentWeek.verses.length})`
+                  : `Verses (${currentWeek.verses.length})`}
+              </span>
+              <span className="hidden sm:inline">
                 {language === "fr"
                   ? `Mémoriser les versets (${currentWeek.verses.length})`
                   : `Memorize Verses (${currentWeek.verses.length})`}
               </span>
-              <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+              <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0 hidden sm:inline" />
             </Link>
 
             <Link
               href="/quiz"
-              className="inline-flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-5 py-2.5 sm:py-3 rounded-full bg-white dark:bg-black/50 text-neutral-800 dark:text-zinc-200 hover:text-neutral-950 dark:hover:text-white font-semibold text-[10.5px] sm:text-xs uppercase tracking-wider border border-neutral-200 dark:border-white/15 hover:bg-neutral-50 dark:hover:bg-white/10 transition-all active:scale-95 shadow-sm backdrop-blur-md whitespace-nowrap"
+              className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1 sm:gap-2 px-2 sm:px-5 py-2.5 sm:py-3 rounded-full bg-white dark:bg-black/50 text-neutral-800 dark:text-zinc-200 hover:text-neutral-950 dark:hover:text-white font-semibold text-[10px] sm:text-xs uppercase tracking-wider border border-neutral-200 dark:border-white/15 hover:bg-neutral-50 dark:hover:bg-white/10 transition-all active:scale-95 shadow-sm backdrop-blur-md text-center whitespace-nowrap"
             >
               <HelpCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#c5a059] shrink-0" />
-              <span>
+              <span className="sm:hidden">
+                {language === "fr"
+                  ? `Quiz (${currentWeek.questions.length})`
+                  : `Quiz (${currentWeek.questions.length})`}
+              </span>
+              <span className="hidden sm:inline">
                 {language === "fr"
                   ? `Lancer le Quiz (${currentWeek.questions.length} Q)`
                   : `Start Quiz (${currentWeek.questions.length} Q)`}
@@ -291,10 +346,15 @@ export default function CourseOverviewPage() {
 
             <Link
               href="/discussion"
-              className="inline-flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-5 py-2.5 sm:py-3 rounded-full bg-neutral-100 dark:bg-black/50 text-neutral-800 dark:text-zinc-200 hover:text-neutral-950 dark:hover:text-white font-semibold text-[10.5px] sm:text-xs uppercase tracking-wider border border-neutral-200 dark:border-white/15 hover:bg-neutral-200/80 dark:hover:bg-white/10 transition-all active:scale-95 shadow-sm backdrop-blur-md whitespace-nowrap"
+              className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1 sm:gap-2 px-2 sm:px-5 py-2.5 sm:py-3 rounded-full bg-neutral-100 dark:bg-black/50 text-neutral-800 dark:text-zinc-200 hover:text-neutral-950 dark:hover:text-white font-semibold text-[10px] sm:text-xs uppercase tracking-wider border border-neutral-200 dark:border-white/15 hover:bg-neutral-200/80 dark:hover:bg-white/10 transition-all active:scale-95 shadow-sm backdrop-blur-md text-center whitespace-nowrap"
             >
               <MessageSquareText className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#c5a059] shrink-0" />
-              <span>
+              <span className="sm:hidden">
+                {language === "fr"
+                  ? `Discussion (${currentWeek.discussionCards?.length || 0})`
+                  : `Discussion (${currentWeek.discussionCards?.length || 0})`}
+              </span>
+              <span className="hidden sm:inline">
                 {language === "fr"
                   ? `Discussion (${currentWeek.discussionCards?.length || 0} Q&A)`
                   : `Discussion (${currentWeek.discussionCards?.length || 0} Q&A)`}
@@ -348,7 +408,8 @@ export default function CourseOverviewPage() {
             </span>
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          {/* Desktop 3 Columns */}
+          <div className="hidden md:grid md:grid-cols-3 gap-5">
             {currentWeek.pillars.map((pillar, idx) => {
               const style = PILLAR_STYLES[idx % PILLAR_STYLES.length];
               return (
@@ -391,6 +452,99 @@ export default function CourseOverviewPage() {
                 </div>
               );
             })}
+          </div>
+
+          {/* Mobile Single Card with 1, 2, 3 Tabs */}
+          <div className="md:hidden">
+            {/* Segmented Tabs Bar */}
+            <div className="flex items-center gap-1.5 p-1 rounded-2xl bg-neutral-200/80 dark:bg-black/60 border border-neutral-300/80 dark:border-white/10 mb-3 shadow-inner">
+              {currentWeek.pillars.map((pillar, idx) => {
+                const isActive = activePillarTab === idx;
+                return (
+                  <button
+                    key={pillar.badgeNumber}
+                    type="button"
+                    onClick={() => setActivePillarTab(idx)}
+                    className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-1 rounded-xl text-xs font-bold transition-all ${
+                      isActive
+                        ? "bg-[#c5a059] text-zinc-950 shadow-md shadow-[#c5a059]/25 scale-[1.02]"
+                        : "text-neutral-600 dark:text-zinc-400 hover:text-neutral-900 dark:hover:text-white"
+                    }`}
+                  >
+                    <span className="w-5 h-5 rounded-lg bg-black/15 flex items-center justify-center text-[11px] font-black shrink-0">
+                      {pillar.badgeNumber}
+                    </span>
+                    <span className="truncate max-w-[85px]">
+                      {pillar.title[language]}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Selected Pillar Card Content */}
+            {(() => {
+              const safePillarIdx = Math.min(activePillarTab, currentWeek.pillars.length - 1);
+              const activePillar = currentWeek.pillars[safePillarIdx];
+              const style = PILLAR_STYLES[safePillarIdx % PILLAR_STYLES.length];
+              return (
+                <div
+                  key={activePillar.badgeNumber}
+                  className="relative overflow-hidden rounded-3xl p-6 shadow-xl border border-neutral-200/80 dark:border-white/10 dark:border-t-white/25 bg-white/80 dark:bg-[#0c0c11]/90 backdrop-blur-xl transition-all duration-300 flex flex-col justify-between space-y-4 animate-fade-in"
+                >
+                  {/* Subtle B&W Film Texture Layer */}
+                  <div className="absolute inset-0 pointer-events-none opacity-5 dark:opacity-10 mix-blend-luminosity">
+                    <img
+                      src={style.bgPattern}
+                      alt=""
+                      className="w-full h-full object-cover grayscale contrast-125 brightness-75 pointer-events-none"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
+                  </div>
+
+                  <div className="relative z-10 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div className={`w-9 h-9 rounded-2xl ${style.badge} flex items-center justify-center font-bold text-sm tracking-tight backdrop-blur-md`}>
+                        {activePillar.badgeNumber}
+                      </div>
+                      <div className="text-[11px] font-mono text-[#9e7d32] dark:text-[#c5a059] font-bold">
+                        {language === "fr" ? `Pilier ${activePillar.badgeNumber} sur 3` : `Pillar ${activePillar.badgeNumber} of 3`}
+                      </div>
+                    </div>
+                    <h3 className="text-lg font-bold text-neutral-900 dark:text-white tracking-tight leading-snug">
+                      {activePillar.title[language]}
+                    </h3>
+                    <p className="text-sm text-neutral-600 dark:text-zinc-300 leading-relaxed font-normal">
+                      {activePillar.description[language]}
+                    </p>
+                  </div>
+
+                  <div className="relative z-10 pt-2 text-xs font-mono text-[#9e7d32] dark:text-[#c5a059] font-semibold border-t border-neutral-200/60 dark:border-white/5 flex items-center justify-between">
+                    <span>{activePillar.verses}</span>
+                    <div className="flex items-center gap-1.5">
+                      {safePillarIdx > 0 && (
+                        <button
+                          type="button"
+                          onClick={() => setActivePillarTab(safePillarIdx - 1)}
+                          className="px-2.5 py-1 rounded-lg bg-neutral-100 dark:bg-white/5 text-[10px] font-bold text-neutral-700 dark:text-zinc-300 active:scale-95"
+                        >
+                          ← {language === "fr" ? "Précédent" : "Prev"}
+                        </button>
+                      )}
+                      {safePillarIdx < currentWeek.pillars.length - 1 && (
+                        <button
+                          type="button"
+                          onClick={() => setActivePillarTab(safePillarIdx + 1)}
+                          className="px-2.5 py-1 rounded-lg bg-neutral-900 text-white dark:bg-white/10 dark:text-zinc-200 text-[10px] font-bold active:scale-95"
+                        >
+                          {language === "fr" ? "Suivant" : "Next"} →
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              );
+            })()}
           </div>
         </div>
       )}
@@ -480,7 +634,7 @@ export default function CourseOverviewPage() {
                   ))}
                 </div>
                 <span className="text-[10px] font-mono text-neutral-500 dark:text-zinc-400 font-semibold">
-                  {mobileVerseIdx + 1} / {Math.min(4, keyVerses.length)} • {language === "fr" ? "Glisser ou Tap" : "Swipe or Tap"}
+                  {mobileVerseIdx + 1} / {Math.min(4, keyVerses.length)} • {language === "fr" ? "Glisser pour naviguer" : "Swipe to navigate"}
                 </span>
               </div>
 

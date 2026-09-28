@@ -42,6 +42,7 @@ export interface LiveSessionState {
   pin: string;
   lanUrl?: string;
   weekId: string;
+  mode?: "teacher" | "challenge";
   status: LiveSessionStatus;
   hostToken: string;
   totalQuestions: number;

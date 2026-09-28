@@ -16,6 +16,7 @@ interface LiveSessionInternal {
   lanUrl: string;
   weekId: string;
   hostToken: string;
+  mode: "teacher" | "challenge";
   status: LiveSessionState["status"];
   questions: Question[];
   currentQuestionIndex: number;
@@ -117,6 +118,7 @@ export function getPublicState(
     pin: session.pin,
     lanUrl: session.lanUrl,
     weekId: session.weekId,
+    mode: session.mode,
     status: session.status,
     hostToken: isHost ? session.hostToken : "",
     totalQuestions: session.questions.length,
@@ -162,6 +164,7 @@ export const liveSessionStore = {
     weekId: string;
     timerSeconds?: number;
     questionCount?: number;
+    mode?: "teacher" | "challenge";
   }): { session: LiveSessionState; hostToken: string; pin: string } {
     const pin = generateUniquePin();
     const id = `live-${pin}-${Date.now()}`;
@@ -203,6 +206,7 @@ export const liveSessionStore = {
       lanUrl,
       weekId: params.weekId,
       hostToken,
+      mode: params.mode || "teacher",
       status: "lobby",
       questions: selectedQuestions,
       currentQuestionIndex: 0,

@@ -159,6 +159,23 @@ const UI_TRANSLATIONS: Record<string, { fr: string; en: string }> = {
     en: "Share the direct link and PIN code in one click to the WhatsApp group.",
   },
   playerInviteWhatsAppBtn: { fr: "Inviter des amis sur WhatsApp", en: "Invite friends on WhatsApp" },
+  liveTabJoin: { fr: "Rejoindre", en: "Join" },
+  liveTabChallenge: { fr: "Défier des amis", en: "Friend Challenge" },
+  challengeTitle: { fr: "Lancer un Défi entre Amis", en: "Start a Friend Challenge" },
+  challengeSubtitle: {
+    fr: "Créez une partie en direct, partagez le lien sur WhatsApp et défiez vos amis sans animateur Zoom !",
+    en: "Create a live game, share the link on WhatsApp, and challenge friends without a Zoom host!",
+  },
+  challengeStartBtn: { fr: "Créer le Défi & Inviter", en: "Create Challenge & Invite" },
+  challengeStartQuizHost: { fr: "Lancer le Défi", en: "Start Challenge" },
+  challengeWaitingFriend: {
+    fr: "En attente de tes amis... Partage le lien sur WhatsApp !",
+    en: "Waiting for friends... Share the link on WhatsApp!",
+  },
+  challengeShareResultsWhatsApp: { fr: "Partager le résultat sur WhatsApp", en: "Share results on WhatsApp" },
+  challengeRematchBtn: { fr: "Rejouer un Défi", en: "Play another Challenge" },
+  challengeWinnerAnnounce: { fr: "a remporté le Défi !", en: "won the Challenge!" },
+  challengeNextQuestionBtn: { fr: "Question suivante →", en: "Next Question →" },
 };
 
 

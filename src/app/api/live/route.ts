@@ -39,6 +39,32 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(result);
     }
 
+    if (action === "create_challenge") {
+      const { playerName = "Challenger", avatar = "🔥" } = body;
+      const weekIdParam = body.weekId || (body.week ? `week-${String(body.week).padStart(2, "0")}` : "week-10");
+      const { timerSeconds = 20, questionCount = 8 } = body;
+
+      const created = liveSessionStore.createSession({
+        weekId: weekIdParam,
+        timerSeconds,
+        questionCount,
+        mode: "challenge",
+      });
+
+      // Automatically join the creator as Player 1
+      const joinResult = liveSessionStore.joinSession(created.pin, playerName, avatar);
+      if ("error" in joinResult) {
+        return NextResponse.json({ error: joinResult.error }, { status: 500 });
+      }
+
+      return NextResponse.json({
+        pin: created.pin,
+        hostToken: created.hostToken,
+        playerId: joinResult.playerId,
+        session: joinResult.state,
+      });
+    }
+
     if (action === "join") {
       const { pin, playerName, avatar } = body;
       if (!pin) {

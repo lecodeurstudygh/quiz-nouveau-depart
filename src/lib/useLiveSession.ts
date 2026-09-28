@@ -73,17 +73,17 @@ export function useLiveSession({
     };
 
     es.onerror = () => {
-      // If SSE errors (e.g. strict corporate proxy or transient network switch), start polling fallback
+      // If SSE errors (e.g. strict corporate proxy or transient network switch)
       if (isMounted) {
         setConnected(false);
-        if (!pollingIntervalRef.current) {
-          pollingIntervalRef.current = setInterval(fetchStateSnapshot, 1500);
-        }
       }
     };
 
     // Also do an immediate initial fetch
     fetchStateSnapshot();
+
+    // Active polling interval (1000ms) to ensure mobile Safari & WhatsApp webviews never miss an update
+    pollingIntervalRef.current = setInterval(fetchStateSnapshot, 1000);
 
     return () => {
       isMounted = false;

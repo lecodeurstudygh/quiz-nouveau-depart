@@ -27,7 +27,7 @@ interface LiveSessionInternal {
   createdAt: number;
 }
 
-// Preserve session store across Next.js dev fast-refreshes
+// Preserve session store across Next.js dev fast-refreshes and serverless warm reuses
 const globalForLive = globalThis as unknown as {
   liveSessions?: Map<string, LiveSessionInternal>;
 };
@@ -35,8 +35,11 @@ const globalForLive = globalThis as unknown as {
 const sessions: Map<string, LiveSessionInternal> =
   globalForLive.liveSessions || new Map<string, LiveSessionInternal>();
 
-if (process.env.NODE_ENV !== "production") {
-  globalForLive.liveSessions = sessions;
+// Always keep active on globalThis
+globalForLive.liveSessions = sessions;
+
+export function normalizePin(raw: string): string {
+  return (raw || "").replace(/\s+/g, "").trim();
 }
 
 // Generate a random 6-digit PIN that is not already taken
@@ -227,7 +230,7 @@ export const liveSessionStore = {
   },
 
   getSession(pin: string): LiveSessionInternal | undefined {
-    return sessions.get(pin);
+    return sessions.get(normalizePin(pin));
   },
 
   joinSession(
@@ -235,9 +238,10 @@ export const liveSessionStore = {
     playerName: string,
     avatar: string
   ): { player: LivePlayer; playerId: string; state: LiveSessionState } | { error: string } {
-    const session = sessions.get(pin);
+    const clean = normalizePin(pin);
+    const session = sessions.get(clean);
     if (!session) {
-      return { error: "Code PIN introuvable. Vérifiez le numéro affiché par l'enseignant." };
+      return { error: "Code PIN introuvable. Vérifiez le numéro de session." };
     }
 
     if (session.status === "finished") {
@@ -275,7 +279,7 @@ export const liveSessionStore = {
     hostToken: string,
     action: LiveHostAction
   ): { success: boolean; state?: LiveSessionState; error?: string } {
-    const session = sessions.get(pin);
+    const session = sessions.get(normalizePin(pin));
     if (!session) return { success: false, error: "Session introuvable" };
     if (session.hostToken !== hostToken) {
       return { success: false, error: "Non autorisé" };
@@ -326,7 +330,7 @@ export const liveSessionStore = {
     playerId: string,
     action: LivePlayerAction
   ): { success: boolean; error?: string } {
-    const session = sessions.get(pin);
+    const session = sessions.get(normalizePin(pin));
     if (!session) return { success: false, error: "Session introuvable" };
     if (session.status !== "question") {
       return { success: false, error: "Temps écoulé ou question fermée" };
@@ -384,7 +388,7 @@ export const liveSessionStore = {
     pin: string,
     callback: (state: LiveSessionState) => void
   ): () => void {
-    const session = sessions.get(pin);
+    const session = sessions.get(normalizePin(pin));
     if (!session) return () => {};
 
     session.listeners.add(callback);

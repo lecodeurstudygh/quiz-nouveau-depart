@@ -34,7 +34,17 @@ export function useLiveSession({
       if (res.ok) {
         const data = await res.json();
         setState(data);
-        setConnected(true);
+        if (data.status === "closed") {
+          setError("session_closed");
+          setConnected(false);
+        } else {
+          setConnected(true);
+          setError(null);
+        }
+      } else if (res.status === 404) {
+        setState((prev) => (prev ? { ...prev, status: "closed" } : null));
+        setError("session_closed");
+        setConnected(false);
       }
     } catch {
       // ignore
@@ -67,6 +77,10 @@ export function useLiveSession({
       try {
         const data: LiveSessionState = JSON.parse(event.data);
         setState(data);
+        if (data.status === "closed") {
+          setError("session_closed");
+          setConnected(false);
+        }
       } catch (err) {
         console.error("SSE parse error", err);
       }

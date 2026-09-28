@@ -246,7 +246,7 @@ export default function LiveHostPage() {
     setTimeout(() => setCopiedLink(false), 2000);
   };
 
-  const handleExitHost = () => {
+  const handleExitHost = async () => {
     if (
       window.confirm(
         language === "fr"
@@ -254,11 +254,38 @@ export default function LiveHostPage() {
           : "Do you really want to close this session and return to courses?"
       )
     ) {
+      if (pin && hostToken) {
+        try {
+          await sendHostAction({ type: "close_session" });
+        } catch {
+          // ignore
+        }
+      }
       setPin(null);
       setHostToken(null);
       window.location.href = "/";
     }
   };
+
+  // Close session on server if teacher closes tab or window
+  useEffect(() => {
+    if (!pin || !hostToken) return;
+
+    const handlePageHide = () => {
+      const payload = JSON.stringify({
+        action: "host_action",
+        pin,
+        hostToken,
+        hostAction: { type: "close_session" },
+      });
+      navigator.sendBeacon("/api/live", new Blob([payload], { type: "application/json" }));
+    };
+
+    window.addEventListener("pagehide", handlePageHide);
+    return () => {
+      window.removeEventListener("pagehide", handlePageHide);
+    };
+  }, [pin, hostToken]);
 
   // Modal QR Code & PIN pour les retardataires (accessible en direct à tout moment)
   const renderLateJoinModal = () => {
@@ -1146,7 +1173,14 @@ export default function LiveHostPage() {
         {/* Bottom Actions */}
         <div className="relative z-10 flex items-center justify-center gap-4 pt-6 border-t border-stone-200 dark:border-white/10">
           <button
-            onClick={() => {
+            onClick={async () => {
+              if (pin && hostToken) {
+                try {
+                  await sendHostAction({ type: "close_session" });
+                } catch {
+                  // ignore
+                }
+              }
               setPin(null);
               setHostToken(null);
             }}
@@ -1156,12 +1190,12 @@ export default function LiveHostPage() {
             {language === "fr" ? "Nouvelle Session" : "New Session"}
           </button>
 
-          <Link
-            href="/"
+          <button
+            onClick={handleExitHost}
             className="px-6 py-3 rounded-full bg-[#c5a059] hover:bg-[#d6b26d] text-zinc-950 font-bold text-sm transition-colors shadow-lg active:scale-95"
           >
             {language === "fr" ? "Retour aux Cours" : "Back to Courses"}
-          </Link>
+          </button>
         </div>
       </div>
     );

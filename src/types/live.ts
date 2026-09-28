@@ -5,7 +5,8 @@ export type LiveSessionStatus =
   | "question"
   | "reveal"
   | "leaderboard"
-  | "finished";
+  | "finished"
+  | "closed";
 
 export interface LivePlayer {
   id: string;
@@ -74,6 +75,7 @@ export type LiveHostAction =
   | { type: "reveal_answer" }
   | { type: "show_leaderboard" }
   | { type: "end_quiz" }
+  | { type: "close_session" }
   | { type: "kick_player"; playerId: string };
 
 // Actions from Player

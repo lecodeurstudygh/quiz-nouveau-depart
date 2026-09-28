@@ -194,14 +194,18 @@ function LivePlayerContent() {
       const data = await res.json();
       if (!res.ok || data.error) {
         setJoinError(data.error || (language === "fr" ? "Impossible de rejoindre la session." : "Unable to join the session."));
+        if (typeof window !== "undefined") {
+          window.history.replaceState({}, "", "/live");
+        }
         setIsJoining(false);
         return;
       }
 
-      // Save to localStorage
+      // Save to localStorage and clean URL
       if (typeof window !== "undefined") {
         localStorage.setItem("nouveau_depart_player_name", nameInput.trim());
         localStorage.setItem("nouveau_depart_player_avatar", avatar);
+        window.history.replaceState({}, "", "/live");
       }
 
       setActivePin(cleanPin);
@@ -287,6 +291,10 @@ function LivePlayerContent() {
       setActivePin(null);
       setPlayerId(null);
       setHostToken(null);
+      setPinInput("");
+      if (typeof window !== "undefined") {
+        window.history.replaceState({}, "", "/live");
+      }
       window.location.href = "/";
     }
   };
@@ -363,15 +371,32 @@ function LivePlayerContent() {
                 <label className="block text-[11px] font-bold uppercase tracking-wider text-neutral-600 dark:text-neutral-400 mb-1">
                   {language === "fr" ? "Code PIN du Jeu" : "Game PIN Code"}
                 </label>
-                <input
-                  type="text"
-                  inputMode="numeric"
-                  maxLength={6}
-                  value={pinInput}
-                  onChange={(e) => setPinInput(e.target.value)}
-                  placeholder="Ex: 742819"
-                  className="w-full bg-stone-50 dark:bg-black/60 border border-stone-200 dark:border-white/15 focus:border-[#c5a059] focus:ring-1 focus:ring-[#c5a059] rounded-2xl px-4 py-2.5 sm:py-3 text-center text-xl sm:text-2xl font-mono font-bold tracking-widest text-neutral-900 dark:text-[#d6b26d] outline-none shadow-inner transition-colors"
-                />
+                <div className="relative">
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    maxLength={6}
+                    value={pinInput}
+                    onChange={(e) => setPinInput(e.target.value)}
+                    placeholder="Ex: 742819"
+                    className="w-full bg-stone-50 dark:bg-black/60 border border-stone-200 dark:border-white/15 focus:border-[#c5a059] focus:ring-1 focus:ring-[#c5a059] rounded-2xl px-4 py-2.5 sm:py-3 text-center text-xl sm:text-2xl font-mono font-bold tracking-widest text-neutral-900 dark:text-[#d6b26d] outline-none shadow-inner transition-colors"
+                  />
+                  {pinInput && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setPinInput("");
+                        if (typeof window !== "undefined") {
+                          window.history.replaceState({}, "", "/live");
+                        }
+                      }}
+                      className="absolute right-3.5 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-stone-200 dark:bg-white/10 text-stone-500 hover:text-stone-800 dark:hover:text-white flex items-center justify-center text-xs transition-colors"
+                      title={language === "fr" ? "Effacer le code PIN" : "Clear PIN"}
+                    >
+                      ✕
+                    </button>
+                  )}
+                </div>
               </div>
 
               {/* Name Input */}
@@ -590,6 +615,61 @@ function LivePlayerContent() {
 
   const isChallengeMode = state.mode === "challenge";
   const isHostPlayer = Boolean(hostToken);
+
+  // 1.5. SESSION CLOSED / CANCELLED BY HOST
+  if (state.status === "closed") {
+    return (
+      <div className="min-h-[75vh] text-neutral-900 dark:text-white flex flex-col items-center justify-center p-4 sm:p-6 pb-20 select-none relative overflow-hidden [isolation:isolate]">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="relative z-10 w-full max-w-sm bg-white/95 dark:bg-[#121217] border border-stone-200/90 dark:border-white/10 rounded-3xl p-6 sm:p-8 shadow-2xl text-center space-y-5 animate-scale-in before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-stone-300 dark:before:via-white/20 before:to-transparent">
+          <div className="w-16 h-16 rounded-full bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-600 dark:text-amber-400 mx-auto text-2xl shadow-lg">
+            🏁
+          </div>
+
+          <div className="space-y-2">
+            <h2 className="text-xl sm:text-2xl font-black text-neutral-900 dark:text-white">
+              {language === "fr" ? "Session terminée" : "Session Closed"}
+            </h2>
+            <p className="text-xs sm:text-sm text-stone-600 dark:text-zinc-400 leading-relaxed">
+              {language === "fr"
+                ? "L'enseignant ou l'organisateur a fermé cette session de jeu."
+                : "The teacher or organizer has closed this live session."}
+            </p>
+          </div>
+
+          <div className="pt-3 border-t border-stone-200/80 dark:border-white/10 space-y-2.5">
+            <button
+              type="button"
+              onClick={() => {
+                setActivePin(null);
+                setPlayerId(null);
+                setHostToken(null);
+                setPinInput("");
+                if (typeof window !== "undefined") {
+                  window.history.replaceState({}, "", "/live");
+                }
+              }}
+              className="w-full py-3 rounded-full bg-[#c5a059] hover:bg-[#d6b26d] text-zinc-950 font-black text-xs sm:text-sm transition-transform active:scale-95 shadow-md flex items-center justify-center gap-2"
+            >
+              <span>{language === "fr" ? "Rejoindre une autre partie" : "Join another game"}</span>
+            </button>
+
+            <Link
+              href="/"
+              onClick={() => {
+                if (typeof window !== "undefined") {
+                  window.history.replaceState({}, "", "/");
+                }
+              }}
+              className="block w-full py-2.5 rounded-full bg-stone-100 hover:bg-stone-200 dark:bg-white/10 dark:hover:bg-white/15 text-stone-700 dark:text-zinc-200 font-bold text-xs transition-colors"
+            >
+              {language === "fr" ? "Retour à l'accueil" : "Back to Home"}
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   // 2. LOBBY SCREEN (WAITING ROOM)
   if (state.status === "lobby") {

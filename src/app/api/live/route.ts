@@ -126,7 +126,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Code PIN requis" }, { status: 400 });
   }
 
-  const session = await liveSessionStore.getSession(pin);
+  const session = await liveSessionStore.getSession(pin, isHost);
   if (!session) {
     return NextResponse.json({ error: "Session introuvable" }, { status: 404 });
   }

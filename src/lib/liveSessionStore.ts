@@ -26,6 +26,7 @@ interface LiveSessionInternal {
   listeners: Set<(state: LiveSessionState) => void>;
   createdAt: number;
   _cachedAt?: number;
+  hostLastSeen?: number;
 }
 
 // Preserve session store across Next.js dev fast-refreshes and serverless warm reuses
@@ -192,6 +193,17 @@ async function restoreFromCloud(pin: string): Promise<LiveSessionInternal | null
   }
 }
 
+async function deleteFromCloud(pin: string) {
+  try {
+    await fetch(`${KV_ENDPOINT}/session_${pin}`, {
+      method: "DELETE",
+      signal: AbortSignal.timeout(3000),
+    });
+  } catch (err) {
+    console.warn("Could not delete session from cloud KV", err);
+  }
+}
+
 function broadcast(session: LiveSessionInternal) {
   const publicState = getPublicState(session, false);
   session.listeners.forEach((callback) => {
@@ -267,6 +279,7 @@ export const liveSessionStore = {
       listeners: new Set(),
       createdAt: Date.now(),
       _cachedAt: Date.now(),
+      hostLastSeen: Date.now(),
     };
 
     sessions.set(pin, session);
@@ -279,7 +292,7 @@ export const liveSessionStore = {
     };
   },
 
-  async getSession(rawPin: string): Promise<LiveSessionInternal | undefined> {
+  async getSession(rawPin: string, isHost?: boolean): Promise<LiveSessionInternal | undefined> {
     const pin = normalizePin(rawPin);
     let session = sessions.get(pin);
     const now = Date.now();
@@ -289,7 +302,29 @@ export const liveSessionStore = {
         session = fromCloud;
       }
     }
-    return session || undefined;
+    if (!session) return undefined;
+
+    // Track host heartbeat
+    if (isHost) {
+      session.hostLastSeen = now;
+    }
+
+    // Auto-expire zombie session if teacher left / closed browser > 2.5 mins ago
+    if (
+      session.mode === "teacher" &&
+      session.status !== "finished" &&
+      session.status !== "closed" &&
+      session.hostLastSeen &&
+      now - session.hostLastSeen > 2.5 * 60 * 1000
+    ) {
+      session.status = "closed";
+      broadcast(session);
+      sessions.delete(pin);
+      await deleteFromCloud(pin);
+      return undefined;
+    }
+
+    return session;
   },
 
   async joinSession(
@@ -303,8 +338,8 @@ export const liveSessionStore = {
       return { error: "Code PIN introuvable. Vérifiez le numéro de session." };
     }
 
-    if (session.status === "finished") {
-      return { error: "Cette session est déjà terminée." };
+    if (session.status === "finished" || session.status === "closed") {
+      return { error: "Cette session est terminée ou a été fermée par l'enseignant." };
     }
 
     const playerId = `player-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`;
@@ -346,8 +381,15 @@ export const liveSessionStore = {
     if (session.hostToken !== hostToken) {
       return { success: false, error: "Non autorisé" };
     }
+    session.hostLastSeen = Date.now();
 
-    if (action.type === "start_quiz") {
+    if (action.type === "close_session") {
+      session.status = "closed";
+      broadcast(session);
+      sessions.delete(pin);
+      await deleteFromCloud(pin);
+      return { success: true, state: getPublicState(session, true) };
+    } else if (action.type === "start_quiz") {
       session.status = "question";
       session.currentQuestionIndex = 0;
       session.questionStartedAt = Date.now();

@@ -152,6 +152,13 @@ const UI_TRANSLATIONS: Record<string, { fr: string; en: string }> = {
   teacherWrongCode: { fr: "Code enseignant incorrect. Veuillez réessayer.", en: "Incorrect teacher code. Please try again." },
   teacherLockBtn: { fr: "Verrouiller", en: "Lock" },
   teacherReturnToPlayer: { fr: "← Retour au mode participant", en: "← Back to participant mode" },
+  inviteWhatsAppBtn: { fr: "Inviter sur WhatsApp", en: "Invite on WhatsApp" },
+  inviteWhatsAppHeaderBtn: { fr: "Inviter WhatsApp", en: "Invite WhatsApp" },
+  inviteWhatsAppSubtext: {
+    fr: "Partagez le lien direct et le code PIN en un clic sur le groupe WhatsApp.",
+    en: "Share the direct link and PIN code in one click to the WhatsApp group.",
+  },
+  playerInviteWhatsAppBtn: { fr: "Inviter des amis sur WhatsApp", en: "Invite friends on WhatsApp" },
 };
 
 

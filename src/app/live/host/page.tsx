@@ -29,6 +29,7 @@ import {
 import Link from "next/link";
 import { allCourses } from "@/data/courses";
 import { CustomDropdown, DropdownOption } from "@/components/CustomDropdown";
+import { WhatsAppShareButton } from "@/components/WhatsAppShareButton";
 
 const OPTION_STYLES = [
   {
@@ -288,6 +289,23 @@ export default function LiveHostPage() {
             <span className="font-mono text-stone-800 dark:text-neutral-200 font-bold break-all">{playerUrl}</span>
           </p>
 
+          <div className="flex items-center gap-2">
+            <WhatsAppShareButton
+              pin={state.pin}
+              playerUrl={playerUrl}
+              variant="compact"
+              className="flex-1 justify-center py-2.5"
+            />
+            <button
+              type="button"
+              onClick={handleCopyLink}
+              className="flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-full bg-stone-100 hover:bg-stone-200 dark:bg-white/10 dark:hover:bg-white/20 text-xs font-semibold text-stone-700 dark:text-zinc-300 transition-colors shadow-sm shrink-0"
+            >
+              {copiedLink ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
+              <span>{copiedLink ? (language === "fr" ? "Copié !" : "Copied!") : (language === "fr" ? "Copier" : "Copy")}</span>
+            </button>
+          </div>
+
           <button
             type="button"
             onClick={() => setShowQrModal(false)}
@@ -527,34 +545,42 @@ export default function LiveHostPage() {
         <div className="absolute bottom-0 left-0 w-80 h-80 bg-neutral-200/50 dark:bg-white/5 rounded-full blur-3xl pointer-events-none" />
 
         {/* Top Header */}
-        <div className="relative z-10 flex items-center justify-between border-b border-stone-200 dark:border-white/10 pb-6">
-          <div className="flex items-center gap-3">
-            <div className="w-2.5 h-2.5 rounded-full bg-[#c5a059] animate-pulse" />
-            <h2 className="text-xs font-semibold uppercase tracking-widest text-[#9e7d32] dark:text-[#d6b26d]">
+        <div className="relative z-10 flex items-center justify-between border-b border-stone-200 dark:border-white/10 pb-4 sm:pb-6 gap-3">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <div className="w-2.5 h-2.5 rounded-full bg-[#c5a059] animate-pulse shrink-0" />
+            <h2 className="text-[11px] sm:text-xs font-semibold uppercase tracking-widest text-[#9e7d32] dark:text-[#d6b26d] truncate">
               {language === "fr"
                 ? "Nouveau Départ • Salle d'Attente Live"
                 : "New Beginnings • Live Waiting Room"}
             </h2>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+            <WhatsAppShareButton
+              pin={state.pin}
+              playerUrl={playerUrl}
+              variant="compact"
+            />
             <button
               onClick={handleCopyLink}
-              className="flex items-center gap-2 text-xs font-semibold px-4 py-2 rounded-full bg-white dark:bg-[#121217] border border-stone-200 dark:border-white/10 hover:border-[#c5a059]/40 text-stone-700 dark:text-neutral-300 transition-colors shadow-sm"
+              className="flex items-center gap-1.5 text-xs font-semibold px-2.5 sm:px-4 py-2 rounded-full bg-white dark:bg-[#121217] border border-stone-200 dark:border-white/10 hover:border-[#c5a059]/40 text-stone-700 dark:text-neutral-300 transition-colors shadow-sm active:scale-95"
+              title={language === "fr" ? "Copier le lien direct" : "Copy direct link"}
             >
               {copiedLink ? <Check className="w-4 h-4 text-emerald-500" /> : <Copy className="w-4 h-4" />}
-              {copiedLink
-                ? language === "fr" ? "Lien copié !" : "Link copied!"
-                : language === "fr" ? "Copier le lien direct" : "Copy direct link"}
+              <span className="hidden sm:inline">
+                {copiedLink
+                  ? language === "fr" ? "Lien copié !" : "Link copied!"
+                  : language === "fr" ? "Copier le lien" : "Copy link"}
+              </span>
             </button>
             <button
               type="button"
               onClick={handleExitHost}
-              className="flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-full bg-stone-100 hover:bg-stone-200 dark:bg-white/10 dark:hover:bg-white/20 text-stone-600 dark:text-zinc-300 transition-colors shadow-sm"
+              className="flex items-center gap-1 text-xs font-semibold px-2.5 sm:px-3 py-2 rounded-full bg-stone-100 hover:bg-stone-200 dark:bg-white/10 dark:hover:bg-white/20 text-stone-600 dark:text-zinc-300 transition-colors shadow-sm active:scale-95"
               title={language === "fr" ? "Fermer la session" : "Close session"}
             >
               <X className="w-3.5 h-3.5" />
-              <span>{language === "fr" ? "Quitter" : "Exit"}</span>
+              <span className="hidden sm:inline">{language === "fr" ? "Quitter" : "Exit"}</span>
             </button>
           </div>
         </div>
@@ -576,6 +602,18 @@ export default function LiveHostPage() {
               <div className="text-5xl sm:text-7xl font-black tracking-widest text-[#9e7d32] dark:text-[#d6b26d] font-mono">
                 {state.pin.slice(0, 3)} {state.pin.slice(3)}
               </div>
+            </div>
+
+            {/* WhatsApp Invite Button & Subtext */}
+            <div className="pt-1 flex flex-col items-center lg:items-start gap-2">
+              <WhatsAppShareButton
+                pin={state.pin}
+                playerUrl={playerUrl}
+                variant="primary"
+              />
+              <p className="text-xs text-stone-500 dark:text-neutral-400 max-w-sm">
+                {t("inviteWhatsAppSubtext")}
+              </p>
             </div>
 
             <div className="text-xs text-stone-500 dark:text-neutral-400">

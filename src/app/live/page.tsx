@@ -18,6 +18,7 @@ import {
   X,
 } from "lucide-react";
 import Link from "next/link";
+import { WhatsAppShareButton } from "@/components/WhatsAppShareButton";
 
 const AVATARS = ["✨", "🦁", "🕊️", "🌿", "🌟", "🔥", "⚡", "🎯"];
 
@@ -338,6 +339,14 @@ function LivePlayerContent() {
             {language === "fr"
               ? "Regardez l'écran de l'enseignant sur Zoom ou dans la salle. Le quiz va bientôt commencer !"
               : "Watch the teacher's screen on Zoom or in the room. The quiz will start soon!"}
+          </div>
+
+          <div className="pt-1">
+            <WhatsAppShareButton
+              pin={state.pin}
+              playerUrl={typeof window !== "undefined" ? `${window.location.origin}/live?pin=${state.pin}` : `https://quiz-nouveau-depart.vercel.app/live?pin=${state.pin}`}
+              variant="subtle"
+            />
           </div>
         </div>
       </div>

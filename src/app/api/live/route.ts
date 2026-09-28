@@ -7,7 +7,28 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const { action } = body;
 
+    if (action === "verify_teacher") {
+      const { teacherCode } = body;
+      const expectedCode = process.env.TEACHER_SECRET || "7777";
+      if (teacherCode && teacherCode.trim() === expectedCode.trim()) {
+        return NextResponse.json({ valid: true });
+      }
+      return NextResponse.json(
+        { valid: false, error: "Code enseignant incorrect" },
+        { status: 403 }
+      );
+    }
+
     if (action === "create") {
+      const { teacherCode } = body;
+      const expectedCode = process.env.TEACHER_SECRET || "7777";
+      if (!teacherCode || teacherCode.trim() !== expectedCode.trim()) {
+        return NextResponse.json(
+          { error: "Code enseignant invalide ou manquant" },
+          { status: 403 }
+        );
+      }
+
       const weekIdParam = body.weekId || (body.week ? `week-${String(body.week).padStart(2, "0")}` : "week-10");
       const { timerSeconds = 20, questionCount = 10 } = body;
       const result = liveSessionStore.createSession({

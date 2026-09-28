@@ -291,8 +291,8 @@ function LivePlayerContent() {
               className="text-xs text-stone-500 dark:text-neutral-400 hover:text-[#9e7d32] dark:hover:text-[#d6b26d] transition-colors inline-flex items-center justify-center gap-1.5 py-0.5"
             >
               <span>{language === "fr" ? "Vous animez la session ?" : "Hosting the session?"}</span>
-              <span className="font-bold underline underline-offset-2 text-[#9e7d32] dark:text-[#d6b26d] whitespace-nowrap">
-                {language === "fr" ? "Écran Enseignant (Zoom) →" : "Teacher Screen (Zoom) →"}
+              <span className="font-bold underline underline-offset-2 text-[#9e7d32] dark:text-[#d6b26d] inline-flex items-center gap-1 whitespace-nowrap">
+                <span>{language === "fr" ? "Écran Enseignant (Code requis) →" : "Teacher Screen (Code required) →"}</span>
               </span>
             </Link>
           </div>

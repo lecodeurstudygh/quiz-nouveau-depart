@@ -24,6 +24,7 @@ import {
   Award,
   Crown,
   X,
+  Lock,
 } from "lucide-react";
 import Link from "next/link";
 import { allCourses } from "@/data/courses";
@@ -61,7 +62,61 @@ const OPTION_STYLES = [
 ];
 
 export default function LiveHostPage() {
-  const { language } = useLanguage();
+  const { language, t } = useLanguage();
+
+  // Teacher authentication state
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [passcode, setPasscode] = useState<string>("");
+  const [authError, setAuthError] = useState<string | null>(null);
+  const [isVerifying, setIsVerifying] = useState<boolean>(false);
+  const [hasCheckedAuth, setHasCheckedAuth] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const savedCode = sessionStorage.getItem("nd_teacher_code");
+      if (savedCode) {
+        setIsAuthenticated(true);
+      }
+      setHasCheckedAuth(true);
+    }
+  }, []);
+
+  const handleVerifyPasscode = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!passcode.trim()) return;
+    setIsVerifying(true);
+    setAuthError(null);
+
+    try {
+      const res = await fetch("/api/live", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "verify_teacher",
+          teacherCode: passcode.trim(),
+        }),
+      });
+      const data = await res.json();
+      if (res.ok && data.valid) {
+        sessionStorage.setItem("nd_teacher_code", passcode.trim());
+        setIsAuthenticated(true);
+      } else {
+        setAuthError(data.error || (language === "fr" ? "Code enseignant incorrect" : "Incorrect teacher code"));
+      }
+    } catch {
+      setAuthError(language === "fr" ? "Erreur réseau. Réessayez." : "Network error. Try again.");
+    } finally {
+      setIsVerifying(false);
+    }
+  };
+
+  const handleLockTeacher = () => {
+    if (typeof window !== "undefined") {
+      sessionStorage.removeItem("nd_teacher_code");
+    }
+    setIsAuthenticated(false);
+    setPasscode("");
+  };
 
   // Setup state
   const [weekId, setWeekId] = useState<string>("week-10");
@@ -104,6 +159,7 @@ export default function LiveHostPage() {
   // Create session
   const handleCreateSession = async () => {
     try {
+      const teacherCode = sessionStorage.getItem("nd_teacher_code") || passcode.trim() || "7777";
       const res = await fetch("/api/live", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -112,12 +168,15 @@ export default function LiveHostPage() {
           weekId,
           timerSeconds,
           questionCount,
+          teacherCode,
         }),
       });
       const data = await res.json();
       if (data.pin && data.hostToken) {
         setPin(data.pin);
         setHostToken(data.hostToken);
+      } else if (data.error) {
+        alert(data.error);
       }
     } catch (err) {
       console.error("Failed to create live session", err);
@@ -241,22 +300,26 @@ export default function LiveHostPage() {
     );
   };
 
-  // 1. SETUP SCREEN
-  if (!pin || !state) {
+  // 0. TEACHER AUTHENTICATION SCREEN
+  if (!hasCheckedAuth) {
+    return (
+      <div className="min-h-[80vh] flex items-center justify-center">
+        <div className="w-8 h-8 rounded-full border-2 border-[#c5a059] border-t-transparent animate-spin" />
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
     return (
       <div className="min-h-[85vh] text-neutral-900 dark:text-zinc-100 flex flex-col items-center justify-center p-4 sm:p-6 relative overflow-hidden [isolation:isolate]">
         <div className="absolute top-0 right-0 w-96 h-96 bg-[#c5a059]/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-80 h-80 bg-neutral-200/50 dark:bg-white/5 rounded-full blur-3xl pointer-events-none" />
 
-        <div className="relative z-10 w-full max-w-xl bg-white dark:bg-[#121217] border border-stone-200/90 dark:border-white/10 rounded-3xl p-6 sm:p-8 shadow-2xl before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-stone-300 dark:before:via-white/20 before:to-transparent">
-          {/* Header row with badge on left and close button on right (Never overlaps!) */}
+        <div className="relative z-10 w-full max-w-md bg-white dark:bg-[#121217] border border-stone-200/90 dark:border-white/10 rounded-3xl p-6 sm:p-8 shadow-2xl before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-stone-300 dark:before:via-white/20 before:to-transparent">
+          {/* Header row */}
           <div className="flex items-center justify-between gap-3 mb-6">
-            <div className="flex items-center gap-2.5 min-w-0">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#c5a059] animate-ping shrink-0" />
-              <span className="text-[11px] sm:text-xs uppercase tracking-widest font-semibold text-[#9e7d32] dark:text-[#d6b26d] truncate">
-                {language === "fr"
-                  ? "Session Enseignant • Live Zoom & Présentiel"
-                  : "Teacher Session • Live Zoom & In-Person"}
-              </span>
+            <div className="w-12 h-12 rounded-2xl bg-[#c5a059]/15 border border-[#c5a059]/30 flex items-center justify-center shadow-inner">
+              <Lock className="w-6 h-6 text-[#9e7d32] dark:text-[#d6b26d]" />
             </div>
             <Link
               href="/"
@@ -266,6 +329,104 @@ export default function LiveHostPage() {
             >
               <X className="w-4 h-4" />
             </Link>
+          </div>
+
+          <h1 className="text-2xl font-light tracking-tight mb-2">
+            <span className="font-semibold">{t("teacherAccessTitle")}</span>
+          </h1>
+          <p className="text-neutral-500 dark:text-zinc-400 text-xs sm:text-sm mb-6 leading-relaxed">
+            {t("teacherAccessSubtitle")}
+          </p>
+
+          <form onSubmit={handleVerifyPasscode} className="space-y-4">
+            <div>
+              <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-600 dark:text-zinc-300 mb-2">
+                {language === "fr" ? "Code Enseignant" : "Teacher Code"}
+              </label>
+              <input
+                type="password"
+                value={passcode}
+                onChange={(e) => {
+                  setPasscode(e.target.value);
+                  if (authError) setAuthError(null);
+                }}
+                placeholder={t("teacherCodePlaceholder")}
+                autoFocus
+                className="w-full px-4 py-3.5 text-center text-lg tracking-widest font-mono rounded-2xl bg-neutral-100 dark:bg-white/5 border border-neutral-200 dark:border-white/10 focus:outline-none focus:ring-2 focus:ring-[#c5a059] text-neutral-900 dark:text-zinc-100 placeholder:text-neutral-400 dark:placeholder:text-zinc-600 shadow-inner"
+              />
+            </div>
+
+            {authError && (
+              <div className="p-3 rounded-2xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/50 text-rose-600 dark:text-rose-400 text-xs text-center font-medium">
+                {authError}
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={isVerifying || !passcode.trim()}
+              className="w-full bg-neutral-900 hover:bg-black text-white dark:bg-[#c5a059] dark:hover:bg-[#d6b26d] dark:text-zinc-950 font-bold py-3.5 rounded-full shadow-lg transition-all flex items-center justify-center gap-2 text-sm sm:text-base active:scale-95 disabled:opacity-50"
+            >
+              {isVerifying ? (
+                <div className="w-5 h-5 rounded-full border-2 border-current border-t-transparent animate-spin" />
+              ) : (
+                <>
+                  <Lock className="w-4 h-4" />
+                  <span>{t("teacherUnlockBtn")}</span>
+                </>
+              )}
+            </button>
+          </form>
+
+          <div className="mt-6 pt-4 text-center border-t border-stone-200/80 dark:border-white/10">
+            <Link
+              href="/live"
+              className="text-xs text-stone-500 dark:text-neutral-400 hover:text-[#9e7d32] dark:hover:text-[#d6b26d] transition-colors"
+            >
+              {t("teacherReturnToPlayer")}
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // 1. SETUP SCREEN
+  if (!pin || !state) {
+    return (
+      <div className="min-h-[85vh] text-neutral-900 dark:text-zinc-100 flex flex-col items-center justify-center p-4 sm:p-6 relative overflow-hidden [isolation:isolate]">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-[#c5a059]/10 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="relative z-10 w-full max-w-xl bg-white dark:bg-[#121217] border border-stone-200/90 dark:border-white/10 rounded-3xl p-6 sm:p-8 shadow-2xl before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-stone-300 dark:before:via-white/20 before:to-transparent">
+          {/* Header row with badge on left and close + lock buttons on right */}
+          <div className="flex items-center justify-between gap-3 mb-6">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <span className="w-2.5 h-2.5 rounded-full bg-[#c5a059] animate-ping shrink-0" />
+              <span className="text-[11px] sm:text-xs uppercase tracking-widest font-semibold text-[#9e7d32] dark:text-[#d6b26d] truncate">
+                {language === "fr"
+                  ? "Session Enseignant • Live Zoom & Présentiel"
+                  : "Teacher Session • Live Zoom & In-Person"}
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={handleLockTeacher}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-stone-100 hover:bg-stone-200 dark:bg-white/10 dark:hover:bg-white/20 text-xs font-medium text-stone-600 dark:text-zinc-300 transition-colors shadow-sm"
+                title={t("teacherLockBtn")}
+              >
+                <Lock className="w-3.5 h-3.5 text-[#9e7d32] dark:text-[#d6b26d]" />
+                <span className="hidden sm:inline">{t("teacherLockBtn")}</span>
+              </button>
+              <Link
+                href="/"
+                className="w-8 h-8 rounded-full bg-stone-100 hover:bg-stone-200 dark:bg-white/10 dark:hover:bg-white/20 text-stone-500 dark:text-zinc-400 hover:text-neutral-900 dark:hover:text-white flex items-center justify-center transition-all active:scale-95 shrink-0 shadow-sm"
+                title={language === "fr" ? "Fermer et retourner aux cours" : "Close and return to courses"}
+                aria-label="Fermer"
+              >
+                <X className="w-4 h-4" />
+              </Link>
+            </div>
           </div>
 
           <h1 className="text-2xl sm:text-3xl font-light tracking-tight mb-2">

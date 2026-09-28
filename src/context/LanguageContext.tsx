@@ -142,6 +142,16 @@ const UI_TRANSLATIONS: Record<string, { fr: string; en: string }> = {
   quizEncouragementSubtitle: { fr: "Tu y es presque, continue tes révisions !", en: "You're getting closer, keep revising!" },
   quizPassCongratulations: { fr: "Félicitations !", en: "Congratulations!" },
   quizPassValidated: { fr: "Tu as validé les acquis avec succès !", en: "You have successfully validated the milestones!" },
+  teacherAccessTitle: { fr: "Espace Enseignant", en: "Teacher Access" },
+  teacherAccessSubtitle: {
+    fr: "Code d'accès secret requis pour animer une session en direct sur Zoom ou projecteur.",
+    en: "Secret access code required to host a live session on Zoom or projector.",
+  },
+  teacherCodePlaceholder: { fr: "Code secret enseignant (ex: 7777)", en: "Teacher secret code (e.g. 7777)" },
+  teacherUnlockBtn: { fr: "Déverrouiller l'Espace", en: "Unlock Access" },
+  teacherWrongCode: { fr: "Code enseignant incorrect. Veuillez réessayer.", en: "Incorrect teacher code. Please try again." },
+  teacherLockBtn: { fr: "Verrouiller", en: "Lock" },
+  teacherReturnToPlayer: { fr: "← Retour au mode participant", en: "← Back to participant mode" },
 };
 
 

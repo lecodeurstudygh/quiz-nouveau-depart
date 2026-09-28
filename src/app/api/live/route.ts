@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
 
       const weekIdParam = body.weekId || (body.week ? `week-${String(body.week).padStart(2, "0")}` : "week-10");
       const { timerSeconds = 20, questionCount = 10 } = body;
-      const result = liveSessionStore.createSession({
+      const result = await liveSessionStore.createSession({
         weekId: weekIdParam,
         timerSeconds,
         questionCount,
@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
       const weekIdParam = body.weekId || (body.week ? `week-${String(body.week).padStart(2, "0")}` : "week-10");
       const { timerSeconds = 20, questionCount = 8 } = body;
 
-      const created = liveSessionStore.createSession({
+      const created = await liveSessionStore.createSession({
         weekId: weekIdParam,
         timerSeconds,
         questionCount,
@@ -52,7 +52,7 @@ export async function POST(req: NextRequest) {
       });
 
       // Automatically join the creator as Player 1
-      const joinResult = liveSessionStore.joinSession(created.pin, playerName, avatar);
+      const joinResult = await liveSessionStore.joinSession(created.pin, playerName, avatar);
       if ("error" in joinResult) {
         return NextResponse.json({ error: joinResult.error }, { status: 500 });
       }
@@ -70,7 +70,7 @@ export async function POST(req: NextRequest) {
       if (!pin) {
         return NextResponse.json({ error: "Code PIN requis" }, { status: 400 });
       }
-      const result = liveSessionStore.joinSession(pin, playerName, avatar);
+      const result = await liveSessionStore.joinSession(pin, playerName, avatar);
       if ("error" in result) {
         return NextResponse.json({ error: result.error }, { status: 404 });
       }
@@ -86,7 +86,7 @@ export async function POST(req: NextRequest) {
       if (!pin || !hostToken || !hostAction) {
         return NextResponse.json({ error: "Paramètres manquants" }, { status: 400 });
       }
-      const result = liveSessionStore.handleHostAction(pin, hostToken, hostAction);
+      const result = await liveSessionStore.handleHostAction(pin, hostToken, hostAction);
       if (!result.success) {
         return NextResponse.json({ error: result.error }, { status: 400 });
       }
@@ -102,7 +102,7 @@ export async function POST(req: NextRequest) {
       if (!pin || !playerId || !playerAction) {
         return NextResponse.json({ error: "Paramètres manquants" }, { status: 400 });
       }
-      const result = liveSessionStore.handlePlayerAction(pin, playerId, playerAction);
+      const result = await liveSessionStore.handlePlayerAction(pin, playerId, playerAction);
       if (!result.success) {
         return NextResponse.json({ error: result.error }, { status: 400 });
       }
@@ -126,7 +126,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Code PIN requis" }, { status: 400 });
   }
 
-  const session = liveSessionStore.getSession(pin);
+  const session = await liveSessionStore.getSession(pin);
   if (!session) {
     return NextResponse.json({ error: "Session introuvable" }, { status: 404 });
   }
@@ -141,17 +141,21 @@ export async function GET(req: NextRequest) {
 
   const stream = new ReadableStream({
     start(controller) {
+      let unsubscribe: () => void = () => {};
+
       // Send initial state immediately
       const initial = getPublicState(session, isHost);
       controller.enqueue(encoder.encode(`data: ${JSON.stringify(initial)}\n\n`));
 
       // Subscribe to session updates
-      const unsubscribe = liveSessionStore.subscribe(pin, (newState) => {
+      liveSessionStore.subscribe(pin, (newState) => {
         try {
           controller.enqueue(encoder.encode(`data: ${JSON.stringify(newState)}\n\n`));
         } catch {
-          unsubscribe();
+          // ignore
         }
+      }).then((unsub) => {
+        unsubscribe = unsub;
       });
 
       // Heartbeat every 15s to keep connection alive through proxies

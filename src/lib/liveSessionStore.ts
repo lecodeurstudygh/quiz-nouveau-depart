@@ -25,6 +25,7 @@ interface LiveSessionInternal {
   players: Record<string, LivePlayer>;
   listeners: Set<(state: LiveSessionState) => void>;
   createdAt: number;
+  _cachedAt?: number;
 }
 
 // Preserve session store across Next.js dev fast-refreshes and serverless warm reuses
@@ -151,6 +152,46 @@ export function getPublicState(
   return baseState;
 }
 
+const KV_ENDPOINT = "https://kvdb.io/2EWtEdQuXZ6eEnQm6XLrrx";
+
+async function persistToCloud(session: LiveSessionInternal) {
+  try {
+    const { listeners, ...serializable } = session;
+    session._cachedAt = Date.now();
+    await fetch(`${KV_ENDPOINT}/session_${session.pin}?ttl=86400`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(serializable),
+      signal: AbortSignal.timeout(3000),
+    });
+  } catch (err) {
+    console.warn("Could not persist session to cloud KV", err);
+  }
+}
+
+async function restoreFromCloud(pin: string): Promise<LiveSessionInternal | null> {
+  try {
+    const res = await fetch(`${KV_ENDPOINT}/session_${pin}?_t=${Date.now()}`, {
+      cache: "no-store",
+      headers: { "Cache-Control": "no-cache" },
+      signal: AbortSignal.timeout(3000),
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (!data || !data.pin) return null;
+    const existing = sessions.get(pin);
+    const restored: LiveSessionInternal = {
+      ...data,
+      listeners: existing ? existing.listeners : new Set(),
+      _cachedAt: Date.now(),
+    };
+    sessions.set(pin, restored);
+    return restored;
+  } catch (err) {
+    return sessions.get(pin) || null;
+  }
+}
+
 function broadcast(session: LiveSessionInternal) {
   const publicState = getPublicState(session, false);
   session.listeners.forEach((callback) => {
@@ -163,12 +204,12 @@ function broadcast(session: LiveSessionInternal) {
 }
 
 export const liveSessionStore = {
-  createSession(params: {
+  async createSession(params: {
     weekId: string;
     timerSeconds?: number;
     questionCount?: number;
     mode?: "teacher" | "challenge";
-  }): { session: LiveSessionState; hostToken: string; pin: string } {
+  }): Promise<{ session: LiveSessionState; hostToken: string; pin: string }> {
     const pin = generateUniquePin();
     const id = `live-${pin}-${Date.now()}`;
     const hostToken = `host-${Math.random().toString(36).substring(2)}${Date.now()}`;
@@ -225,9 +266,11 @@ export const liveSessionStore = {
       players: {},
       listeners: new Set(),
       createdAt: Date.now(),
+      _cachedAt: Date.now(),
     };
 
     sessions.set(pin, session);
+    await persistToCloud(session);
 
     return {
       session: getPublicState(session, true),
@@ -236,17 +279,26 @@ export const liveSessionStore = {
     };
   },
 
-  getSession(pin: string): LiveSessionInternal | undefined {
-    return sessions.get(normalizePin(pin));
+  async getSession(rawPin: string): Promise<LiveSessionInternal | undefined> {
+    const pin = normalizePin(rawPin);
+    let session = sessions.get(pin);
+    const now = Date.now();
+    if (!session || !session._cachedAt || now - session._cachedAt > 800) {
+      const fromCloud = await restoreFromCloud(pin);
+      if (fromCloud) {
+        session = fromCloud;
+      }
+    }
+    return session || undefined;
   },
 
-  joinSession(
-    pin: string,
+  async joinSession(
+    rawPin: string,
     playerName: string,
     avatar: string
-  ): { player: LivePlayer; playerId: string; state: LiveSessionState } | { error: string } {
-    const clean = normalizePin(pin);
-    const session = sessions.get(clean);
+  ): Promise<{ player: LivePlayer; playerId: string; state: LiveSessionState } | { error: string }> {
+    const pin = normalizePin(rawPin);
+    const session = (await restoreFromCloud(pin)) || sessions.get(pin);
     if (!session) {
       return { error: "Code PIN introuvable. Vérifiez le numéro de session." };
     }
@@ -272,6 +324,8 @@ export const liveSessionStore = {
     };
 
     session.players[playerId] = player;
+    sessions.set(pin, session);
+    await persistToCloud(session);
     broadcast(session);
 
     return {
@@ -281,12 +335,13 @@ export const liveSessionStore = {
     };
   },
 
-  handleHostAction(
-    pin: string,
+  async handleHostAction(
+    rawPin: string,
     hostToken: string,
     action: LiveHostAction
-  ): { success: boolean; state?: LiveSessionState; error?: string } {
-    const session = sessions.get(normalizePin(pin));
+  ): Promise<{ success: boolean; state?: LiveSessionState; error?: string }> {
+    const pin = normalizePin(rawPin);
+    const session = (await restoreFromCloud(pin)) || sessions.get(pin);
     if (!session) return { success: false, error: "Session introuvable" };
     if (session.hostToken !== hostToken) {
       return { success: false, error: "Non autorisé" };
@@ -328,16 +383,19 @@ export const liveSessionStore = {
       delete session.players[action.playerId];
     }
 
+    sessions.set(pin, session);
+    await persistToCloud(session);
     broadcast(session);
     return { success: true, state: getPublicState(session, true) };
   },
 
-  handlePlayerAction(
-    pin: string,
+  async handlePlayerAction(
+    rawPin: string,
     playerId: string,
     action: LivePlayerAction
-  ): { success: boolean; error?: string } {
-    const session = sessions.get(normalizePin(pin));
+  ): Promise<{ success: boolean; error?: string }> {
+    const pin = normalizePin(rawPin);
+    const session = (await restoreFromCloud(pin)) || sessions.get(pin);
     if (!session) return { success: false, error: "Session introuvable" };
     if (session.status !== "question") {
       return { success: false, error: "Temps écoulé ou question fermée" };
@@ -379,23 +437,28 @@ export const liveSessionStore = {
       player.lastPointsEarned = 0;
     }
 
-    broadcast(session);
-
     // If all players have answered, automatically trigger reveal
     const allAnswered = Object.values(session.players).every((p) => p.answered);
     if (allAnswered && Object.keys(session.players).length > 0) {
       session.status = "reveal";
-      broadcast(session);
     }
+
+    sessions.set(pin, session);
+    await persistToCloud(session);
+    broadcast(session);
 
     return { success: true };
   },
 
-  subscribe(
-    pin: string,
+  async subscribe(
+    rawPin: string,
     callback: (state: LiveSessionState) => void
-  ): () => void {
-    const session = sessions.get(normalizePin(pin));
+  ): Promise<() => void> {
+    const pin = normalizePin(rawPin);
+    let session = sessions.get(pin);
+    if (!session) {
+      session = (await restoreFromCloud(pin)) || undefined;
+    }
     if (!session) return () => {};
 
     session.listeners.add(callback);

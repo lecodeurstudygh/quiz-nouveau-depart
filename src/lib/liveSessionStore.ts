@@ -174,8 +174,15 @@ export const liveSessionStore = {
     const hostToken = `host-${Math.random().toString(36).substring(2)}${Date.now()}`;
 
     const localIp = getLocalNetworkIp();
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null);
-    const lanUrl = appUrl || `http://${localIp}:3000`;
+    const appUrl =
+      process.env.NEXT_PUBLIC_APP_URL ||
+      (process.env.VERCEL_PROJECT_PRODUCTION_URL
+        ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+        : "https://quiz-nouveau-depart.vercel.app");
+    const lanUrl =
+      process.env.NODE_ENV === "development"
+        ? `http://${localIp}:3000`
+        : appUrl;
 
     // Select and filter questions
     let candidateQuestions: Question[] = [];

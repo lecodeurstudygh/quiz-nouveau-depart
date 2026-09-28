@@ -221,12 +221,24 @@ export default function LiveHostPage() {
   // Show late-join QR Code modal
   const [showQrModal, setShowQrModal] = useState(false);
 
-  // Copy shareable player link (prioritizes LAN URL or public deployment URL)
-  const playerUrl = state?.lanUrl
-    ? `${state.lanUrl}/live?pin=${pin || ""}`
-    : typeof window !== "undefined"
-    ? `${window.location.origin}/live?pin=${pin || ""}`
-    : `http://localhost:3000/live?pin=${pin || ""}`;
+  // Canonical player URL: prioritize clean production domain without deployment hashes or preview login gates
+  const cleanBaseUrl = useMemo(() => {
+    if (typeof window !== "undefined") {
+      const origin = window.location.origin;
+      // In local development, use LAN URL if available so mobile on local Wi-Fi can join
+      if (window.location.hostname === "localhost" && state?.lanUrl && !state.lanUrl.includes("vercel.app")) {
+        return state.lanUrl;
+      }
+      // If visiting a Vercel preview domain containing hashes or username, fallback to official production domain
+      if (origin.includes(".vercel.app") && origin !== "https://quiz-nouveau-depart.vercel.app") {
+        return "https://quiz-nouveau-depart.vercel.app";
+      }
+      return origin;
+    }
+    return state?.lanUrl || "https://quiz-nouveau-depart.vercel.app";
+  }, [state?.lanUrl]);
+
+  const playerUrl = `${cleanBaseUrl}/live?pin=${pin || ""}`;
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(playerUrl);

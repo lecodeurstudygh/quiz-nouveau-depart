@@ -48,12 +48,26 @@ const OPTION_STYLES = [
   },
 ];
 
+function getPublicAppBaseUrl(): string {
+  if (typeof window !== "undefined") {
+    const origin = window.location.origin;
+    if (window.location.hostname === "localhost") {
+      return origin;
+    }
+    if (origin.includes(".vercel.app") && origin !== "https://quiz-nouveau-depart.vercel.app") {
+      return "https://quiz-nouveau-depart.vercel.app";
+    }
+    return origin;
+  }
+  return "https://quiz-nouveau-depart.vercel.app";
+}
+
 function LivePlayerContent() {
   const { language, t } = useLanguage();
   const searchParams = useSearchParams();
 
   // Query parameter PIN support (from QR code scan or WhatsApp link)
-  const pinFromUrl = searchParams.get("pin") || "";
+  const pinFromUrl = (searchParams.get("pin") || "").replace(/\s+/g, "").trim();
 
   // Join form state
   const [pinInput, setPinInput] = useState<string>(pinFromUrl);
@@ -66,6 +80,7 @@ function LivePlayerContent() {
   const [liveTab, setLiveTab] = useState<"join" | "challenge">(pinFromUrl ? "join" : "join");
   const [challengeWeekId, setChallengeWeekId] = useState<string>("week-10");
   const [challengeQuestionCount, setChallengeQuestionCount] = useState<number>(8);
+  const [challengeTimerSeconds, setChallengeTimerSeconds] = useState<number>(20);
   const [isCreatingChallenge, setIsCreatingChallenge] = useState<boolean>(false);
 
   // Active session player & host token (if user created challenge)
@@ -217,7 +232,7 @@ function LivePlayerContent() {
           action: "create_challenge",
           weekId: challengeWeekId,
           questionCount: challengeQuestionCount,
-          timerSeconds: 20,
+          timerSeconds: challengeTimerSeconds,
           playerName: nameInput.trim(),
           avatar,
         }),
@@ -482,6 +497,29 @@ function LivePlayerContent() {
                 </div>
               </div>
 
+              {/* Question Timer Selector */}
+              <div>
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-neutral-600 dark:text-neutral-400 mb-1">
+                  {language === "fr" ? "Temps par question" : "Time per question"}
+                </label>
+                <div className="grid grid-cols-4 gap-1.5 sm:gap-2">
+                  {[15, 20, 30, 45].map((sec) => (
+                    <button
+                      key={sec}
+                      type="button"
+                      onClick={() => setChallengeTimerSeconds(sec)}
+                      className={`py-2 rounded-xl text-xs font-bold border transition-all ${
+                        challengeTimerSeconds === sec
+                          ? "bg-[#c5a059]/20 border-[#c5a059] text-neutral-900 dark:text-[#d6b26d] scale-102 shadow-sm"
+                          : "bg-stone-50 dark:bg-black/30 border-stone-200 dark:border-white/10 text-stone-600 dark:text-zinc-400 hover:border-stone-300"
+                      }`}
+                    >
+                      {sec}s
+                    </button>
+                  ))}
+                </div>
+              </div>
+
               {/* Player Name */}
               <div>
                 <label className="block text-[11px] font-bold uppercase tracking-wider text-neutral-600 dark:text-neutral-400 mb-1">
@@ -556,10 +594,7 @@ function LivePlayerContent() {
   // 2. LOBBY SCREEN (WAITING ROOM)
   if (state.status === "lobby") {
     const formattedPin = state.pin.length === 6 ? `${state.pin.slice(0, 3)} ${state.pin.slice(3)}` : state.pin;
-    const playerDirectUrl =
-      typeof window !== "undefined"
-        ? `${window.location.origin}/live?pin=${state.pin}`
-        : `https://quiz-nouveau-depart.vercel.app/live?pin=${state.pin}`;
+    const playerDirectUrl = `${getPublicAppBaseUrl()}/live?pin=${state.pin}`;
 
     return (
       <div className="min-h-[75vh] text-neutral-900 dark:text-white flex flex-col items-center justify-center p-3 sm:p-6 pb-24 sm:pb-8 text-center select-none relative overflow-hidden [isolation:isolate]">
@@ -1044,7 +1079,7 @@ function LivePlayerContent() {
           <div>
             <WhatsAppShareButton
               pin={state.pin}
-              playerUrl={typeof window !== "undefined" ? `${window.location.origin}/live?pin=${state.pin}` : `https://quiz-nouveau-depart.vercel.app/live?pin=${state.pin}`}
+              playerUrl={`${getPublicAppBaseUrl()}/live?pin=${state.pin}`}
               variant="primary"
               customLabel={t("challengeShareResultsWhatsApp")}
               customShareText={shareResultsText}

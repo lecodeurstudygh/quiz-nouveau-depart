@@ -579,15 +579,15 @@ export default function LiveHostPage() {
     const playersList = Object.values(state.players);
 
     return (
-      <div className="min-h-[85vh] text-neutral-900 dark:text-white flex flex-col justify-between p-6 sm:p-10 select-none relative overflow-hidden [isolation:isolate] bg-white/95 dark:bg-[#0f0f14] border border-stone-200/90 dark:border-white/10 rounded-3xl shadow-xl">
+      <div className="min-h-[85vh] text-neutral-900 dark:text-white flex flex-col justify-between p-4 sm:p-8 md:p-10 select-none relative overflow-hidden [isolation:isolate] bg-white/95 dark:bg-[#0f0f14] border border-stone-200/90 dark:border-white/10 rounded-2xl sm:rounded-3xl shadow-xl">
         <div className="absolute top-0 right-0 w-96 h-96 bg-[#c5a059]/10 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-80 h-80 bg-neutral-200/50 dark:bg-white/5 rounded-full blur-3xl pointer-events-none" />
 
         {/* Top Header */}
-        <div className="relative z-10 flex items-center justify-between border-b border-stone-200 dark:border-white/10 pb-4 sm:pb-6 gap-3">
-          <div className="flex items-center gap-2.5 min-w-0">
+        <div className="relative z-10 flex items-center justify-between border-b border-stone-200 dark:border-white/10 pb-3 sm:pb-5 gap-2 sm:gap-3">
+          <div className="flex items-center gap-2 min-w-0">
             <div className="w-2.5 h-2.5 rounded-full bg-[#c5a059] animate-pulse shrink-0" />
-            <h2 className="text-[11px] sm:text-xs font-semibold uppercase tracking-widest text-[#9e7d32] dark:text-[#d6b26d] truncate">
+            <h2 className="text-[11px] sm:text-xs font-semibold uppercase tracking-widest text-[#9e7d32] dark:text-[#d6b26d] truncate max-w-[160px] sm:max-w-none">
               {language === "fr"
                 ? "Nouveau Départ • Salle d'Attente Live"
                 : "New Beginnings • Live Waiting Room"}
@@ -602,7 +602,7 @@ export default function LiveHostPage() {
             />
             <button
               onClick={handleCopyLink}
-              className="flex items-center gap-1.5 text-xs font-semibold px-2.5 sm:px-4 py-2 rounded-full bg-white dark:bg-[#121217] border border-stone-200 dark:border-white/10 hover:border-[#c5a059]/40 text-stone-700 dark:text-neutral-300 transition-colors shadow-sm active:scale-95"
+              className="flex items-center gap-1.5 text-xs font-semibold px-2.5 sm:px-4 py-2 rounded-full bg-white dark:bg-[#121217] border border-stone-200 dark:border-white/10 hover:border-[#c5a059]/40 text-stone-700 dark:text-neutral-300 transition-colors shadow-sm active:scale-95 shrink-0"
               title={language === "fr" ? "Copier le lien direct" : "Copy direct link"}
             >
               {copiedLink ? <Check className="w-4 h-4 text-emerald-500" /> : <Copy className="w-4 h-4" />}
@@ -615,7 +615,7 @@ export default function LiveHostPage() {
             <button
               type="button"
               onClick={handleExitHost}
-              className="flex items-center gap-1 text-xs font-semibold px-2.5 sm:px-3 py-2 rounded-full bg-stone-100 hover:bg-stone-200 dark:bg-white/10 dark:hover:bg-white/20 text-stone-600 dark:text-zinc-300 transition-colors shadow-sm active:scale-95"
+              className="flex items-center gap-1 text-xs font-semibold px-2.5 sm:px-3 py-2 rounded-full bg-stone-100 hover:bg-stone-200 dark:bg-white/10 dark:hover:bg-white/20 text-stone-600 dark:text-zinc-300 transition-colors shadow-sm active:scale-95 shrink-0"
               title={language === "fr" ? "Fermer la session" : "Close session"}
             >
               <X className="w-3.5 h-3.5" />
@@ -625,20 +625,20 @@ export default function LiveHostPage() {
         </div>
 
         {/* Central Display: Huge PIN & QR Code */}
-        <div className="relative z-10 my-auto grid grid-cols-1 lg:grid-cols-2 gap-10 items-center max-w-5xl mx-auto w-full py-8">
+        <div className="relative z-10 my-auto grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-10 items-center max-w-5xl mx-auto w-full py-4 sm:py-8">
           {/* Instructions & PIN */}
-          <div className="space-y-6 text-center lg:text-left">
-            <p className="text-stone-600 dark:text-neutral-400 text-sm font-medium">
+          <div className="space-y-4 sm:space-y-6 text-center lg:text-left">
+            <p className="text-stone-600 dark:text-neutral-400 text-xs sm:text-sm font-medium">
               {language === "fr"
                 ? "Sur votre smartphone, rejoignez la partie en saisissant le code PIN :"
                 : "On your smartphone, join the game by entering the PIN code:"}
             </p>
 
-            <div className="inline-block p-6 sm:p-8 bg-white dark:bg-[#121217] border border-stone-200 dark:border-[#c5a059]/30 rounded-3xl shadow-xl shadow-stone-200/50 dark:shadow-[#c5a059]/10 backdrop-blur-md relative overflow-hidden before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-stone-300 dark:before:via-white/20 before:to-transparent">
-              <span className="text-xs uppercase tracking-widest text-stone-500 dark:text-[#d6b26d] font-bold block mb-1">
+            <div className="inline-block p-4 sm:p-8 bg-white dark:bg-[#121217] border border-stone-200 dark:border-[#c5a059]/30 rounded-2xl sm:rounded-3xl shadow-xl shadow-stone-200/50 dark:shadow-[#c5a059]/10 backdrop-blur-md relative overflow-hidden before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-stone-300 dark:before:via-white/20 before:to-transparent">
+              <span className="text-[10px] sm:text-xs uppercase tracking-widest text-stone-500 dark:text-[#d6b26d] font-bold block mb-1">
                 {language === "fr" ? "Code PIN du Jeu" : "Game PIN Code"}
               </span>
-              <div className="text-5xl sm:text-7xl font-black tracking-widest text-[#9e7d32] dark:text-[#d6b26d] font-mono">
+              <div className="text-4xl sm:text-7xl font-black tracking-widest text-[#9e7d32] dark:text-[#d6b26d] font-mono">
                 {state.pin.slice(0, 3)} {state.pin.slice(3)}
               </div>
             </div>
@@ -664,11 +664,11 @@ export default function LiveHostPage() {
           </div>
 
           {/* QR Code */}
-          <div className="flex flex-col items-center justify-center space-y-3">
-            <div className="p-4 bg-white rounded-3xl shadow-xl border border-stone-200 dark:border-white/20">
-              <QRCodeDisplay url={playerUrl} size={220} />
+          <div className="flex flex-col items-center justify-center space-y-2 sm:space-y-3">
+            <div className="p-3 sm:p-4 bg-white rounded-2xl sm:rounded-3xl shadow-xl border border-stone-200 dark:border-white/20">
+              <QRCodeDisplay url={playerUrl} size={190} />
             </div>
-            <p className="text-xs text-stone-500 dark:text-neutral-400 font-medium">
+            <p className="text-xs text-stone-500 dark:text-neutral-400 font-medium text-center">
               {language === "fr"
                 ? "Scannez directement avec l'appareil photo de votre téléphone"
                 : "Scan directly with your phone's camera"}
@@ -677,11 +677,11 @@ export default function LiveHostPage() {
         </div>
 
         {/* Players Waiting List & Start Button */}
-        <div className="relative z-10 border-t border-stone-200 dark:border-white/10 pt-6 space-y-6">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <Users className="w-5 h-5 text-[#c5a059]" />
-              <span className="text-lg font-bold text-neutral-900 dark:text-white">
+        <div className="relative z-10 border-t border-stone-200 dark:border-white/10 pt-4 sm:pt-6 space-y-4 sm:space-y-6">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <Users className="w-4 h-4 sm:w-5 sm:h-5 text-[#c5a059]" />
+              <span className="text-base sm:text-lg font-bold text-neutral-900 dark:text-white">
                 {language === "fr"
                   ? `${playersList.length} participant${playersList.length > 1 ? "s" : ""} connecté${playersList.length > 1 ? "s" : ""}`
                   : `${playersList.length} participant${playersList.length > 1 ? "s" : ""} connected`}
@@ -691,7 +691,7 @@ export default function LiveHostPage() {
             <button
               onClick={() => sendHostAction({ type: "start_quiz" })}
               disabled={playersList.length === 0}
-              className={`flex items-center gap-3 px-8 py-4 rounded-full font-black text-lg transition-all shadow-xl active:scale-95 ${
+              className={`w-full sm:w-auto flex items-center justify-center gap-2.5 px-6 sm:px-8 py-3.5 sm:py-4 rounded-full font-black text-base sm:text-lg transition-all shadow-xl active:scale-95 ${
                 playersList.length > 0
                   ? "bg-[#c5a059] hover:bg-[#d6b26d] text-zinc-950 hover:scale-105 shadow-[#c5a059]/20"
                   : "bg-stone-200 dark:bg-white/10 text-stone-400 dark:text-neutral-500 cursor-not-allowed"
@@ -736,71 +736,91 @@ export default function LiveHostPage() {
     const totalPlayers = state.playerCount;
 
     return (
-      <div className="min-h-[85vh] text-neutral-900 dark:text-white flex flex-col justify-between p-6 sm:p-10 select-none relative overflow-hidden [isolation:isolate] bg-white/95 dark:bg-[#0f0f14] border border-stone-200/90 dark:border-white/10 rounded-3xl shadow-xl">
+      <div className="min-h-[85vh] text-neutral-900 dark:text-white flex flex-col justify-between p-3.5 sm:p-8 md:p-10 select-none relative overflow-hidden [isolation:isolate] bg-white/95 dark:bg-[#0f0f14] border border-stone-200/90 dark:border-white/10 rounded-2xl sm:rounded-3xl shadow-xl">
         <div className="absolute top-0 right-0 w-96 h-96 bg-[#c5a059]/10 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-80 h-80 bg-neutral-200/50 dark:bg-white/5 rounded-full blur-3xl pointer-events-none" />
 
         {/* Top bar: Question indicator, Late-joiner PIN, Timer & Answer counter */}
-        <div className="relative z-10 flex items-center justify-between border-b border-stone-200 dark:border-white/10 pb-4">
-          <div className="flex items-center gap-3">
-            <div className="text-sm font-bold uppercase tracking-widest text-[#9e7d32] dark:text-[#d6b26d]">
-              Question {state.currentQuestionIndex + 1} / {state.totalQuestions}
+        <div className="relative z-10 border-b border-stone-200 dark:border-white/10 pb-3 sm:pb-4 space-y-2.5 sm:space-y-0 sm:flex sm:items-center sm:justify-between">
+          {/* Row 1 on mobile, Left on desktop: Question count + PIN */}
+          <div className="flex items-center justify-between sm:justify-start gap-2 sm:gap-3 w-full sm:w-auto">
+            <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+              <span className="text-xs sm:text-sm font-bold uppercase tracking-wider text-[#9e7d32] dark:text-[#d6b26d] whitespace-nowrap">
+                {language === "fr"
+                  ? `Question ${state.currentQuestionIndex + 1} / ${state.totalQuestions}`
+                  : `Question ${state.currentQuestionIndex + 1} / ${state.totalQuestions}`}
+              </span>
+
+              {/* Persistent Late-Joiner PIN badge - never wraps */}
+              <button
+                type="button"
+                onClick={() => setShowQrModal(true)}
+                className="flex items-center gap-1 px-2.5 sm:px-3 py-1 bg-white dark:bg-[#121217] hover:bg-stone-50 dark:hover:bg-[#1a1a22] border border-stone-200 dark:border-[#c5a059]/40 rounded-full text-[11px] sm:text-xs font-mono font-bold text-[#9e7d32] dark:text-[#d6b26d] transition-all hover:scale-105 shadow-sm shrink-0 whitespace-nowrap"
+                title={language === "fr" ? "Cliquer pour afficher le QR Code pour les retardataires" : "Click to view QR code for late arrivals"}
+              >
+                <span className="text-[10px] uppercase text-stone-500 dark:text-neutral-400">PIN :</span>
+                <span className="tracking-wider">{state.pin}</span>
+              </button>
             </div>
 
-            {/* Persistent Late-Joiner PIN badge */}
+            {/* Exit button on mobile top right */}
             <button
               type="button"
-              onClick={() => setShowQrModal(true)}
-              className="flex items-center gap-1.5 px-3 py-1 bg-white dark:bg-[#121217] hover:bg-stone-50 dark:hover:bg-[#1a1a22] border border-stone-200 dark:border-[#c5a059]/40 rounded-full text-xs font-mono font-bold text-[#9e7d32] dark:text-[#d6b26d] transition-all hover:scale-105 shadow-sm"
-              title={language === "fr" ? "Cliquer pour afficher le QR Code pour les retardataires" : "Click to view QR code for late arrivals"}
+              onClick={handleExitHost}
+              className="sm:hidden flex items-center justify-center w-7 h-7 rounded-full bg-stone-100 hover:bg-stone-200 dark:bg-white/10 dark:hover:bg-white/20 text-stone-600 dark:text-zinc-300 transition-colors shadow-sm shrink-0"
+              title={language === "fr" ? "Fermer la session" : "Close session"}
             >
-              <span className="text-[10px] uppercase text-stone-500 dark:text-neutral-400">PIN :</span>
-              <span className="tracking-widest">{state.pin}</span>
+              <X className="w-3.5 h-3.5" />
             </button>
           </div>
 
-          {/* Central Circular / Pill Timer */}
-          <div
-            className={`flex items-center gap-2 px-6 py-2 rounded-full font-black text-2xl transition-all ${
-              secondsLeft <= 5
-                ? "bg-rose-500/15 text-rose-600 dark:text-rose-400 border border-rose-500/40 animate-pulse"
-                : "bg-white dark:bg-[#121217] border border-stone-200 dark:border-white/10 text-[#9e7d32] dark:text-[#d6b26d] shadow-sm"
-            }`}
-          >
-            <Clock className="w-5 h-5 text-[#c5a059]" />
-            <span>{secondsLeft}s</span>
-          </div>
-
-          {/* Answered counter & Exit */}
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2 text-sm text-stone-500 dark:text-neutral-400 font-semibold">
-              <Users className="w-4 h-4 text-[#c5a059]" />
+          {/* Row 2 on mobile, Center on desktop: Timer & Answer Counter */}
+          <div className="flex items-center justify-between sm:justify-center gap-3">
+            {/* Answered counter */}
+            <div className="flex items-center gap-1.5 text-xs sm:text-sm text-stone-500 dark:text-neutral-400 font-semibold">
+              <Users className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#c5a059] shrink-0" />
               <span>
                 {language === "fr"
                   ? `${answeredCount} / ${totalPlayers} ont répondu`
                   : `${answeredCount} / ${totalPlayers} answered`}
               </span>
             </div>
+
+            {/* Timer Badge */}
+            <div
+              className={`flex items-center gap-1.5 px-3.5 sm:px-6 py-1 sm:py-2 rounded-full font-black text-sm sm:text-2xl transition-all shadow-sm shrink-0 ${
+                secondsLeft <= 5
+                  ? "bg-rose-500/15 text-rose-600 dark:text-rose-400 border border-rose-500/40 animate-pulse"
+                  : "bg-white dark:bg-[#121217] border border-stone-200 dark:border-white/10 text-[#9e7d32] dark:text-[#d6b26d]"
+              }`}
+            >
+              <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-[#c5a059]" />
+              <span>{secondsLeft}s</span>
+            </div>
+          </div>
+
+          {/* Right on desktop: Exit button */}
+          <div className="hidden sm:flex items-center gap-3">
             <button
               type="button"
               onClick={handleExitHost}
-              className="flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 rounded-full bg-stone-100 hover:bg-stone-200 dark:bg-white/10 dark:hover:bg-white/20 text-stone-600 dark:text-zinc-300 transition-colors shadow-sm"
+              className="flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 rounded-full bg-stone-100 hover:bg-stone-200 dark:bg-white/10 dark:hover:bg-white/20 text-stone-600 dark:text-zinc-300 transition-colors shadow-sm shrink-0"
               title={language === "fr" ? "Fermer la session" : "Close session"}
             >
               <X className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">{language === "fr" ? "Quitter" : "Exit"}</span>
+              <span>{language === "fr" ? "Quitter" : "Exit"}</span>
             </button>
           </div>
         </div>
 
         {/* Big Question Prompt */}
-        <div className="relative z-10 my-auto max-w-4xl mx-auto w-full py-6 text-center space-y-4">
-          <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold tracking-tight leading-tight text-neutral-900 dark:text-white drop-shadow-sm">
+        <div className="relative z-10 my-auto max-w-4xl mx-auto w-full py-4 sm:py-6 text-center space-y-2.5 sm:space-y-4">
+          <h1 className="text-xl sm:text-3xl md:text-5xl font-bold tracking-tight leading-snug sm:leading-tight text-neutral-900 dark:text-white drop-shadow-sm">
             {q.text[language] || q.text.fr}
           </h1>
 
           {q.biblicalReference && (
-            <div className="inline-flex items-center gap-1.5 px-3.5 py-1 bg-white dark:bg-[#121217] border border-stone-200 dark:border-white/10 rounded-full text-xs text-[#9e7d32] dark:text-[#d6b26d] font-mono shadow-sm">
+            <div className="inline-flex items-center gap-1.5 px-3 py-0.5 sm:px-3.5 sm:py-1 bg-white dark:bg-[#121217] border border-stone-200 dark:border-white/10 rounded-full text-[11px] sm:text-xs text-[#9e7d32] dark:text-[#d6b26d] font-mono shadow-sm">
               <BookOpen className="w-3.5 h-3.5 text-[#c5a059]" />
               <span>{q.biblicalReference}</span>
             </div>
@@ -808,20 +828,20 @@ export default function LiveHostPage() {
         </div>
 
         {/* 4 Large Clean Options with Distinctive Badges */}
-        <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-5xl mx-auto w-full mb-6">
+        <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-4 max-w-5xl mx-auto w-full mb-4 sm:mb-6">
           {q.options?.map((opt, idx) => {
             const style = OPTION_STYLES[idx % OPTION_STYLES.length];
             return (
               <div
                 key={opt.id}
-                className={`p-6 sm:p-7 rounded-3xl border flex items-center gap-4 text-left transition-all ${style.card} ${style.borderAccent}`}
+                className={`p-3.5 sm:p-6 rounded-2xl sm:rounded-3xl border flex items-center gap-3 sm:gap-4 text-left transition-all ${style.card} ${style.borderAccent}`}
               >
                 <div
-                  className={`w-12 h-12 rounded-2xl flex items-center justify-center font-black text-xl shadow-md shrink-0 ${style.badge}`}
+                  className={`w-9 h-9 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl flex items-center justify-center font-black text-base sm:text-xl shadow-md shrink-0 ${style.badge}`}
                 >
                   {style.symbol}
                 </div>
-                <span className="text-lg sm:text-xl font-medium text-neutral-900 dark:text-zinc-100 leading-snug">
+                <span className="text-xs sm:text-lg md:text-xl font-medium text-neutral-900 dark:text-zinc-100 leading-snug break-words flex-1">
                   {opt.text[language] || opt.text.fr}
                 </span>
               </div>
@@ -830,10 +850,10 @@ export default function LiveHostPage() {
         </div>
 
         {/* Bottom control bar for host */}
-        <div className="relative z-10 flex justify-end pt-4 border-t border-stone-200 dark:border-white/10">
+        <div className="relative z-10 flex justify-end pt-3 sm:pt-4 border-t border-stone-200 dark:border-white/10">
           <button
             onClick={() => sendHostAction({ type: "reveal_answer" })}
-            className="flex items-center gap-2 px-6 py-3 rounded-full bg-white dark:bg-[#121217] hover:bg-stone-50 dark:hover:bg-[#1b1b24] border border-stone-200 dark:border-white/10 hover:border-[#c5a059]/40 text-stone-800 dark:text-neutral-200 hover:text-neutral-950 dark:hover:text-white font-bold text-sm transition-colors active:scale-95 shadow-sm"
+            className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3.5 sm:py-3 rounded-full bg-white dark:bg-[#121217] hover:bg-stone-50 dark:hover:bg-[#1b1b24] border border-stone-200 dark:border-white/10 hover:border-[#c5a059]/40 text-stone-800 dark:text-neutral-200 hover:text-neutral-950 dark:hover:text-white font-bold text-sm sm:text-base transition-colors active:scale-95 shadow-sm"
           >
             {language === "fr" ? "Révéler la réponse" : "Reveal Answer"}
             <ArrowRight className="w-4 h-4 text-[#c5a059]" />
@@ -853,35 +873,36 @@ export default function LiveHostPage() {
     const totalVotes = Object.values(dist).reduce((a, b) => a + b, 0);
 
     return (
-      <div className="min-h-[85vh] text-neutral-900 dark:text-white flex flex-col justify-between p-6 sm:p-10 select-none relative overflow-hidden [isolation:isolate] bg-white/95 dark:bg-[#0f0f14] border border-stone-200/90 dark:border-white/10 rounded-3xl shadow-xl">
+      <div className="min-h-[85vh] text-neutral-900 dark:text-white flex flex-col justify-between p-3.5 sm:p-8 md:p-10 select-none relative overflow-hidden [isolation:isolate] bg-white/95 dark:bg-[#0f0f14] border border-stone-200/90 dark:border-white/10 rounded-2xl sm:rounded-3xl shadow-xl">
         <div className="absolute top-0 right-0 w-96 h-96 bg-[#c5a059]/10 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-80 h-80 bg-neutral-200/50 dark:bg-white/5 rounded-full blur-3xl pointer-events-none" />
 
         {/* Top Header */}
-        <div className="relative z-10 flex items-center justify-between border-b border-stone-200 dark:border-white/10 pb-4">
-          <div className="flex items-center gap-3">
-            <div className="text-sm font-bold uppercase tracking-widest text-[#9e7d32] dark:text-[#d6b26d]">
+        <div className="relative z-10 flex items-center justify-between border-b border-stone-200 dark:border-white/10 pb-3 sm:pb-4 gap-2">
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+            <span className="text-xs sm:text-sm font-bold uppercase tracking-wider text-[#9e7d32] dark:text-[#d6b26d] whitespace-nowrap">
               {language === "fr"
-                ? `Résultats • Question ${state.currentQuestionIndex + 1} / ${state.totalQuestions}`
-                : `Results • Question ${state.currentQuestionIndex + 1} / ${state.totalQuestions}`}
-            </div>
+                ? `Résultats • Q${state.currentQuestionIndex + 1}/${state.totalQuestions}`
+                : `Results • Q${state.currentQuestionIndex + 1}/${state.totalQuestions}`}
+            </span>
 
-            {/* Persistent Late-Joiner PIN badge */}
+            {/* Persistent Late-Joiner PIN badge - never wraps */}
             <button
               type="button"
               onClick={() => setShowQrModal(true)}
-              className="flex items-center gap-1.5 px-3 py-1 bg-white dark:bg-[#121217] hover:bg-stone-50 dark:hover:bg-[#1a1a22] border border-stone-200 dark:border-[#c5a059]/40 rounded-full text-xs font-mono font-bold text-[#9e7d32] dark:text-[#d6b26d] transition-all hover:scale-105 shadow-sm"
+              className="flex items-center gap-1 px-2.5 sm:px-3 py-1 bg-white dark:bg-[#121217] hover:bg-stone-50 dark:hover:bg-[#1a1a22] border border-stone-200 dark:border-[#c5a059]/40 rounded-full text-[11px] sm:text-xs font-mono font-bold text-[#9e7d32] dark:text-[#d6b26d] transition-all hover:scale-105 shadow-sm shrink-0 whitespace-nowrap"
               title={language === "fr" ? "Cliquer pour afficher le QR Code pour les retardataires" : "Click to view QR code for late arrivals"}
             >
               <span className="text-[10px] uppercase text-stone-500 dark:text-neutral-400">PIN :</span>
-              <span className="tracking-widest">{state.pin}</span>
+              <span className="tracking-wider">{state.pin}</span>
             </button>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 shrink-0">
+            {/* View Leaderboard button visible in header on desktop */}
             <button
               onClick={() => sendHostAction({ type: "show_leaderboard" })}
-              className="flex items-center gap-2 px-6 py-3 rounded-full bg-[#c5a059] hover:bg-[#d6b26d] text-zinc-950 font-black text-sm shadow-lg transition-transform hover:scale-105 active:scale-95"
+              className="hidden sm:flex items-center gap-2 px-6 py-2.5 rounded-full bg-[#c5a059] hover:bg-[#d6b26d] text-zinc-950 font-black text-sm shadow-lg transition-transform hover:scale-105 active:scale-95"
             >
               <span>{language === "fr" ? "Voir le Classement" : "View Leaderboard"}</span>
               <Trophy className="w-4 h-4" />
@@ -889,21 +910,22 @@ export default function LiveHostPage() {
             <button
               type="button"
               onClick={handleExitHost}
-              className="flex items-center gap-1 text-xs font-semibold px-2.5 py-2 rounded-full bg-stone-100 hover:bg-stone-200 dark:bg-white/10 dark:hover:bg-white/20 text-stone-600 dark:text-zinc-300 transition-colors shadow-sm"
+              className="flex items-center justify-center w-7 h-7 sm:w-auto sm:h-auto sm:px-2.5 sm:py-2 rounded-full bg-stone-100 hover:bg-stone-200 dark:bg-white/10 dark:hover:bg-white/20 text-stone-600 dark:text-zinc-300 transition-colors shadow-sm shrink-0"
               title={language === "fr" ? "Fermer la session" : "Close session"}
             >
               <X className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline sm:ml-1 text-xs font-semibold">{language === "fr" ? "Quitter" : "Exit"}</span>
             </button>
           </div>
         </div>
 
         {/* Central Card: Options with Vote Bars and Correct Answer Highlight */}
-        <div className="relative z-10 my-auto max-w-4xl mx-auto w-full py-6 space-y-6">
-          <h2 className="text-xl sm:text-2xl font-bold text-center text-neutral-900 dark:text-white drop-shadow-sm">
+        <div className="relative z-10 my-auto max-w-4xl mx-auto w-full py-4 sm:py-6 space-y-4 sm:space-y-6">
+          <h2 className="text-base sm:text-2xl font-bold text-center text-neutral-900 dark:text-white drop-shadow-sm leading-snug">
             {q.text[language] || q.text.fr}
           </h2>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-4">
             {q.options?.map((opt, idx) => {
               const isCorrect = opt.id === state.correctAnswerId;
               const count = dist[opt.id] || 0;
@@ -913,7 +935,7 @@ export default function LiveHostPage() {
               return (
                 <div
                   key={opt.id}
-                  className={`relative overflow-hidden p-5 sm:p-6 rounded-3xl border transition-all ${
+                  className={`relative overflow-hidden p-3.5 sm:p-5 rounded-2xl sm:rounded-3xl border transition-all ${
                     isCorrect
                       ? "bg-emerald-50 dark:bg-[#112419] border-emerald-500/70 shadow-xl shadow-emerald-500/10 ring-2 ring-emerald-500/40"
                       : "bg-white dark:bg-[#121217] border-stone-200 dark:border-white/10 opacity-70"
@@ -928,22 +950,22 @@ export default function LiveHostPage() {
                   />
 
                   <div className="relative flex items-center justify-between gap-3">
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2.5 sm:gap-3 flex-1 min-w-0">
                       <div
-                        className={`w-9 h-9 rounded-xl flex items-center justify-center font-bold text-sm ${style.badge}`}
+                        className={`w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center font-bold text-xs sm:text-sm shrink-0 ${style.badge}`}
                       >
                         {style.symbol}
                       </div>
-                      <span className="font-bold text-base sm:text-lg text-neutral-900 dark:text-zinc-100">
+                      <span className="font-bold text-xs sm:text-base text-neutral-900 dark:text-zinc-100 leading-snug break-words flex-1">
                         {opt.text[language] || opt.text.fr}
                       </span>
                     </div>
 
-                    <div className="flex items-center gap-2 shrink-0">
+                    <div className="flex items-center gap-1.5 shrink-0 ml-2">
                       {isCorrect && (
-                        <CheckCircle2 className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
+                        <CheckCircle2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400 shrink-0" />
                       )}
-                      <span className="font-mono font-bold text-sm text-stone-600 dark:text-neutral-300">
+                      <span className="font-mono font-bold text-xs sm:text-sm text-stone-600 dark:text-neutral-300 whitespace-nowrap">
                         {count} ({percentage}%)
                       </span>
                     </div>
@@ -955,19 +977,30 @@ export default function LiveHostPage() {
 
           {/* Theological pastoral note for debrief */}
           {state.explanation && (
-            <div className="p-6 bg-stone-50 dark:bg-[#121217] border border-stone-200 dark:border-[#c5a059]/30 rounded-3xl shadow-lg space-y-2 text-left animate-slide-up relative overflow-hidden before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-stone-300 dark:before:via-white/20 before:to-transparent">
-              <div className="flex items-center gap-2 text-[#9e7d32] dark:text-[#d6b26d] text-xs font-bold uppercase tracking-wider">
-                <BookOpen className="w-4 h-4 text-[#c5a059]" />
+            <div className="p-3.5 sm:p-6 bg-stone-50 dark:bg-[#121217] border border-stone-200 dark:border-[#c5a059]/30 rounded-2xl sm:rounded-3xl shadow-lg space-y-1.5 sm:space-y-2 text-left animate-slide-up relative overflow-hidden before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-stone-300 dark:before:via-white/20 before:to-transparent">
+              <div className="flex items-center gap-2 text-[#9e7d32] dark:text-[#d6b26d] text-[11px] sm:text-xs font-bold uppercase tracking-wider">
+                <BookOpen className="w-3.5 h-3.5 text-[#c5a059] shrink-0" />
                 <span>{language === "fr" ? "Éclairage Biblique & Pastoral" : "Biblical & Pastoral Insight"}</span>
                 {state.biblicalReference && (
                   <span className="text-stone-500 dark:text-neutral-400">({state.biblicalReference})</span>
                 )}
               </div>
-              <p className="text-stone-800 dark:text-neutral-200 text-sm sm:text-base leading-relaxed font-serif italic">
+              <p className="text-stone-800 dark:text-neutral-200 text-xs sm:text-base leading-relaxed font-serif italic">
                 « {state.explanation[language] || state.explanation.fr} »
               </p>
             </div>
           )}
+        </div>
+
+        {/* Bottom Action Bar: Always accessible on mobile & desktop */}
+        <div className="relative z-10 pt-3 sm:pt-4 border-t border-stone-200 dark:border-white/10 flex justify-end">
+          <button
+            onClick={() => sendHostAction({ type: "show_leaderboard" })}
+            className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 sm:px-8 py-3.5 sm:py-3 rounded-full bg-[#c5a059] hover:bg-[#d6b26d] text-zinc-950 font-black text-sm sm:text-base shadow-xl transition-transform active:scale-95"
+          >
+            <span>{language === "fr" ? "Voir le Classement" : "View Leaderboard"}</span>
+            <Trophy className="w-4 h-4 sm:w-5 sm:h-5" />
+          </button>
         </div>
 
         {/* Modal QR Code pour les retardataires */}
@@ -982,35 +1015,36 @@ export default function LiveHostPage() {
     const topPlayers = state.leaderboard.slice(0, 5);
 
     return (
-      <div className="min-h-[85vh] text-neutral-900 dark:text-white flex flex-col justify-between p-6 sm:p-10 select-none relative overflow-hidden [isolation:isolate] bg-white/95 dark:bg-[#0f0f14] border border-stone-200/90 dark:border-white/10 rounded-3xl shadow-xl">
+      <div className="min-h-[85vh] text-neutral-900 dark:text-white flex flex-col justify-between p-3.5 sm:p-8 md:p-10 select-none relative overflow-hidden [isolation:isolate] bg-white/95 dark:bg-[#0f0f14] border border-stone-200/90 dark:border-white/10 rounded-2xl sm:rounded-3xl shadow-xl">
         <div className="absolute top-0 right-0 w-96 h-96 bg-[#c5a059]/10 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-80 h-80 bg-neutral-200/50 dark:bg-white/5 rounded-full blur-3xl pointer-events-none" />
 
         {/* Top Header */}
-        <div className="relative z-10 flex items-center justify-between border-b border-stone-200 dark:border-white/10 pb-4">
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2 text-[#9e7d32] dark:text-[#d6b26d] text-sm font-bold uppercase tracking-widest">
-              <Trophy className="w-5 h-5 text-[#c5a059]" />
-              <span>
+        <div className="relative z-10 flex items-center justify-between border-b border-stone-200 dark:border-white/10 pb-3 sm:pb-4 gap-2">
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+            <div className="flex items-center gap-1.5 text-[#9e7d32] dark:text-[#d6b26d] text-xs sm:text-sm font-bold uppercase tracking-wider shrink-0">
+              <Trophy className="w-4 h-4 text-[#c5a059] shrink-0" />
+              <span className="whitespace-nowrap">
                 {language === "fr"
-                  ? `Classement Général • Question ${state.currentQuestionIndex + 1} / ${state.totalQuestions}`
-                  : `Current Standings • Question ${state.currentQuestionIndex + 1} / ${state.totalQuestions}`}
+                  ? `Classement • Q${state.currentQuestionIndex + 1}/${state.totalQuestions}`
+                  : `Standings • Q${state.currentQuestionIndex + 1}/${state.totalQuestions}`}
               </span>
             </div>
 
-            {/* Persistent Late-Joiner PIN badge */}
+            {/* Persistent Late-Joiner PIN badge - never wraps */}
             <button
               type="button"
               onClick={() => setShowQrModal(true)}
-              className="flex items-center gap-1.5 px-3 py-1 bg-white dark:bg-[#121217] hover:bg-stone-50 dark:hover:bg-[#1a1a22] border border-stone-200 dark:border-[#c5a059]/40 rounded-full text-xs font-mono font-bold text-[#9e7d32] dark:text-[#d6b26d] transition-all hover:scale-105 shadow-sm"
+              className="flex items-center gap-1 px-2.5 sm:px-3 py-1 bg-white dark:bg-[#121217] hover:bg-stone-50 dark:hover:bg-[#1a1a22] border border-stone-200 dark:border-[#c5a059]/40 rounded-full text-[11px] sm:text-xs font-mono font-bold text-[#9e7d32] dark:text-[#d6b26d] transition-all hover:scale-105 shadow-sm shrink-0 whitespace-nowrap"
               title={language === "fr" ? "Cliquer pour afficher le QR Code pour les retardataires" : "Click to view QR code for late arrivals"}
             >
               <span className="text-[10px] uppercase text-stone-500 dark:text-neutral-400">PIN :</span>
-              <span className="tracking-widest">{state.pin}</span>
+              <span className="tracking-wider">{state.pin}</span>
             </button>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 shrink-0">
+            {/* Desktop Next Question button in header */}
             <button
               onClick={() => {
                 if (isLastQuestion) {
@@ -1019,42 +1053,43 @@ export default function LiveHostPage() {
                   sendHostAction({ type: "next_question" });
                 }
               }}
-              className="flex items-center gap-2 px-8 py-3 rounded-full bg-[#c5a059] hover:bg-[#d6b26d] text-zinc-950 font-black text-base shadow-xl transition-transform hover:scale-105 active:scale-95"
+              className="hidden sm:flex items-center gap-2 px-6 py-2.5 rounded-full bg-[#c5a059] hover:bg-[#d6b26d] text-zinc-950 font-black text-sm shadow-xl transition-transform hover:scale-105 active:scale-95"
             >
               <span>
                 {isLastQuestion
                   ? language === "fr" ? "Podium Final !" : "Final Podium!"
                   : language === "fr" ? "Question Suivante" : "Next Question"}
               </span>
-              <ArrowRight className="w-5 h-5" />
+              <ArrowRight className="w-4 h-4" />
             </button>
             <button
               type="button"
               onClick={handleExitHost}
-              className="flex items-center gap-1 text-xs font-semibold px-2.5 py-2 rounded-full bg-stone-100 hover:bg-stone-200 dark:bg-white/10 dark:hover:bg-white/20 text-stone-600 dark:text-zinc-300 transition-colors shadow-sm"
+              className="flex items-center justify-center w-7 h-7 sm:w-auto sm:h-auto sm:px-2.5 sm:py-2 rounded-full bg-stone-100 hover:bg-stone-200 dark:bg-white/10 dark:hover:bg-white/20 text-stone-600 dark:text-zinc-300 transition-colors shadow-sm shrink-0"
               title={language === "fr" ? "Fermer la session" : "Close session"}
             >
               <X className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline sm:ml-1 text-xs font-semibold">{language === "fr" ? "Quitter" : "Exit"}</span>
             </button>
           </div>
         </div>
 
         {/* Central Leaderboard list */}
-        <div className="relative z-10 my-auto max-w-2xl mx-auto w-full py-8 space-y-3">
+        <div className="relative z-10 my-auto max-w-2xl mx-auto w-full py-4 sm:py-8 space-y-2.5 sm:space-y-3">
           {topPlayers.map((player, idx) => {
             const isFirst = idx === 0;
             return (
               <div
                 key={player.id}
-                className={`flex items-center justify-between p-4 sm:p-5 rounded-2xl border transition-all ${
+                className={`flex items-center justify-between p-3 sm:p-5 rounded-xl sm:rounded-2xl border transition-all ${
                   isFirst
                     ? "bg-[#c5a059]/15 dark:bg-[#c5a059]/20 border-[#c5a059]/40 dark:border-[#c5a059]/50 shadow-lg text-neutral-950 dark:text-white font-extrabold ring-1 ring-[#c5a059]/30"
                     : "bg-stone-50 dark:bg-[#121217] border-stone-200 dark:border-white/10 text-stone-800 dark:text-neutral-200 shadow-sm"
                 }`}
               >
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2.5 sm:gap-4 min-w-0">
                   <div
-                    className={`w-9 h-9 rounded-full flex items-center justify-center font-black text-sm ${
+                    className={`w-7 h-7 sm:w-9 sm:h-9 rounded-full flex items-center justify-center font-black text-xs sm:text-sm shrink-0 ${
                       isFirst
                         ? "bg-[#c5a059] text-zinc-950 font-black"
                         : "bg-stone-200 dark:bg-white/10 text-stone-600 dark:text-neutral-400 font-bold"
@@ -1062,22 +1097,43 @@ export default function LiveHostPage() {
                   >
                     #{player.rank}
                   </div>
-                  <span className="text-xl">{player.avatar}</span>
-                  <span className="text-lg font-bold">{player.name}</span>
+                  <span className="text-base sm:text-xl shrink-0">{player.avatar}</span>
+                  <span className="text-sm sm:text-lg font-bold truncate max-w-[110px] sm:max-w-none">{player.name}</span>
                   {player.streak >= 2 && (
-                    <span className="flex items-center gap-1 text-xs text-[#9e7d32] dark:text-[#d6b26d] font-bold px-2.5 py-0.5 bg-[#c5a059]/15 dark:bg-[#c5a059]/20 border border-[#c5a059]/30 rounded-full">
-                      <Flame className="w-3.5 h-3.5 fill-current text-[#c5a059]" />
+                    <span className="flex items-center gap-1 text-[11px] sm:text-xs text-[#9e7d32] dark:text-[#d6b26d] font-bold px-2 py-0.5 bg-[#c5a059]/15 dark:bg-[#c5a059]/20 border border-[#c5a059]/30 rounded-full shrink-0">
+                      <Flame className="w-3 h-3 fill-current text-[#c5a059]" />
                       {player.streak}
                     </span>
                   )}
                 </div>
 
-                <div className="font-mono text-xl sm:text-2xl font-black text-[#9e7d32] dark:text-[#d6b26d]">
+                <div className="font-mono text-base sm:text-2xl font-black text-[#9e7d32] dark:text-[#d6b26d] shrink-0 pl-2">
                   {player.score.toLocaleString()} pts
                 </div>
               </div>
             );
           })}
+        </div>
+
+        {/* Bottom Action Bar: Always accessible on mobile & desktop */}
+        <div className="relative z-10 pt-3 sm:pt-4 border-t border-stone-200 dark:border-white/10 flex justify-end">
+          <button
+            onClick={() => {
+              if (isLastQuestion) {
+                sendHostAction({ type: "end_quiz" });
+              } else {
+                sendHostAction({ type: "next_question" });
+              }
+            }}
+            className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 sm:px-8 py-3.5 sm:py-3 rounded-full bg-[#c5a059] hover:bg-[#d6b26d] text-zinc-950 font-black text-sm sm:text-base shadow-xl transition-transform active:scale-95"
+          >
+            <span>
+              {isLastQuestion
+                ? language === "fr" ? "Podium Final !" : "Final Podium!"
+                : language === "fr" ? "Question Suivante" : "Next Question"}
+            </span>
+            <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
+          </button>
         </div>
 
         {/* Modal QR Code pour les retardataires */}
@@ -1094,7 +1150,7 @@ export default function LiveHostPage() {
     const third = top3[2];
 
     return (
-      <div className="min-h-[85vh] text-neutral-900 dark:text-white flex flex-col justify-between p-6 sm:p-10 select-none relative overflow-hidden [isolation:isolate] bg-white/95 dark:bg-[#0f0f14] border border-stone-200/90 dark:border-white/10 rounded-3xl shadow-xl">
+      <div className="min-h-[85vh] text-neutral-900 dark:text-white flex flex-col justify-between p-3.5 sm:p-8 md:p-10 select-none relative overflow-hidden [isolation:isolate] bg-white/95 dark:bg-[#0f0f14] border border-stone-200/90 dark:border-white/10 rounded-2xl sm:rounded-3xl shadow-xl">
         <div className="absolute top-0 right-0 w-96 h-96 bg-[#c5a059]/10 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-80 h-80 bg-neutral-200/50 dark:bg-white/5 rounded-full blur-3xl pointer-events-none" />
 
@@ -1102,76 +1158,76 @@ export default function LiveHostPage() {
         <button
           type="button"
           onClick={handleExitHost}
-          className="absolute top-6 right-6 w-9 h-9 rounded-full bg-stone-100 hover:bg-stone-200 dark:bg-white/10 dark:hover:bg-white/20 text-stone-500 dark:text-zinc-400 hover:text-neutral-900 dark:hover:text-white flex items-center justify-center transition-all active:scale-95 z-20 shadow-sm"
+          className="absolute top-3 right-3 sm:top-6 sm:right-6 w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-stone-100 hover:bg-stone-200 dark:bg-white/10 dark:hover:bg-white/20 text-stone-500 dark:text-zinc-400 hover:text-neutral-900 dark:hover:text-white flex items-center justify-center transition-all active:scale-95 z-20 shadow-sm"
           title={language === "fr" ? "Fermer la session" : "Close session"}
         >
           <X className="w-4 h-4" />
         </button>
 
-        <div className="relative z-10 text-center space-y-2 pt-4">
-          <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#9e7d32] dark:text-[#d6b26d] px-4 py-1.5 bg-[#c5a059]/15 border border-[#c5a059]/30 rounded-full shadow-sm">
-            <Crown className="w-4 h-4 text-[#c5a059]" />
+        <div className="relative z-10 text-center space-y-1.5 sm:space-y-2 pt-2 sm:pt-4">
+          <div className="inline-flex items-center gap-1.5 text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#9e7d32] dark:text-[#d6b26d] px-3.5 py-1 bg-[#c5a059]/15 border border-[#c5a059]/30 rounded-full shadow-sm">
+            <Crown className="w-3.5 h-3.5 text-[#c5a059]" />
             <span>{language === "fr" ? "Grand Podium Nouveau Départ" : "New Beginnings Grand Podium"}</span>
           </div>
-          <h1 className="text-3xl sm:text-5xl font-light tracking-tight text-neutral-900 dark:text-white">
+          <h1 className="text-xl sm:text-4xl font-light tracking-tight text-neutral-900 dark:text-white">
             <span className="font-semibold">{language === "fr" ? "Félicitations" : "Congratulations"}</span> {language === "fr" ? "à tous les participants !" : "to all participants!"}
           </h1>
         </div>
 
-        {/* 3D-like Podium */}
-        <div className="relative z-10 my-auto max-w-3xl mx-auto w-full flex items-end justify-center gap-4 sm:gap-6 pt-12 pb-6">
+        {/* 3D-like Podium: Scaled for mobile viewports */}
+        <div className="relative z-10 my-auto max-w-3xl mx-auto w-full flex items-end justify-center gap-2.5 sm:gap-6 pt-3 sm:pt-12 pb-2 sm:pb-6">
           {/* 2nd place (Silver) */}
           {second && (
-            <div className="flex flex-col items-center flex-1 max-w-[180px]">
-              <div className="text-3xl mb-1">{second.avatar}</div>
-              <div className="font-bold text-sm text-stone-800 dark:text-neutral-200 truncate max-w-full mb-1">
+            <div className="flex flex-col items-center flex-1 max-w-[110px] sm:max-w-[180px]">
+              <div className="text-2xl sm:text-3xl mb-0.5">{second.avatar}</div>
+              <div className="font-bold text-xs sm:text-sm text-stone-800 dark:text-neutral-200 truncate max-w-full mb-0.5">
                 {second.name}
               </div>
-              <div className="text-xs font-mono text-stone-500 dark:text-neutral-400 mb-2">
+              <div className="text-[10px] sm:text-xs font-mono text-stone-500 dark:text-neutral-400 mb-1 sm:mb-2">
                 {second.score} pts
               </div>
-              <div className="w-full h-44 bg-gradient-to-t from-stone-200 to-stone-100 dark:from-[#1b1b22] dark:to-[#2b2b36] rounded-t-3xl flex items-center justify-center border-t-4 border-stone-400 dark:border-neutral-300 shadow-xl">
-                <span className="text-4xl font-black text-stone-600 dark:text-neutral-300">2</span>
+              <div className="w-full h-28 sm:h-44 bg-gradient-to-t from-stone-200 to-stone-100 dark:from-[#1b1b22] dark:to-[#2b2b36] rounded-t-2xl sm:rounded-t-3xl flex items-center justify-center border-t-4 border-stone-400 dark:border-neutral-300 shadow-xl">
+                <span className="text-2xl sm:text-4xl font-black text-stone-600 dark:text-neutral-300">2</span>
               </div>
             </div>
           )}
 
           {/* 1st place (Gold) */}
           {first && (
-            <div className="flex flex-col items-center flex-1 max-w-[200px]">
-              <Crown className="w-8 h-8 text-[#d6b26d] animate-bounce mb-1" />
-              <div className="text-4xl mb-1">{first.avatar}</div>
-              <div className="font-black text-base text-[#9e7d32] dark:text-[#d6b26d] truncate max-w-full mb-1">
+            <div className="flex flex-col items-center flex-1 max-w-[130px] sm:max-w-[200px]">
+              <Crown className="w-6 h-6 sm:w-8 sm:h-8 text-[#d6b26d] animate-bounce mb-0.5" />
+              <div className="text-3xl sm:text-4xl mb-0.5">{first.avatar}</div>
+              <div className="font-black text-xs sm:text-base text-[#9e7d32] dark:text-[#d6b26d] truncate max-w-full mb-0.5">
                 {first.name}
               </div>
-              <div className="text-sm font-mono font-bold text-[#9e7d32] dark:text-[#d6b26d] mb-2">
+              <div className="text-xs sm:text-sm font-mono font-bold text-[#9e7d32] dark:text-[#d6b26d] mb-1 sm:mb-2">
                 {first.score} pts
               </div>
-              <div className="w-full h-60 bg-gradient-to-t from-[#c5a059] to-[#ebd29b] dark:from-[#8a6825] dark:to-[#c5a059] rounded-t-3xl flex items-center justify-center border-t-4 border-[#9e7d32] dark:border-[#e4c88e] shadow-2xl shadow-[#c5a059]/30">
-                <span className="text-6xl font-black text-zinc-950">1</span>
+              <div className="w-full h-36 sm:h-60 bg-gradient-to-t from-[#c5a059] to-[#ebd29b] dark:from-[#8a6825] dark:to-[#c5a059] rounded-t-2xl sm:rounded-t-3xl flex items-center justify-center border-t-4 border-[#9e7d32] dark:border-[#e4c88e] shadow-2xl shadow-[#c5a059]/30">
+                <span className="text-4xl sm:text-6xl font-black text-zinc-950">1</span>
               </div>
             </div>
           )}
 
           {/* 3rd place (Bronze) */}
           {third && (
-            <div className="flex flex-col items-center flex-1 max-w-[180px]">
-              <div className="text-3xl mb-1">{third.avatar}</div>
-              <div className="font-bold text-sm text-stone-800 dark:text-neutral-200 truncate max-w-full mb-1">
+            <div className="flex flex-col items-center flex-1 max-w-[110px] sm:max-w-[180px]">
+              <div className="text-2xl sm:text-3xl mb-0.5">{third.avatar}</div>
+              <div className="font-bold text-xs sm:text-sm text-stone-800 dark:text-neutral-200 truncate max-w-full mb-0.5">
                 {third.name}
               </div>
-              <div className="text-xs font-mono text-stone-500 dark:text-neutral-400 mb-2">
+              <div className="text-[10px] sm:text-xs font-mono text-stone-500 dark:text-neutral-400 mb-1 sm:mb-2">
                 {third.score} pts
               </div>
-              <div className="w-full h-36 bg-gradient-to-t from-amber-100 to-amber-50 dark:from-[#261711] dark:to-[#45281c] rounded-t-3xl flex items-center justify-center border-t-4 border-amber-600/60 dark:border-[#8f522f] shadow-xl">
-                <span className="text-4xl font-black text-amber-800 dark:text-[#c5a059]">3</span>
+              <div className="w-full h-20 sm:h-36 bg-gradient-to-t from-amber-100 to-amber-50 dark:from-[#261711] dark:to-[#45281c] rounded-t-2xl sm:rounded-t-3xl flex items-center justify-center border-t-4 border-amber-600/60 dark:border-[#8f522f] shadow-xl">
+                <span className="text-2xl sm:text-4xl font-black text-amber-800 dark:text-[#c5a059]">3</span>
               </div>
             </div>
           )}
         </div>
 
-        {/* Bottom Actions */}
-        <div className="relative z-10 flex items-center justify-center gap-4 pt-6 border-t border-stone-200 dark:border-white/10">
+        {/* Bottom Actions: Fully responsive and always visible */}
+        <div className="relative z-10 flex flex-col sm:flex-row items-center justify-center gap-2.5 sm:gap-4 pt-3 sm:pt-6 border-t border-stone-200 dark:border-white/10 w-full">
           <button
             onClick={async () => {
               if (pin && hostToken) {
@@ -1184,17 +1240,17 @@ export default function LiveHostPage() {
               setPin(null);
               setHostToken(null);
             }}
-            className="flex items-center gap-2 px-6 py-3 rounded-full bg-stone-100 hover:bg-stone-200 dark:bg-[#121217] border border-stone-200 dark:border-white/10 hover:border-[#c5a059]/40 text-stone-800 dark:text-neutral-300 font-bold text-sm transition-colors active:scale-95 shadow-sm"
+            className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-stone-100 hover:bg-stone-200 dark:bg-[#121217] border border-stone-200 dark:border-white/10 hover:border-[#c5a059]/40 text-stone-800 dark:text-neutral-300 font-bold text-xs sm:text-sm transition-colors active:scale-95 shadow-sm"
           >
             <RotateCcw className="w-4 h-4 text-stone-500 dark:text-neutral-400" />
-            {language === "fr" ? "Nouvelle Session" : "New Session"}
+            <span>{language === "fr" ? "Nouvelle Session" : "New Session"}</span>
           </button>
 
           <button
             onClick={handleExitHost}
-            className="px-6 py-3 rounded-full bg-[#c5a059] hover:bg-[#d6b26d] text-zinc-950 font-bold text-sm transition-colors shadow-lg active:scale-95"
+            className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-[#c5a059] hover:bg-[#d6b26d] text-zinc-950 font-bold text-xs sm:text-sm transition-colors shadow-lg active:scale-95"
           >
-            {language === "fr" ? "Retour aux Cours" : "Back to Courses"}
+            <span>{language === "fr" ? "Retour aux Cours" : "Back to Courses"}</span>
           </button>
         </div>
       </div>

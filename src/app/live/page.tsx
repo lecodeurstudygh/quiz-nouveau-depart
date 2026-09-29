@@ -16,6 +16,7 @@ import {
   Crown,
   Play,
   Users,
+  BookOpen,
 } from "lucide-react";
 import Link from "next/link";
 import { WhatsAppShareButton } from "@/components/WhatsAppShareButton";
@@ -795,15 +796,40 @@ function LivePlayerContent() {
     const hasAnswered = myPlayer?.answered;
 
     if (hasAnswered) {
+      const selectedOpt = q.options?.find(
+        (o) => o.id === myPlayer?.lastSelectedOptionId
+      );
+      const optIdx =
+        q.options?.findIndex((o) => o.id === myPlayer?.lastSelectedOptionId) ?? -1;
+      const optStyle =
+        optIdx >= 0 ? OPTION_STYLES[optIdx % OPTION_STYLES.length] : null;
+
       return (
         <div className="min-h-[75vh] text-neutral-900 dark:text-white flex flex-col items-center justify-center p-4 sm:p-6 pb-24 sm:pb-8 text-center select-none relative overflow-hidden [isolation:isolate]">
-          <div className="relative z-10 w-full max-w-sm bg-white/95 dark:bg-[#121217] border border-stone-200/90 dark:border-white/10 rounded-3xl p-8 shadow-2xl space-y-4 animate-scale-in before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-stone-300 dark:before:via-white/20 before:to-transparent">
-            <div className="w-20 h-20 rounded-full bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400 mx-auto shadow-lg shadow-emerald-500/15">
-              <Check className="w-10 h-10 stroke-[3]" />
+          <div className="relative z-10 w-full max-w-md bg-white/95 dark:bg-[#121217] border border-stone-200/90 dark:border-white/10 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-4 animate-scale-in before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-stone-300 dark:before:via-white/20 before:to-transparent">
+            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400 mx-auto shadow-lg shadow-emerald-500/15">
+              <Check className="w-8 h-8 sm:w-10 sm:h-10 stroke-[3]" />
             </div>
-            <h2 className="text-xl font-black text-neutral-900 dark:text-white">
+            <h2 className="text-xl sm:text-2xl font-black text-neutral-900 dark:text-white">
               {language === "fr" ? "Réponse enregistrée !" : "Answer recorded!"}
             </h2>
+
+            {/* Locked-in option feedback */}
+            {selectedOpt && optStyle && (
+              <div
+                className={`p-3 rounded-2xl border flex items-center gap-3 text-left ${optStyle.card}`}
+              >
+                <div
+                  className={`w-8 h-8 rounded-xl flex items-center justify-center font-black text-sm shrink-0 ${optStyle.badge}`}
+                >
+                  {optStyle.symbol}
+                </div>
+                <span className="text-xs sm:text-sm font-semibold text-neutral-900 dark:text-zinc-100 leading-snug break-words">
+                  {selectedOpt.text[language] || selectedOpt.text.fr}
+                </span>
+              </div>
+            )}
+
             <div className="inline-flex items-center gap-2 text-xs font-semibold text-stone-600 dark:text-zinc-300 px-3 py-1.5 rounded-full bg-stone-100 dark:bg-white/5 border border-stone-200/80 dark:border-white/10">
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
               <span>
@@ -823,10 +849,10 @@ function LivePlayerContent() {
     }
 
     return (
-      <div className="min-h-[75vh] text-neutral-900 dark:text-white flex flex-col justify-between p-2 sm:p-6 pb-24 sm:pb-8 select-none relative overflow-hidden [isolation:isolate]">
-        <div className="w-full max-w-md mx-auto flex-1 flex flex-col justify-between py-2 sm:py-4">
+      <div className="min-h-[75vh] text-neutral-900 dark:text-white flex flex-col justify-between p-3 sm:p-6 pb-24 sm:pb-8 select-none relative overflow-hidden [isolation:isolate]">
+        <div className="w-full max-w-4xl mx-auto flex-1 flex flex-col justify-between py-2 sm:py-4">
           {/* Top Header with Q counter, Timer and Score */}
-          <div className="flex items-center justify-between border-b border-stone-200/80 dark:border-white/10 pb-3">
+          <div className="flex items-center justify-between border-b border-stone-200/80 dark:border-white/10 pb-3 w-full">
             <div className="text-xs font-bold uppercase tracking-wider text-[#9e7d32] dark:text-[#d6b26d]">
               Q{state.currentQuestionIndex + 1} / {state.totalQuestions}
             </div>
@@ -848,29 +874,35 @@ function LivePlayerContent() {
             </div>
           </div>
 
-          {/* Question Title */}
-          <div className="my-auto py-3 text-center">
-            <h2 className="text-lg sm:text-xl font-bold leading-snug text-neutral-900 dark:text-white drop-shadow-sm">
+          {/* Question Title & Optional Reference */}
+          <div className="my-auto py-4 sm:py-8 text-center max-w-3xl mx-auto px-1">
+            <h2 className="text-base sm:text-2xl font-bold leading-snug sm:leading-relaxed text-neutral-900 dark:text-white drop-shadow-sm">
               {q.text[language] || q.text.fr}
             </h2>
+            {q.biblicalReference && (
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 mt-2.5 bg-stone-100 dark:bg-white/5 border border-stone-200 dark:border-white/10 rounded-full text-xs text-[#9e7d32] dark:text-[#d6b26d] font-mono shadow-sm">
+                <BookOpen className="w-3.5 h-3.5 text-[#c5a059]" />
+                <span>{q.biblicalReference}</span>
+              </div>
+            )}
           </div>
 
-          {/* 4 Ergonomic Big Touch Buttons */}
-          <div className="grid grid-cols-2 gap-3.5 max-w-md mx-auto w-full mb-2">
+          {/* Ergonomic Big Touch Buttons - Full text visible, never truncated */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-4 w-full mb-2">
             {q.options?.map((opt, idx) => {
               const style = OPTION_STYLES[idx % OPTION_STYLES.length];
               return (
                 <button
                   key={opt.id}
                   onClick={() => handleSelectOption(opt.id)}
-                  className={`h-28 sm:h-36 p-3.5 rounded-2xl flex flex-col items-center justify-center gap-2 text-center transition-all active:scale-95 ${style.card}`}
+                  className={`w-full min-h-[58px] sm:min-h-[76px] p-3.5 sm:p-5 rounded-2xl sm:rounded-3xl border flex items-center gap-3 sm:gap-4 text-left transition-all active:scale-[0.98] hover:shadow-lg cursor-pointer ${style.card}`}
                 >
                   <div
-                    className={`w-9 h-9 rounded-xl flex items-center justify-center font-black text-lg ${style.badge}`}
+                    className={`w-9 h-9 sm:w-11 sm:h-11 rounded-xl sm:rounded-2xl flex items-center justify-center font-black text-base sm:text-lg shrink-0 shadow-sm ${style.badge}`}
                   >
                     {style.symbol}
                   </div>
-                  <span className="text-xs sm:text-sm font-semibold line-clamp-2 leading-snug">
+                  <span className="flex-1 text-xs sm:text-sm md:text-base font-semibold text-neutral-900 dark:text-zinc-100 leading-snug sm:leading-relaxed break-words">
                     {opt.text[language] || opt.text.fr}
                   </span>
                 </button>
@@ -921,6 +953,20 @@ function LivePlayerContent() {
               </div>
             )}
           </div>
+
+          {/* If participant was wrong, clearly show what the right answer was */}
+          {!isCorrect && state.correctAnswerId && state.currentQuestion?.options && (
+            <div className="pt-2 text-left space-y-1 border-t border-stone-200/80 dark:border-white/10">
+              <div className="text-[11px] font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-400 flex items-center gap-1">
+                <Check className="w-3.5 h-3.5" />
+                <span>{language === "fr" ? "Bonne réponse :" : "Correct answer:"}</span>
+              </div>
+              <p className="text-xs sm:text-sm font-semibold text-neutral-900 dark:text-zinc-100 leading-snug">
+                {state.currentQuestion.options.find((o) => o.id === state.correctAnswerId)?.text[language] ||
+                  state.currentQuestion.options.find((o) => o.id === state.correctAnswerId)?.text.fr}
+              </p>
+            </div>
+          )}
 
           {isCorrect && myPlayer && myPlayer.streak > 1 && (
             <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#c5a059]/15 dark:bg-[#c5a059]/20 border border-[#c5a059]/30 rounded-full text-xs font-bold text-[#9e7d32] dark:text-[#d6b26d]">

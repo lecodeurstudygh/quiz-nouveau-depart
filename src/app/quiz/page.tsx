@@ -610,7 +610,7 @@ export default function QuizPage() {
                           >
                             {letter}
                           </span>
-                          <span className="text-xs sm:text-base font-semibold leading-snug truncate sm:whitespace-normal">
+                          <span className="text-xs sm:text-base font-semibold leading-snug break-words whitespace-normal">
                             {option.text[language]}
                           </span>
                         </div>
